@@ -196,6 +196,7 @@ struct CodeRainBackground: View {
     let speed: Double
 
     @State private var characters: [CodeCharacter] = []
+    @State private var animationTimer: Timer?
 
     var body: some View {
         Canvas { context, size in
@@ -213,6 +214,10 @@ struct CodeRainBackground: View {
         .onAppear {
             initializeCharacters()
             startAnimation()
+        }
+        .onDisappear {
+            animationTimer?.invalidate()
+            animationTimer = nil
         }
     }
 
@@ -233,7 +238,7 @@ struct CodeRainBackground: View {
     }
 
     private func startAnimation() {
-        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
+        animationTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
             let screenHeight = UIScreen.main.bounds.height
 
             for i in characters.indices {

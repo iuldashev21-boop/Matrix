@@ -8,6 +8,7 @@ struct WhiteRabbitOverlay: View {
     @State private var rewardType: RewardType = .cheatKey
     @State private var twitchOffset: CGSize = .zero
     @State private var hasBeenTapped: Bool = false
+    @State private var idleTimer: Timer?
 
     let onRewardClaimed: (RewardType) -> Void
 
@@ -55,6 +56,10 @@ struct WhiteRabbitOverlay: View {
         }
         .onAppear {
             setupRabbit()
+        }
+        .onDisappear {
+            idleTimer?.invalidate()
+            idleTimer = nil
         }
     }
 
@@ -178,8 +183,11 @@ struct WhiteRabbitOverlay: View {
 
     private func startIdleAnimation() {
         // Twitch animation loop
-        Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
-            guard !hasBeenTapped else { return }
+        idleTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [self] _ in
+            guard !hasBeenTapped else {
+                idleTimer?.invalidate()
+                return
+            }
 
             withAnimation(.easeInOut(duration: 0.1)) {
                 twitchOffset = CGSize(
@@ -262,7 +270,7 @@ struct WhiteRabbitOverlay: View {
 class WhiteRabbitManager: ObservableObject {
     @Published var shouldShowRabbit: Bool = false
 
-    private let appearanceChance: Double = 1.0 // 100% for testing (was 0.05)
+    private let appearanceChance: Double = 0.05 // 5% chance per session
 
     func checkForRabbit() {
         let roll = Double.random(in: 0...1)

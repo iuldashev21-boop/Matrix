@@ -268,7 +268,7 @@ struct DialInView: View {
         }
 
         // Continuous haptics during hold
-        let timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
             if !isHolding || isCompleted {
                 timer.invalidate()
                 return

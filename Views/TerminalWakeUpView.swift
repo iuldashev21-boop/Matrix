@@ -9,6 +9,7 @@ struct TerminalWakeUpView: View {
     @State private var showRabbit: Bool = false
     @State private var rabbitOpacity: Double = 0.8
     @State private var navigateToNextScreen: Bool = false
+    @State private var cursorTimer: Timer?
 
     // MARK: - Constants
     private let lines: [String] = [
@@ -72,6 +73,10 @@ struct TerminalWakeUpView: View {
             startTypingAnimation()
             startCursorBlink()
         }
+        .onDisappear {
+            cursorTimer?.invalidate()
+            cursorTimer = nil
+        }
         .fullScreenCover(isPresented: $navigateToNextScreen) {
             AwakeningView(isPresented: $navigateToNextScreen)
         }
@@ -117,7 +122,7 @@ struct TerminalWakeUpView: View {
 
     // MARK: - Cursor Blink
     private func startCursorBlink() {
-        Timer.scheduledTimer(withTimeInterval: cursorBlinkOn + cursorBlinkOff, repeats: true) { _ in
+        cursorTimer = Timer.scheduledTimer(withTimeInterval: cursorBlinkOn + cursorBlinkOff, repeats: true) { _ in
             withAnimation(.easeInOut(duration: 0.1)) {
                 showCursor = true
             }

@@ -13,4 +13,7 @@ enum Theme {
     static let cardCornerRadius: CGFloat = 16
     static let buttonHeight: CGFloat = 50
     static let progressBarHeight: CGFloat = 8
+
+    // Habit formation constant (days to form a habit)
+    static let habitFormationDays: Int = 66
 }

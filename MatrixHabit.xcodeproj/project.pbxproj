@@ -14,17 +14,13 @@
 		A10000000000000000000005 /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000005 /* Spacing.swift */; };
 		A10000000000000000000006 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000006 /* Theme.swift */; };
 		A10000000000000000000007 /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* PrimaryButton.swift */; };
-		A10000000000000000000008 /* SecondaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* SecondaryButton.swift */; };
 		A10000000000000000000009 /* HabitCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* HabitCard.swift */; };
 		A10000000000000000000010 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000010 /* ProgressBar.swift */; };
-		A10000000000000000000011 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000011 /* EmptyStateView.swift */; };
 		A10000000000000000000012 /* Power.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000012 /* Power.swift */; };
 		A10000000000000000000013 /* Agent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000013 /* Agent.swift */; };
 		A10000000000000000000014 /* CheckIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000014 /* CheckIn.swift */; };
 		A10000000000000000000015 /* PresetHabits.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000015 /* PresetHabits.swift */; };
-		A10000000000000000000016 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000016 /* DataManager.swift */; };
 		A10000000000000000000017 /* StreakCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000017 /* StreakCalculator.swift */; };
-		A10000000000000000000018 /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000018 /* ExportService.swift */; };
 		A10000000000000000000019 /* DateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000019 /* DateHelpers.swift */; };
 		A10000000000000000000020 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000020 /* UserProfile.swift */; };
 		A10000000000000000000021 /* TerminalWakeUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000021 /* TerminalWakeUpView.swift */; };
