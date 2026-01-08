@@ -1,0 +1,515 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000000000000000000001 /* MatrixHabitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* MatrixHabitApp.swift */; };
+		A10000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* ContentView.swift */; };
+		A10000000000000000000003 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000003 /* Colors.swift */; };
+		A10000000000000000000004 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000004 /* Typography.swift */; };
+		A10000000000000000000005 /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000005 /* Spacing.swift */; };
+		A10000000000000000000006 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000006 /* Theme.swift */; };
+		A10000000000000000000007 /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* PrimaryButton.swift */; };
+		A10000000000000000000008 /* SecondaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* SecondaryButton.swift */; };
+		A10000000000000000000009 /* HabitCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* HabitCard.swift */; };
+		A10000000000000000000010 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000010 /* ProgressBar.swift */; };
+		A10000000000000000000011 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000011 /* EmptyStateView.swift */; };
+		A10000000000000000000012 /* Power.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000012 /* Power.swift */; };
+		A10000000000000000000013 /* Agent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000013 /* Agent.swift */; };
+		A10000000000000000000014 /* CheckIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000014 /* CheckIn.swift */; };
+		A10000000000000000000015 /* PresetHabits.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000015 /* PresetHabits.swift */; };
+		A10000000000000000000016 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000016 /* DataManager.swift */; };
+		A10000000000000000000017 /* StreakCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000017 /* StreakCalculator.swift */; };
+		A10000000000000000000018 /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000018 /* ExportService.swift */; };
+		A10000000000000000000019 /* DateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000019 /* DateHelpers.swift */; };
+		A10000000000000000000020 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000020 /* UserProfile.swift */; };
+		A10000000000000000000021 /* TerminalWakeUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000021 /* TerminalWakeUpView.swift */; };
+		A10000000000000000000022 /* PillChoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000022 /* PillChoiceView.swift */; };
+		A10000000000000000000023 /* FirstHackSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000023 /* FirstHackSetupView.swift */; };
+		A10000000000000000000024 /* RankSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000024 /* RankSystem.swift */; };
+		A10000000000000000000025 /* CommandCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000025 /* CommandCenterView.swift */; };
+		A10000000000000000000026 /* DialInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000026 /* DialInView.swift */; };
+		A10000000000000000000027 /* EMPRecoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000027 /* EMPRecoveryView.swift */; };
+		A10000000000000000000028 /* SignalAnalysisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000028 /* SignalAnalysisView.swift */; };
+		A10000000000000000000029 /* ZionMainframeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000029 /* ZionMainframeView.swift */; };
+		A10000000000000000000030 /* WhiteRabbitOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000030 /* WhiteRabbitOverlay.swift */; };
+		A10000000000000000000031 /* AnomalyReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000031 /* AnomalyReport.swift */; };
+		A10000000000000000000032 /* AnomalyReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000032 /* AnomalyReportsView.swift */; };
+		A10000000000000000000033 /* AwakeningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000033 /* AwakeningView.swift */; };
+		A10000000000000000000034 /* Achievement.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000034 /* Achievement.swift */; };
+		A10000000000000000000035 /* AchievementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000035 /* AchievementManager.swift */; };
+		A10000000000000000000036 /* AchievementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000036 /* AchievementsView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A20000000000000000000001 /* MatrixHabitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHabitApp.swift; sourceTree = "<group>"; };
+		A20000000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A20000000000000000000003 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		A20000000000000000000004 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		A20000000000000000000005 /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacing.swift; sourceTree = "<group>"; };
+		A20000000000000000000006 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		A20000000000000000000007 /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
+		A20000000000000000000008 /* SecondaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryButton.swift; sourceTree = "<group>"; };
+		A20000000000000000000009 /* HabitCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCard.swift; sourceTree = "<group>"; };
+		A20000000000000000000010 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
+		A20000000000000000000011 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		A20000000000000000000012 /* Power.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Power.swift; sourceTree = "<group>"; };
+		A20000000000000000000013 /* Agent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Agent.swift; sourceTree = "<group>"; };
+		A20000000000000000000014 /* CheckIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckIn.swift; sourceTree = "<group>"; };
+		A20000000000000000000015 /* PresetHabits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetHabits.swift; sourceTree = "<group>"; };
+		A20000000000000000000016 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		A20000000000000000000017 /* StreakCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakCalculator.swift; sourceTree = "<group>"; };
+		A20000000000000000000018 /* ExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportService.swift; sourceTree = "<group>"; };
+		A20000000000000000000019 /* DateHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelpers.swift; sourceTree = "<group>"; };
+		A20000000000000000000020 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		A20000000000000000000021 /* TerminalWakeUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalWakeUpView.swift; sourceTree = "<group>"; };
+		A20000000000000000000022 /* PillChoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillChoiceView.swift; sourceTree = "<group>"; };
+		A20000000000000000000023 /* FirstHackSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstHackSetupView.swift; sourceTree = "<group>"; };
+		A20000000000000000000024 /* RankSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankSystem.swift; sourceTree = "<group>"; };
+		A20000000000000000000025 /* CommandCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandCenterView.swift; sourceTree = "<group>"; };
+		A20000000000000000000026 /* DialInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialInView.swift; sourceTree = "<group>"; };
+		A20000000000000000000027 /* EMPRecoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EMPRecoveryView.swift; sourceTree = "<group>"; };
+		A20000000000000000000028 /* SignalAnalysisView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalAnalysisView.swift; sourceTree = "<group>"; };
+		A20000000000000000000029 /* ZionMainframeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZionMainframeView.swift; sourceTree = "<group>"; };
+		A20000000000000000000030 /* WhiteRabbitOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteRabbitOverlay.swift; sourceTree = "<group>"; };
+		A20000000000000000000031 /* AnomalyReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnomalyReport.swift; sourceTree = "<group>"; };
+		A20000000000000000000032 /* AnomalyReportsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnomalyReportsView.swift; sourceTree = "<group>"; };
+		A20000000000000000000033 /* AwakeningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwakeningView.swift; sourceTree = "<group>"; };
+		A20000000000000000000034 /* Achievement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Achievement.swift; sourceTree = "<group>"; };
+		A20000000000000000000035 /* AchievementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementManager.swift; sourceTree = "<group>"; };
+		A20000000000000000000036 /* AchievementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementsView.swift; sourceTree = "<group>"; };
+		A30000000000000000000001 /* MatrixHabit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatrixHabit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A40000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A50000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				A50000000000000000000002 /* MatrixHabit */,
+				A50000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A50000000000000000000002 /* MatrixHabit */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000001 /* MatrixHabitApp.swift */,
+				A20000000000000000000002 /* ContentView.swift */,
+				A50000000000000000000004 /* Theme */,
+				A50000000000000000000005 /* Components */,
+				A50000000000000000000006 /* Models */,
+				A50000000000000000000007 /* Services */,
+				A50000000000000000000008 /* Utilities */,
+				A50000000000000000000009 /* Views */,
+			);
+			path = "";
+			sourceTree = "<group>";
+		};
+		A50000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A30000000000000000000001 /* MatrixHabit.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A50000000000000000000004 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000003 /* Colors.swift */,
+				A20000000000000000000004 /* Typography.swift */,
+				A20000000000000000000005 /* Spacing.swift */,
+				A20000000000000000000006 /* Theme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		A50000000000000000000005 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000007 /* PrimaryButton.swift */,
+				A20000000000000000000008 /* SecondaryButton.swift */,
+				A20000000000000000000009 /* HabitCard.swift */,
+				A20000000000000000000010 /* ProgressBar.swift */,
+				A20000000000000000000011 /* EmptyStateView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		A50000000000000000000006 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000012 /* Power.swift */,
+				A20000000000000000000013 /* Agent.swift */,
+				A20000000000000000000014 /* CheckIn.swift */,
+				A20000000000000000000015 /* PresetHabits.swift */,
+				A20000000000000000000031 /* AnomalyReport.swift */,
+				A20000000000000000000034 /* Achievement.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A50000000000000000000007 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000016 /* DataManager.swift */,
+				A20000000000000000000017 /* StreakCalculator.swift */,
+				A20000000000000000000018 /* ExportService.swift */,
+				A20000000000000000000035 /* AchievementManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A50000000000000000000008 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000019 /* DateHelpers.swift */,
+				A20000000000000000000020 /* UserProfile.swift */,
+				A20000000000000000000024 /* RankSystem.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		A50000000000000000000009 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000021 /* TerminalWakeUpView.swift */,
+				A20000000000000000000022 /* PillChoiceView.swift */,
+				A20000000000000000000023 /* FirstHackSetupView.swift */,
+				A20000000000000000000025 /* CommandCenterView.swift */,
+				A20000000000000000000026 /* DialInView.swift */,
+				A20000000000000000000027 /* EMPRecoveryView.swift */,
+				A20000000000000000000028 /* SignalAnalysisView.swift */,
+				A20000000000000000000029 /* ZionMainframeView.swift */,
+				A20000000000000000000030 /* WhiteRabbitOverlay.swift */,
+				A20000000000000000000032 /* AnomalyReportsView.swift */,
+				A20000000000000000000033 /* AwakeningView.swift */,
+				A20000000000000000000036 /* AchievementsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A60000000000000000000001 /* MatrixHabit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A80000000000000000000001 /* Build configuration list for PBXNativeTarget "MatrixHabit" */;
+			buildPhases = (
+				A70000000000000000000001 /* Sources */,
+				A40000000000000000000001 /* Frameworks */,
+				A90000000000000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MatrixHabit;
+			productName = MatrixHabit;
+			productReference = A30000000000000000000001 /* MatrixHabit.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A00000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					A60000000000000000000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = A80000000000000000000002 /* Build configuration list for PBXProject "MatrixHabit" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A50000000000000000000001;
+			productRefGroup = A50000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A60000000000000000000001 /* MatrixHabit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A90000000000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A70000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000001 /* MatrixHabitApp.swift in Sources */,
+				A10000000000000000000002 /* ContentView.swift in Sources */,
+				A10000000000000000000003 /* Colors.swift in Sources */,
+				A10000000000000000000004 /* Typography.swift in Sources */,
+				A10000000000000000000005 /* Spacing.swift in Sources */,
+				A10000000000000000000006 /* Theme.swift in Sources */,
+				A10000000000000000000007 /* PrimaryButton.swift in Sources */,
+				A10000000000000000000008 /* SecondaryButton.swift in Sources */,
+				A10000000000000000000009 /* HabitCard.swift in Sources */,
+				A10000000000000000000010 /* ProgressBar.swift in Sources */,
+				A10000000000000000000011 /* EmptyStateView.swift in Sources */,
+				A10000000000000000000012 /* Power.swift in Sources */,
+				A10000000000000000000013 /* Agent.swift in Sources */,
+				A10000000000000000000014 /* CheckIn.swift in Sources */,
+				A10000000000000000000015 /* PresetHabits.swift in Sources */,
+				A10000000000000000000016 /* DataManager.swift in Sources */,
+				A10000000000000000000017 /* StreakCalculator.swift in Sources */,
+				A10000000000000000000018 /* ExportService.swift in Sources */,
+				A10000000000000000000019 /* DateHelpers.swift in Sources */,
+				A10000000000000000000020 /* UserProfile.swift in Sources */,
+				A10000000000000000000021 /* TerminalWakeUpView.swift in Sources */,
+				A10000000000000000000022 /* PillChoiceView.swift in Sources */,
+				A10000000000000000000023 /* FirstHackSetupView.swift in Sources */,
+				A10000000000000000000024 /* RankSystem.swift in Sources */,
+				A10000000000000000000025 /* CommandCenterView.swift in Sources */,
+				A10000000000000000000026 /* DialInView.swift in Sources */,
+				A10000000000000000000027 /* EMPRecoveryView.swift in Sources */,
+				A10000000000000000000028 /* SignalAnalysisView.swift in Sources */,
+				A10000000000000000000029 /* ZionMainframeView.swift in Sources */,
+				A10000000000000000000030 /* WhiteRabbitOverlay.swift in Sources */,
+				A10000000000000000000031 /* AnomalyReport.swift in Sources */,
+				A10000000000000000000032 /* AnomalyReportsView.swift in Sources */,
+				A10000000000000000000033 /* AwakeningView.swift in Sources */,
+				A10000000000000000000034 /* Achievement.swift in Sources */,
+				A10000000000000000000035 /* AchievementManager.swift in Sources */,
+				A10000000000000000000036 /* AchievementsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		B10000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		B10000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B20000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.construct.MatrixHabit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B20000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.construct.MatrixHabit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A80000000000000000000001 /* Build configuration list for PBXNativeTarget "MatrixHabit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B20000000000000000000001 /* Debug */,
+				B20000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A80000000000000000000002 /* Build configuration list for PBXProject "MatrixHabit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B10000000000000000000001 /* Debug */,
+				B10000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A00000000000000000000001 /* Project object */;
+}
