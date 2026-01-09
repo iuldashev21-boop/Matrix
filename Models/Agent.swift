@@ -40,6 +40,11 @@ final class Agent {
         return checkIns.contains { Calendar.current.startOfDay(for: $0.date) == today && $0.isSuccess }
     }
 
+    var relapsedToday: Bool {
+        let today = Calendar.current.startOfDay(for: Date())
+        return checkIns.contains { Calendar.current.startOfDay(for: $0.date) == today && !$0.isSuccess }
+    }
+
     var progressPercent: Double {
         Double(currentStreak) / Double(targetDays) * 100
     }

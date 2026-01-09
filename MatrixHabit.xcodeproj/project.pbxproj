@@ -39,6 +39,14 @@
 		A10000000000000000000034 /* Achievement.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000034 /* Achievement.swift */; };
 		A10000000000000000000035 /* AchievementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000035 /* AchievementManager.swift */; };
 		A10000000000000000000036 /* AchievementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000036 /* AchievementsView.swift */; };
+		A10000000000000000000037 /* HabitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000037 /* HabitDetailView.swift */; };
+		A10000000000000000000038 /* CollapsibleSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000038 /* CollapsibleSection.swift */; };
+		A10000000000000000000039 /* SidequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000039 /* SidequestManager.swift */; };
+		A10000000000000000000040 /* ConstructLoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000040 /* ConstructLoaderView.swift */; };
+		A10000000000000000000041 /* OracleInsightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000041 /* OracleInsightView.swift */; };
+		A10000000000000000000042 /* CodeBreakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000042 /* CodeBreakerView.swift */; };
+		A10000000000000000000043 /* CombatTrainingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000043 /* CombatTrainingView.swift */; };
+		A10000000000000000000044 /* SystemMaintenanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000044 /* SystemMaintenanceView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +86,14 @@
 		A20000000000000000000034 /* Achievement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Achievement.swift; sourceTree = "<group>"; };
 		A20000000000000000000035 /* AchievementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementManager.swift; sourceTree = "<group>"; };
 		A20000000000000000000036 /* AchievementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementsView.swift; sourceTree = "<group>"; };
+		A20000000000000000000037 /* HabitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDetailView.swift; sourceTree = "<group>"; };
+		A20000000000000000000038 /* CollapsibleSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleSection.swift; sourceTree = "<group>"; };
+		A20000000000000000000039 /* SidequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidequestManager.swift; sourceTree = "<group>"; };
+		A20000000000000000000040 /* ConstructLoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstructLoaderView.swift; sourceTree = "<group>"; };
+		A20000000000000000000041 /* OracleInsightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OracleInsightView.swift; sourceTree = "<group>"; };
+		A20000000000000000000042 /* CodeBreakerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBreakerView.swift; sourceTree = "<group>"; };
+		A20000000000000000000043 /* CombatTrainingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombatTrainingView.swift; sourceTree = "<group>"; };
+		A20000000000000000000044 /* SystemMaintenanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMaintenanceView.swift; sourceTree = "<group>"; };
 		A30000000000000000000001 /* MatrixHabit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatrixHabit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -142,6 +158,7 @@
 				A20000000000000000000009 /* HabitCard.swift */,
 				A20000000000000000000010 /* ProgressBar.swift */,
 				A20000000000000000000011 /* EmptyStateView.swift */,
+				A20000000000000000000038 /* CollapsibleSection.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -176,6 +193,7 @@
 				A20000000000000000000019 /* DateHelpers.swift */,
 				A20000000000000000000020 /* UserProfile.swift */,
 				A20000000000000000000024 /* RankSystem.swift */,
+				A20000000000000000000039 /* SidequestManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -195,8 +213,22 @@
 				A20000000000000000000032 /* AnomalyReportsView.swift */,
 				A20000000000000000000033 /* AwakeningView.swift */,
 				A20000000000000000000036 /* AchievementsView.swift */,
+				A20000000000000000000037 /* HabitDetailView.swift */,
+				A20000000000000000000040 /* ConstructLoaderView.swift */,
+				A50000000000000000000010 /* Sidequests */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		A50000000000000000000010 /* Sidequests */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000041 /* OracleInsightView.swift */,
+				A20000000000000000000042 /* CodeBreakerView.swift */,
+				A20000000000000000000043 /* CombatTrainingView.swift */,
+				A20000000000000000000044 /* SystemMaintenanceView.swift */,
+			);
+			path = Sidequests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -303,6 +335,14 @@
 				A10000000000000000000034 /* Achievement.swift in Sources */,
 				A10000000000000000000035 /* AchievementManager.swift in Sources */,
 				A10000000000000000000036 /* AchievementsView.swift in Sources */,
+				A10000000000000000000037 /* HabitDetailView.swift in Sources */,
+				A10000000000000000000038 /* CollapsibleSection.swift in Sources */,
+				A10000000000000000000039 /* SidequestManager.swift in Sources */,
+				A10000000000000000000040 /* ConstructLoaderView.swift in Sources */,
+				A10000000000000000000041 /* OracleInsightView.swift in Sources */,
+				A10000000000000000000042 /* CodeBreakerView.swift in Sources */,
+				A10000000000000000000043 /* CombatTrainingView.swift in Sources */,
+				A10000000000000000000044 /* SystemMaintenanceView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

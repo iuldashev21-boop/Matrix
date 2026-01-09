@@ -24,6 +24,9 @@ struct DialInView: View {
     @State private var codeRainSpeed: Double = 0.3
     @State private var glitchOffset: CGSize = .zero
     @State private var showEMPRecovery: Bool = false
+    @State private var showBreachConfirm: Bool = false
+    @State private var showBreachMessage: Bool = false
+    @State private var breachComplete: Bool = false
 
     // MARK: - Constants
     private let holdDuration: Double = 1.5
@@ -43,8 +46,12 @@ struct DialInView: View {
 
     private var isAlreadyCompleted: Bool {
         if let p = power { return p.completedToday }
-        if let a = agent { return a.resistedToday }
+        if let a = agent { return a.resistedToday || a.relapsedToday }
         return false
+    }
+
+    private var hasRelapsedToday: Bool {
+        agent?.relapsedToday ?? false
     }
 
     private var needsRecovery: Bool {
@@ -59,6 +66,7 @@ struct DialInView: View {
 
     private var statusText: String {
         if isCompleted { return "SIGNAL LOCKED" }
+        if breachComplete || hasRelapsedToday { return "BREACH LOGGED" }
         if isHolding { return "UPLOADING..." }
         if isAlreadyCompleted { return "ALREADY SYNCED" }
         return "HOLD TO SYNC"
@@ -188,19 +196,34 @@ struct DialInView: View {
 
                 Spacer()
 
-                // Progress indicator
-                if !isCompleted && !isAlreadyCompleted {
-                    Text("DAY \(currentStreak + 1) OF \(Theme.habitFormationDays)")
-                        .font(.system(size: 12, design: .monospaced))
-                        .foregroundColor(Color.mediumGray)
-                }
-
                 // XP earned indicator
                 if isCompleted {
                     Text("+10 XP")
                         .font(.system(size: 18, weight: .bold, design: .monospaced))
                         .foregroundColor(accentColor)
                         .transition(.scale.combined(with: .opacity))
+                }
+
+                // Report Breach button (Agents only, hidden if already relapsed today)
+                if !isPower && !isCompleted && !isAlreadyCompleted && !breachComplete && !hasRelapsedToday {
+                    Button(action: { showBreachConfirm = true }) {
+                        HStack(spacing: Spacing.xs) {
+                            Image(systemName: "exclamationmark.triangle")
+                                .font(.system(size: 14))
+                            Text("REPORT BREACH")
+                                .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        }
+                        .foregroundColor(Color.danger)
+                        .padding(.horizontal, Spacing.lg)
+                        .padding(.vertical, Spacing.sm)
+                        .background(Color.charcoal)
+                        .cornerRadius(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.danger.opacity(0.5), lineWidth: 1)
+                        )
+                    }
+                    .padding(.top, Spacing.md)
                 }
 
                 Spacer()
@@ -211,6 +234,20 @@ struct DialInView: View {
                 OracleRewardView(isPresented: $showOracleReward)
                     .transition(.opacity)
             }
+
+            // Breach Message Overlay
+            if showBreachMessage {
+                BreachMessageOverlay(isPresented: $showBreachMessage)
+                    .transition(.opacity)
+            }
+        }
+        .alert("CONFIRM BREACH", isPresented: $showBreachConfirm) {
+            Button("CANCEL", role: .cancel) { }
+            Button("CONFIRM", role: .destructive) {
+                handleBreach()
+            }
+        } message: {
+            Text("Reporting a breach will reset your current streak. Your longest streak will be preserved. Be honest with yourself.")
         }
         .onChange(of: isHolding) { _, holding in
             if holding {
@@ -395,6 +432,134 @@ struct DialInView: View {
 
         modelContext.insert(checkIn)
         try? modelContext.save()
+    }
+
+    // MARK: - Breach Logic (Agent Relapse)
+
+    private func handleBreach() {
+        guard let a = agent else { return }
+
+        // Log failed check-in
+        let checkIn = CheckIn(date: Date(), isSuccess: false)
+        checkIn.agent = a
+        a.checkIns.append(checkIn)
+
+        modelContext.insert(checkIn)
+        try? modelContext.save()
+
+        // Mark breach complete
+        breachComplete = true
+
+        // Haptic feedback
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.warning)
+
+        // Glitch effect
+        triggerGlitch()
+
+        // Show encouraging message
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            withAnimation {
+                showBreachMessage = true
+            }
+        }
+    }
+}
+
+// MARK: - Breach Message Overlay
+
+struct BreachMessageOverlay: View {
+    @Binding var isPresented: Bool
+    @State private var glitchOffset: CGSize = .zero
+    @State private var showContent: Bool = false
+
+    private let encouragements = [
+        "BREACH LOGGED.\nFIREWALL REBUILDING.\nDAY 1.",
+        "AGENT INFILTRATION DETECTED.\nRESETTING DEFENSES.\nYOU ARE STILL IN CONTROL.",
+        "SYSTEM COMPROMISED.\nINITIATING RECOVERY PROTOCOL.\nTHE FIGHT CONTINUES.",
+        "THE MATRIX HAD YOU...\nBUT NOT FOR LONG.\nRECONNECTING TO ZION.",
+        "SIGNAL LOST.\nREBOOTING RESISTANCE.\nEVERY DAY IS A NEW CHANCE.",
+        "BREACH ACKNOWLEDGED.\nHONESTY IS STRENGTH.\nREBUILD STRONGER."
+    ]
+
+    private var randomEncouragement: String {
+        encouragements.randomElement() ?? encouragements[0]
+    }
+
+    var body: some View {
+        ZStack {
+            // Dark overlay
+            Color.black.opacity(0.9)
+                .ignoresSafeArea()
+                .onTapGesture {
+                    withAnimation {
+                        isPresented = false
+                    }
+                }
+
+            if showContent {
+                VStack(spacing: Spacing.xl) {
+                    // Warning icon
+                    Image(systemName: "shield.slash")
+                        .font(.system(size: 50))
+                        .foregroundColor(Color.agentRed)
+                        .offset(glitchOffset)
+
+                    // Message
+                    Text(randomEncouragement)
+                        .font(.system(size: 18, weight: .medium, design: .monospaced))
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, Spacing.xl)
+                        .offset(glitchOffset)
+
+                    // Encouraging subtext
+                    Text("Your longest streak is preserved.\nThis is not failure—it's data.")
+                        .font(.system(size: 12, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+                        .multilineTextAlignment(.center)
+                        .padding(.top, Spacing.sm)
+
+                    // Dismiss button
+                    Button(action: {
+                        withAnimation {
+                            isPresented = false
+                        }
+                    }) {
+                        Text("CONTINUE")
+                            .font(.system(size: 14, weight: .bold, design: .monospaced))
+                            .foregroundColor(Color.deepBlack)
+                            .padding(.horizontal, Spacing.xl)
+                            .padding(.vertical, Spacing.sm)
+                            .background(Color.agentRed)
+                            .cornerRadius(8)
+                    }
+                    .padding(.top, Spacing.md)
+                }
+            }
+        }
+        .onAppear {
+            glitchIn()
+        }
+    }
+
+    private func glitchIn() {
+        // Initial glitch effect
+        for i in 0..<8 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.03) {
+                glitchOffset = CGSize(
+                    width: CGFloat.random(in: -8...8),
+                    height: CGFloat.random(in: -8...8)
+                )
+            }
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            withAnimation(.easeOut(duration: 0.1)) {
+                glitchOffset = .zero
+                showContent = true
+            }
+        }
     }
 }
 

@@ -59,8 +59,11 @@ struct SignalAnalysisView: View {
                     // Operator Level Card
                     operatorLevelCard
 
-                    // The Grid
+                    // The Grid (Compact)
                     gridSection
+
+                    // Program Analytics (per-habit)
+                    programAnalyticsSection
 
                     // System Metrics
                     metricsSection
@@ -199,40 +202,124 @@ struct SignalAnalysisView: View {
         .padding(.horizontal, Spacing.md)
     }
 
-    // MARK: - Grid Section
+    // MARK: - Grid Section (Compact 28-day view)
 
     private var gridSection: some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
-            // Section header
-            Text("// 66-DAY PROTOCOL")
-                .font(.system(size: 12, weight: .bold, design: .monospaced))
-                .foregroundColor(Color.lightGray)
-                .padding(.horizontal, Spacing.md)
+            // Section header with info
+            HStack {
+                Text("// 66-DAY PROTOCOL")
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.lightGray)
+                Spacer()
+                Text("LAST 4 WEEKS")
+                    .font(.system(size: 10, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+            }
+            .padding(.horizontal, Spacing.md)
 
             // Day labels
-            HStack(spacing: Spacing.xs) {
+            HStack(spacing: 2) {
                 ForEach(["M", "T", "W", "T", "F", "S", "S"], id: \.self) { day in
                     Text(day)
-                        .font(.system(size: 10, design: .monospaced))
+                        .font(.system(size: 8, design: .monospaced))
                         .foregroundColor(Color.mediumGray)
                         .frame(maxWidth: .infinity)
                 }
             }
             .padding(.horizontal, Spacing.md)
 
-            // Grid
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: Spacing.xs), count: 7), spacing: Spacing.xs) {
-                ForEach(0..<70, id: \.self) { index in
+            // Compact Grid (28 days = 4 weeks)
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 2), count: 7), spacing: 2) {
+                ForEach(0..<28, id: \.self) { index in
                     GridCell(
                         state: getCellState(for: index),
                         isCurrentDay: isCurrentDay(index: index),
                         appeared: gridAppeared,
                         delay: Double(index) * 0.01
                     )
+                    .frame(height: 16)
                 }
             }
             .padding(.horizontal, Spacing.md)
         }
+    }
+
+    // MARK: - Program Analytics Section
+
+    private var programAnalyticsSection: some View {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
+            Text("// PROGRAM ANALYTICS")
+                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                .foregroundColor(Color.lightGray)
+                .padding(.horizontal, Spacing.md)
+
+            if powers.isEmpty && agents.isEmpty {
+                Text("No programs loaded")
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                    .padding(.horizontal, Spacing.md)
+            } else {
+                VStack(spacing: Spacing.sm) {
+                    // Powers
+                    ForEach(powers) { power in
+                        HabitAnalyticsCard(
+                            name: power.name,
+                            icon: power.icon,
+                            currentStreak: power.currentStreak,
+                            longestStreak: power.longestStreak,
+                            completionRate: calculateCompletionRate(checkIns: power.checkIns),
+                            last7Days: getLast7Days(checkIns: power.checkIns),
+                            isPower: true
+                        )
+                    }
+
+                    // Agents
+                    ForEach(agents) { agent in
+                        HabitAnalyticsCard(
+                            name: agent.name,
+                            icon: agent.icon,
+                            currentStreak: agent.currentStreak,
+                            longestStreak: agent.longestStreak,
+                            completionRate: calculateCompletionRate(checkIns: agent.checkIns),
+                            last7Days: getLast7Days(checkIns: agent.checkIns),
+                            isPower: false
+                        )
+                    }
+                }
+                .padding(.horizontal, Spacing.md)
+            }
+        }
+    }
+
+    // MARK: - Analytics Helpers
+
+    private func calculateCompletionRate(checkIns: [CheckIn]) -> Int {
+        guard !checkIns.isEmpty else { return 0 }
+        let successful = checkIns.filter { $0.isSuccess }.count
+        return Int((Double(successful) / Double(checkIns.count)) * 100)
+    }
+
+    private func getLast7Days(checkIns: [CheckIn]) -> [GridCellState] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+
+        return (0..<7).map { dayOffset in
+            guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: today) else {
+                return .empty
+            }
+
+            let hasSuccess = checkIns.contains {
+                calendar.startOfDay(for: $0.date) == date && $0.isSuccess
+            }
+            let hasFail = checkIns.contains {
+                calendar.startOfDay(for: $0.date) == date && !$0.isSuccess
+            }
+
+            if hasSuccess { return .success }
+            if hasFail { return .fail }
+            return .empty
+        }.reversed()
     }
 
     // MARK: - Metrics Section
@@ -378,6 +465,135 @@ struct MetricItem: View {
         .padding(.vertical, Spacing.md)
         .background(Color.darkGray)
         .cornerRadius(12)
+    }
+}
+
+// MARK: - Habit Analytics Card
+
+struct HabitAnalyticsCard: View {
+    let name: String
+    let icon: String
+    let currentStreak: Int
+    let longestStreak: Int
+    let completionRate: Int
+    let last7Days: [GridCellState]
+    let isPower: Bool
+
+    private var accentColor: Color {
+        isPower ? Color.matrixGreen : Color.agentRed
+    }
+
+    var body: some View {
+        VStack(spacing: Spacing.sm) {
+            // Header row
+            HStack(spacing: Spacing.sm) {
+                // Icon
+                Image(systemName: icon)
+                    .font(.system(size: 16))
+                    .foregroundColor(accentColor)
+                    .frame(width: 28, height: 28)
+                    .background(accentColor.opacity(0.2))
+                    .cornerRadius(6)
+
+                // Name
+                Text(name.uppercased())
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+
+                Spacer()
+
+                // Type badge
+                Text(isPower ? "HACK" : "AGENT")
+                    .font(.system(size: 8, weight: .bold, design: .monospaced))
+                    .foregroundColor(accentColor)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(accentColor.opacity(0.2))
+                    .cornerRadius(4)
+            }
+
+            // Stats row
+            HStack(spacing: Spacing.md) {
+                // Current Streak
+                VStack(spacing: 2) {
+                    Text("\(currentStreak)")
+                        .font(.system(size: 18, weight: .bold, design: .monospaced))
+                        .foregroundColor(accentColor)
+                    Text("STREAK")
+                        .font(.system(size: 8, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+                }
+                .frame(maxWidth: .infinity)
+
+                // Divider
+                Rectangle()
+                    .fill(Color.charcoal)
+                    .frame(width: 1, height: 30)
+
+                // Longest
+                VStack(spacing: 2) {
+                    Text("\(longestStreak)")
+                        .font(.system(size: 18, weight: .bold, design: .monospaced))
+                        .foregroundColor(.white)
+                    Text("BEST")
+                        .font(.system(size: 8, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+                }
+                .frame(maxWidth: .infinity)
+
+                // Divider
+                Rectangle()
+                    .fill(Color.charcoal)
+                    .frame(width: 1, height: 30)
+
+                // Completion Rate
+                VStack(spacing: 2) {
+                    Text("\(completionRate)%")
+                        .font(.system(size: 18, weight: .bold, design: .monospaced))
+                        .foregroundColor(.white)
+                    Text("RATE")
+                        .font(.system(size: 8, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+                }
+                .frame(maxWidth: .infinity)
+
+                // Divider
+                Rectangle()
+                    .fill(Color.charcoal)
+                    .frame(width: 1, height: 30)
+
+                // 7-day trend
+                VStack(spacing: 2) {
+                    HStack(spacing: 2) {
+                        ForEach(0..<7, id: \.self) { index in
+                            Circle()
+                                .fill(dotColor(for: last7Days.indices.contains(index) ? last7Days[index] : .empty))
+                                .frame(width: 6, height: 6)
+                        }
+                    }
+                    Text("7 DAYS")
+                        .font(.system(size: 8, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+                }
+            }
+        }
+        .padding(Spacing.sm)
+        .background(Color.darkGray)
+        .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(accentColor.opacity(0.3), lineWidth: 1)
+        )
+    }
+
+    private func dotColor(for state: GridCellState) -> Color {
+        switch state {
+        case .success: return isPower ? Color.matrixGreen : Color.agentRed
+        case .fail: return Color.agentRed.opacity(0.5)
+        case .missed: return Color.charcoal
+        case .empty: return Color.charcoal
+        }
     }
 }
 

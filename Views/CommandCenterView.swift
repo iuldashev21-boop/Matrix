@@ -12,7 +12,14 @@ struct CommandCenterView: View {
     @State private var selectedPower: Power? = nil
     @State private var selectedAgent: Agent? = nil
     @State private var showWhiteRabbit: Bool = false
+    @State private var showHabitTip: Bool = false
     @StateObject private var rabbitManager = WhiteRabbitManager()
+    @AppStorage("hasSeenHabitTip") private var hasSeenHabitTip: Bool = false
+
+    // Collapsible section states
+    @State private var isPowersExpanded: Bool = true
+    @State private var isAgentsExpanded: Bool = true
+    @State private var isSidequestsExpanded: Bool = false
 
     private var totalSignalStrength: Int {
         let powerStreak = powers.reduce(0) { $0 + $1.currentStreak }
@@ -28,6 +35,30 @@ struct CommandCenterView: View {
     private var codeRainSpeed: Double {
         // Base 0.5, faster at high streaks
         min(3.0, 0.5 + Double(totalSignalStrength) * 0.1)
+    }
+
+    // Completion tracking
+    private var allPowersCompleted: Bool {
+        !powers.isEmpty && powers.allSatisfy { $0.completedToday }
+    }
+
+    private var allAgentsCompleted: Bool {
+        !agents.isEmpty && agents.allSatisfy { $0.resistedToday || $0.relapsedToday }
+    }
+
+    private var allHabitsCompleted: Bool {
+        let hasHabits = !powers.isEmpty || !agents.isEmpty
+        let powersOk = powers.isEmpty || allPowersCompleted
+        let agentsOk = agents.isEmpty || allAgentsCompleted
+        return hasHabits && powersOk && agentsOk
+    }
+
+    private var powersCompletedCount: Int {
+        powers.filter { $0.completedToday }.count
+    }
+
+    private var agentsCompletedCount: Int {
+        agents.filter { $0.resistedToday || $0.relapsedToday }.count
     }
 
     var body: some View {
@@ -76,11 +107,84 @@ struct CommandCenterView: View {
         .sheet(isPresented: $showSettings) {
             ZionMainframeView()
         }
-        .fullScreenCover(item: $selectedPower) { power in
-            DialInView(power: power)
+        .sheet(item: $selectedPower) { power in
+            DialInView(power: power, agent: nil)
         }
-        .fullScreenCover(item: $selectedAgent) { agent in
-            DialInView(agent: agent)
+        .sheet(item: $selectedAgent) { agent in
+            DialInView(power: nil, agent: agent)
+        }
+        .overlay {
+            // First-time tip overlay
+            if showHabitTip {
+                habitTipOverlay
+            }
+        }
+        .onChange(of: powers.count + agents.count) { oldValue, newValue in
+            // Show tip when first habit is created
+            if oldValue == 0 && newValue > 0 && !hasSeenHabitTip {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    withAnimation {
+                        showHabitTip = true
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Habit Tip Overlay
+
+    private var habitTipOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.7)
+                .ignoresSafeArea()
+                .onTapGesture {
+                    dismissTip()
+                }
+
+            VStack(spacing: Spacing.md) {
+                Image(systemName: "hand.tap")
+                    .font(.system(size: 40))
+                    .foregroundColor(Color.matrixGreen)
+
+                Text("// SYSTEM TIP")
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.matrixGreen)
+
+                Text("TAP ANY PROGRAM TO ACCESS\nMODIFICATION PROTOCOLS")
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+
+                Text("Edit, view stats, or delete programs")
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+
+                Button(action: dismissTip) {
+                    Text("GOT IT")
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .foregroundColor(Color.deepBlack)
+                        .padding(.horizontal, Spacing.xl)
+                        .padding(.vertical, Spacing.sm)
+                        .background(Color.matrixGreen)
+                        .cornerRadius(8)
+                }
+                .padding(.top, Spacing.sm)
+            }
+            .padding(Spacing.xl)
+            .background(Color.charcoal)
+            .cornerRadius(Theme.cornerRadius)
+            .overlay(
+                RoundedRectangle(cornerRadius: Theme.cornerRadius)
+                    .stroke(Color.matrixGreen, lineWidth: 1)
+            )
+            .padding(.horizontal, Spacing.xl)
+        }
+    }
+
+    private func dismissTip() {
+        withAnimation {
+            showHabitTip = false
+            hasSeenHabitTip = true
         }
     }
 
@@ -93,24 +197,33 @@ struct CommandCenterView: View {
 
             // Content
             ScrollView {
-                VStack(spacing: Spacing.lg) {
-                    // Powers Section
+                VStack(spacing: Spacing.md) {
+                    // Powers Section (collapsible)
                     if !powers.isEmpty {
-                        sectionView(
+                        CollapsibleSection(
                             title: "// LOADED HACKS",
-                            items: powers,
-                            isPower: true
-                        )
+                            subtitle: allPowersCompleted ? "ALL SYNCED" : "\(powersCompletedCount)/\(powers.count) UPLOADED",
+                            accentColor: Color.matrixGreen,
+                            isExpanded: $isPowersExpanded
+                        ) {
+                            powersContent
+                        }
                     }
 
-                    // Agents Section
+                    // Agents Section (collapsible)
                     if !agents.isEmpty {
-                        sectionView(
+                        CollapsibleSection(
                             title: "// DETECTED AGENTS",
-                            items: agents,
-                            isPower: false
-                        )
+                            subtitle: allAgentsCompleted ? "ALL CONTAINED" : "\(agentsCompletedCount)/\(agents.count) RESISTED",
+                            accentColor: Color.agentRed,
+                            isExpanded: $isAgentsExpanded
+                        ) {
+                            agentsContent
+                        }
                     }
+
+                    // Sidequests Section (collapsible, available after habits done)
+                    sidequestsSection
 
                     // Empty state
                     if powers.isEmpty && agents.isEmpty {
@@ -120,6 +233,84 @@ struct CommandCenterView: View {
                     Spacer(minLength: 100)
                 }
                 .padding(.top, Spacing.md)
+            }
+        }
+        .onChange(of: allPowersCompleted) { _, completed in
+            if completed {
+                withAnimation(.easeInOut(duration: 0.3).delay(0.5)) {
+                    isPowersExpanded = false
+                }
+            }
+        }
+        .onChange(of: allAgentsCompleted) { _, completed in
+            if completed {
+                withAnimation(.easeInOut(duration: 0.3).delay(0.5)) {
+                    isAgentsExpanded = false
+                }
+            }
+        }
+    }
+
+    // MARK: - Powers Content
+
+    private var powersContent: some View {
+        VStack(spacing: Spacing.sm) {
+            ForEach(powers) { power in
+                let isCompleted = power.completedToday
+                HabitCard(
+                    title: power.name,
+                    icon: power.icon,
+                    currentDay: power.currentStreak,
+                    targetDays: power.targetDays,
+                    isCompletedToday: isCompleted,
+                    isPower: true
+                )
+                .padding(.horizontal, Spacing.md)
+                .onTapGesture {
+                    guard !isCompleted else { return }
+                    selectedPower = power
+                }
+            }
+        }
+    }
+
+    // MARK: - Agents Content
+
+    private var agentsContent: some View {
+        VStack(spacing: Spacing.sm) {
+            ForEach(agents) { agent in
+                let isCompleted = agent.resistedToday || agent.relapsedToday
+                HabitCard(
+                    title: agent.name,
+                    icon: agent.icon,
+                    currentDay: agent.currentStreak,
+                    targetDays: agent.targetDays,
+                    isCompletedToday: isCompleted,
+                    isPower: false
+                )
+                .padding(.horizontal, Spacing.md)
+                .onTapGesture {
+                    guard !isCompleted else { return }
+                    selectedAgent = agent
+                }
+            }
+        }
+    }
+
+    // MARK: - Sidequests Section
+
+    private var sidequestsSection: some View {
+        VStack(spacing: Spacing.sm) {
+            SidequestSectionHeader(
+                isAvailable: allHabitsCompleted,
+                isExpanded: $isSidequestsExpanded,
+                xpEarned: SidequestManager.sidequestXPToday,
+                xpCap: SidequestManager.dailyXPCap
+            )
+
+            if isSidequestsExpanded && allHabitsCompleted {
+                ConstructLoaderView()
+                    .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
     }
@@ -162,37 +353,6 @@ struct CommandCenterView: View {
         .padding(.horizontal, Spacing.md)
         .padding(.top, Spacing.lg)
         .padding(.bottom, Spacing.sm)
-    }
-
-    // MARK: - Section View
-
-    private func sectionView(title: String, items: [any HabitProtocol], isPower: Bool) -> some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
-            Text(title)
-                .font(.system(size: 12, weight: .bold, design: .monospaced))
-                .foregroundColor(Color.lightGray)
-                .padding(.horizontal, Spacing.md)
-
-            ForEach(items.indices, id: \.self) { index in
-                let item = items[index]
-                HabitCard(
-                    title: item.name,
-                    icon: item.icon,
-                    currentDay: item.currentStreak,
-                    targetDays: item.targetDays,
-                    isCompletedToday: isPower ? (item as! Power).completedToday : (item as! Agent).resistedToday,
-                    isPower: isPower
-                )
-                .padding(.horizontal, Spacing.md)
-                .onTapGesture {
-                    if isPower {
-                        selectedPower = items[index] as? Power
-                    } else {
-                        selectedAgent = items[index] as? Agent
-                    }
-                }
-            }
-        }
     }
 
     // MARK: - Empty State
