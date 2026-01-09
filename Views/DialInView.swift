@@ -190,7 +190,7 @@ struct DialInView: View {
 
                 // Progress indicator
                 if !isCompleted && !isAlreadyCompleted {
-                    Text("DAY \(currentStreak + 1) OF 66")
+                    Text("DAY \(currentStreak + 1) OF \(Theme.habitFormationDays)")
                         .font(.system(size: 12, design: .monospaced))
                         .foregroundColor(Color.mediumGray)
                 }

@@ -19,7 +19,9 @@ struct MatrixHabitApp: App {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
             // Log error and create in-memory fallback to prevent crash
+            #if DEBUG
             print("Error creating ModelContainer: \(error). Using in-memory storage.")
+            #endif
             let fallbackConfig = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
             do {
                 return try ModelContainer(for: schema, configurations: [fallbackConfig])

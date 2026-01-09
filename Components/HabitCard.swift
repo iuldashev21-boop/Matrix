@@ -53,7 +53,7 @@ struct HabitCard: View {
                 title: "Morning Workout",
                 icon: "figure.run",
                 currentDay: 12,
-                targetDays: 66,
+                targetDays: Theme.habitFormationDays,
                 isCompletedToday: true,
                 isPower: true
             )
@@ -61,7 +61,7 @@ struct HabitCard: View {
                 title: "No Doomscrolling",
                 icon: "arrow.down.circle",
                 currentDay: 5,
-                targetDays: 66,
+                targetDays: Theme.habitFormationDays,
                 isCompletedToday: false,
                 isPower: false
             )

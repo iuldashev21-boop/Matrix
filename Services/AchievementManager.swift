@@ -145,7 +145,7 @@ class AchievementManager: ObservableObject {
         if streak >= 14 { unlock("streak_14") }
         if streak >= 21 { unlock("streak_21") }
         if streak >= 30 { unlock("streak_30") }
-        if streak >= 66 { unlock("streak_66") }
+        if streak >= Theme.habitFormationDays { unlock("streak_66") }
     }
 
     // MARK: - Special Achievements
@@ -180,8 +180,8 @@ class AchievementManager: ObservableObject {
 
         guard let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today)) else { return }
 
-        let saturday = calendar.date(byAdding: .day, value: 6, to: weekStart)!
-        let sunday = calendar.date(byAdding: .day, value: 7, to: weekStart)!
+        guard let saturday = calendar.date(byAdding: .day, value: 6, to: weekStart),
+              let sunday = calendar.date(byAdding: .day, value: 7, to: weekStart) else { return }
 
         var saturdayLogged = false
         var sundayLogged = false

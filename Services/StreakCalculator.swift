@@ -24,14 +24,21 @@ enum StreakCalculator {
         if daysDiff > 1 { return 0 }
 
         var streak = 0
-        var expectedDate = daysDiff == 0 ? today : calendar.date(byAdding: .day, value: -1, to: today)!
+        var expectedDate: Date
+        if daysDiff == 0 {
+            expectedDate = today
+        } else {
+            guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else { return 0 }
+            expectedDate = yesterday
+        }
 
         for checkIn in sorted {
             let checkInDay = calendar.startOfDay(for: checkIn.date)
 
             if checkInDay == expectedDate {
                 streak += 1
-                expectedDate = calendar.date(byAdding: .day, value: -1, to: expectedDate)!
+                guard let previousDay = calendar.date(byAdding: .day, value: -1, to: expectedDate) else { break }
+                expectedDate = previousDay
             } else if checkInDay < expectedDate {
                 // Gap found, streak breaks
                 break

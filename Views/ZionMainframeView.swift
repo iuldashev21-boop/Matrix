@@ -291,7 +291,9 @@ struct ZionMainframeView: View {
             try modelContext.delete(model: CheckIn.self)
             try modelContext.save()
         } catch {
+            #if DEBUG
             print("Failed to reset data: \(error)")
+            #endif
         }
 
         // Clear UserDefaults

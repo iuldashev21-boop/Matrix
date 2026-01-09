@@ -149,23 +149,20 @@ class AnomalyManager: ObservableObject {
 
     func unlockReportForMilestone(day: Int) {
         // Unlock reports at specific milestones
-        let reportToUnlock: String?
+        let milestones: [Int: String] = [
+            3: "001",
+            7: "002",
+            14: "003",
+            21: "004",
+            30: "005",
+            42: "006",
+            50: "007",
+            60: "008",
+            Theme.habitFormationDays: "009",
+            100: "010"
+        ]
 
-        switch day {
-        case 3: reportToUnlock = "001"
-        case 7: reportToUnlock = "002"
-        case 14: reportToUnlock = "003"
-        case 21: reportToUnlock = "004"
-        case 30: reportToUnlock = "005"
-        case 42: reportToUnlock = "006"
-        case 50: reportToUnlock = "007"
-        case 60: reportToUnlock = "008"
-        case 66: reportToUnlock = "009"
-        case 100: reportToUnlock = "010"
-        default: reportToUnlock = nil
-        }
-
-        if let id = reportToUnlock, !unlockedReports.contains(id) {
+        if let id = milestones[day], !unlockedReports.contains(id) {
             startDecrypting(id)
         }
     }

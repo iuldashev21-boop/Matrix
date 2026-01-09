@@ -259,7 +259,7 @@ struct CodeRainBackground: View {
 
     private func randomMatrixChar() -> String {
         let matrixChars = "ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        return String(matrixChars.randomElement()!)
+        return String(matrixChars.randomElement() ?? "0")
     }
 }
 

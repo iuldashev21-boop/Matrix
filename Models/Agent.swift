@@ -19,7 +19,7 @@ final class Agent {
         self.name = name
         self.icon = icon
         self.createdAt = Date()
-        self.targetDays = 66
+        self.targetDays = Theme.habitFormationDays
         self.isDefeated = false
         self.defeatedAt = nil
         self.checkIns = []
