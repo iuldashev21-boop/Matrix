@@ -15,6 +15,7 @@ struct EMPRecoveryView: View {
     @State private var burnProgress: Double = 0
     @State private var showSuccess: Bool = false
     @State private var glitchOffset: CGSize = .zero
+    @State private var showSaveError: Bool = false
 
     private var title: String {
         power?.name ?? agent?.name ?? "Unknown"
@@ -61,6 +62,16 @@ struct EMPRecoveryView: View {
         }
         .onAppear {
             triggerGlitch()
+        }
+        .alert("RECOVERY FAILED", isPresented: $showSaveError) {
+            Button("RETRY") {
+                // Retry will be handled by the action that triggered the error
+            }
+            Button("CANCEL", role: .cancel) {
+                dismiss()
+            }
+        } message: {
+            Text("Failed to save recovery. Please try again.")
         }
     }
 
@@ -284,10 +295,12 @@ struct EMPRecoveryView: View {
         let generator = UIImpactFeedbackGenerator(style: .heavy)
         generator.impactOccurred()
 
-        saveRecoveryCheckIn(note: "2X Effort Recovery")
-
-        withAnimation(.easeInOut(duration: 0.3)) {
-            showSuccess = true
+        if saveRecoveryCheckIn(note: "2X Effort Recovery") {
+            withAnimation(.easeInOut(duration: 0.3)) {
+                showSuccess = true
+            }
+        } else {
+            showSaveError = true
         }
     }
 
@@ -304,15 +317,19 @@ struct EMPRecoveryView: View {
 
         // Save after burn completes
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-            saveRecoveryCheckIn(note: "Debrief: \(debriefText)")
-
-            withAnimation(.easeInOut(duration: 0.3)) {
-                showSuccess = true
+            if saveRecoveryCheckIn(note: "Debrief: \(debriefText)") {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    showSuccess = true
+                }
+            } else {
+                isBurning = false
+                burnProgress = 0
+                showSaveError = true
             }
         }
     }
 
-    private func saveRecoveryCheckIn(note: String) {
+    private func saveRecoveryCheckIn(note: String) -> Bool {
         // Create a recovery check-in for yesterday
         let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date()
         let checkIn = CheckIn(date: yesterday, isSuccess: true, note: note)
@@ -326,10 +343,14 @@ struct EMPRecoveryView: View {
         }
 
         modelContext.insert(checkIn)
-        try? modelContext.save()
-
-        // Award reduced XP for recovery
-        UserProfile.addXP(5)
+        do {
+            try modelContext.save()
+            // Award reduced XP for recovery
+            UserProfile.addXP(5)
+            return true
+        } catch {
+            return false
+        }
     }
 
     private func triggerGlitch() {

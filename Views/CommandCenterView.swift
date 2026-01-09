@@ -769,6 +769,7 @@ struct AddHabitSheet: View {
     @State private var habitName: String = ""
     @State private var isAgent: Bool = false
     @State private var selectedIcon: String = "bolt"
+    @State private var showSaveError: Bool = false
 
     private let powerIcons = ["bolt", "figure.run", "book", "brain.head.profile", "drop.fill", "pencil.and.scribble"]
     private let agentIcons = ["xmark.shield", "iphone", "moon.zzz", "cup.and.saucer", "tv", "creditcard"]
@@ -829,8 +830,11 @@ struct AddHabitSheet: View {
                     // Upload Button
                     if !habitName.trimmingCharacters(in: .whitespaces).isEmpty {
                         PrimaryButton(title: "UPLOAD TO CORE") {
-                            createHabit()
-                            dismiss()
+                            if createHabit() {
+                                dismiss()
+                            } else {
+                                showSaveError = true
+                            }
                         }
                         .padding(.horizontal, Spacing.xl)
                         .padding(.bottom, Spacing.xl)
@@ -847,10 +851,15 @@ struct AddHabitSheet: View {
                         .foregroundColor(Color.matrixGreen)
                 }
             }
+            .alert("SAVE FAILED", isPresented: $showSaveError) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Failed to create habit. Please try again.")
+            }
         }
     }
 
-    private func createHabit() {
+    private func createHabit() -> Bool {
         let name = habitName.trimmingCharacters(in: .whitespaces)
         if isAgent {
             let agent = Agent(name: name, icon: selectedIcon)
@@ -859,7 +868,12 @@ struct AddHabitSheet: View {
             let power = Power(name: name, icon: selectedIcon)
             modelContext.insert(power)
         }
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+            return true
+        } catch {
+            return false
+        }
     }
 }
 

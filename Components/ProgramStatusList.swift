@@ -40,6 +40,7 @@ struct ProgramStatusRow: View {
     @State private var animatedProgress: CGFloat = 0
     @State private var glitchOffset: CGFloat = 0
     @State private var glitchOpacity: Double = 1.0
+    @State private var glitchTimer: Timer?
 
     private var accentColor: Color {
         program.isPower ? Color.matrixGreen : Color.agentRed
@@ -114,6 +115,11 @@ struct ProgramStatusRow: View {
                 startGlitchAnimation()
             }
         }
+        .onDisappear {
+            // Clean up timer to prevent memory leak
+            glitchTimer?.invalidate()
+            glitchTimer = nil
+        }
     }
 
     private var statusColor: Color {
@@ -125,7 +131,7 @@ struct ProgramStatusRow: View {
 
     private func startGlitchAnimation() {
         // Random glitch every 2-4 seconds
-        Timer.scheduledTimer(withTimeInterval: Double.random(in: 2...4), repeats: true) { timer in
+        glitchTimer = Timer.scheduledTimer(withTimeInterval: Double.random(in: 2...4), repeats: true) { _ in
             // Quick glitch sequence
             withAnimation(.linear(duration: 0.05)) {
                 glitchOffset = CGFloat.random(in: -3...3)

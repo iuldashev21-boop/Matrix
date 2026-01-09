@@ -203,11 +203,14 @@ struct SignalAnalysisView: View {
         // Add XP for 66 days (~60 successful days * 10 XP + achievements)
         UserProfile.addXP(750)
 
-        try? modelContext.save()
-
-        // Haptic feedback
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
+        do {
+            try modelContext.save()
+            // Haptic feedback
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.success)
+        } catch {
+            print("DEBUG: Failed to seed test data: \(error)")
+        }
     }
     #endif
 

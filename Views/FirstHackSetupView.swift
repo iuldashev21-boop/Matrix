@@ -14,6 +14,7 @@ struct FirstHackSetupView: View {
     @State private var uploadProgress: Double = 0
     @State private var showSuccess: Bool = false
     @State private var navigateToDashboard: Bool = false
+    @State private var showSaveError: Bool = false
 
     // MARK: - Constants
     private let headerFullText = "> CONSTRUCT V1.0"
@@ -187,6 +188,14 @@ struct FirstHackSetupView: View {
         .fullScreenCover(isPresented: $navigateToDashboard) {
             MainAppView()
         }
+        .alert("SAVE FAILED", isPresented: $showSaveError) {
+            Button("RETRY") {
+                handleUpload()
+            }
+            Button("CANCEL", role: .cancel) { }
+        } message: {
+            Text("Failed to create habit. Please try again.")
+        }
     }
 
     // MARK: - Animations
@@ -222,29 +231,42 @@ struct FirstHackSetupView: View {
 
         // Create the habit
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            createHabit()
+            let success = createHabit()
 
-            withAnimation {
-                isUploading = false
-                showSuccess = true
-            }
+            if success {
+                withAnimation {
+                    isUploading = false
+                    showSuccess = true
+                }
 
-            // Navigate to dashboard
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                UserProfile.completeOnboarding()
-                navigateToDashboard = true
+                // Navigate to dashboard
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    UserProfile.completeOnboarding()
+                    navigateToDashboard = true
+                }
+            } else {
+                withAnimation {
+                    isUploading = false
+                    uploadProgress = 0
+                }
+                showSaveError = true
             }
         }
     }
 
-    private func createHabit() {
+    private func createHabit() -> Bool {
         let habitName = selectedHabitName
         let icon = selectedPreset?.icon ?? "bolt"
 
         let power = Power(name: habitName, icon: icon)
         modelContext.insert(power)
 
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+            return true
+        } catch {
+            return false
+        }
     }
 }
 

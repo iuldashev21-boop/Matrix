@@ -11,6 +11,7 @@ struct HabitDetailView: View {
     @State private var showDeleteAlert: Bool = false
     @State private var showEditSheet: Bool = false
     @State private var showDialIn: Bool = false
+    @State private var showSaveError: Bool = false
     @StateObject private var achievementManager = AchievementManager()
 
     private var isPower: Bool { power != nil }
@@ -72,6 +73,11 @@ struct HabitDetailView: View {
             }
         } message: {
             Text("This will permanently remove \(name) and all associated data. This cannot be undone.")
+        }
+        .alert("DELETE FAILED", isPresented: $showSaveError) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Failed to delete habit. Please try again.")
         }
         .sheet(isPresented: $showEditSheet) {
             EditHabitSheet(power: power, agent: agent)
@@ -266,12 +272,15 @@ struct HabitDetailView: View {
         } else if let a = agent {
             modelContext.delete(a)
         }
-        try? modelContext.save()
 
-        // Trigger achievement
-        achievementManager.checkDeleteHabitAchievement()
-
-        dismiss()
+        do {
+            try modelContext.save()
+            // Trigger achievement
+            achievementManager.checkDeleteHabitAchievement()
+            dismiss()
+        } catch {
+            showSaveError = true
+        }
     }
 }
 
@@ -306,6 +315,7 @@ struct EditHabitSheet: View {
 
     @State private var habitName: String = ""
     @State private var selectedIcon: String = ""
+    @State private var showSaveError: Bool = false
 
     private var isPower: Bool { power != nil }
     private var accentColor: Color { isPower ? Color.matrixGreen : Color.agentRed }
@@ -390,6 +400,11 @@ struct EditHabitSheet: View {
             habitName = power?.name ?? agent?.name ?? ""
             selectedIcon = power?.icon ?? agent?.icon ?? ""
         }
+        .alert("SAVE FAILED", isPresented: $showSaveError) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Failed to save changes. Please try again.")
+        }
     }
 
     private func saveChanges() {
@@ -403,8 +418,12 @@ struct EditHabitSheet: View {
             a.icon = selectedIcon
         }
 
-        try? modelContext.save()
-        dismiss()
+        do {
+            try modelContext.save()
+            dismiss()
+        } catch {
+            showSaveError = true
+        }
     }
 }
 
