@@ -48,6 +48,48 @@ struct SignalAnalysisView: View {
         RankSystem.xpForNextLevel(UserProfile.totalXP)
     }
 
+    // MARK: - P2: Weekly Summary Stats
+
+    private var weeklyStats: (completed: Int, total: Int, rate: Int, vsLastWeek: Int?) {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+
+        // This week: last 7 days including today
+        guard let weekStart = calendar.date(byAdding: .day, value: -6, to: today) else {
+            return (0, 0, 0, nil)
+        }
+
+        // Last week: 7-14 days ago
+        guard let lastWeekStart = calendar.date(byAdding: .day, value: -13, to: today),
+              let lastWeekEnd = calendar.date(byAdding: .day, value: -7, to: today) else {
+            return (0, 0, 0, nil)
+        }
+
+        let totalHabits = powers.count + agents.count
+        let totalPossible = totalHabits * 7
+
+        // This week's check-ins
+        let thisWeekCheckIns = checkIns.filter { checkIn in
+            let date = calendar.startOfDay(for: checkIn.date)
+            return date >= weekStart && date <= today && checkIn.isSuccess
+        }.count
+
+        let thisWeekRate = totalPossible > 0 ? Int((Double(thisWeekCheckIns) / Double(totalPossible)) * 100) : 0
+
+        // Last week's check-ins
+        let lastWeekCheckIns = checkIns.filter { checkIn in
+            let date = calendar.startOfDay(for: checkIn.date)
+            return date >= lastWeekStart && date <= lastWeekEnd && checkIn.isSuccess
+        }.count
+
+        let lastWeekRate = totalPossible > 0 ? Int((Double(lastWeekCheckIns) / Double(totalPossible)) * 100) : 0
+
+        // Only show comparison if we have last week data
+        let comparison: Int? = lastWeekCheckIns > 0 ? thisWeekRate - lastWeekRate : nil
+
+        return (thisWeekCheckIns, totalPossible, thisWeekRate, comparison)
+    }
+
     var body: some View {
         ZStack {
             Color.matrixBlack
@@ -60,6 +102,9 @@ struct SignalAnalysisView: View {
 
                     // Operator Level Card
                     operatorLevelCard
+
+                    // P2: Weekly Summary
+                    weeklySummarySection
 
                     // The Grid (Compact)
                     gridSection
@@ -201,6 +246,73 @@ struct SignalAnalysisView: View {
             .padding(Spacing.md)
             .background(Color.darkGray)
             .cornerRadius(16)
+        }
+        .padding(.horizontal, Spacing.md)
+    }
+
+    // MARK: - P2: Weekly Summary Section
+
+    private var weeklySummarySection: some View {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
+            Text("// WEEKLY REPORT")
+                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                .foregroundColor(Color.lightGray)
+
+            HStack(spacing: Spacing.md) {
+                // Completion count
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(weeklyStats.completed)/\(weeklyStats.total)")
+                        .font(.system(size: 24, weight: .bold, design: .monospaced))
+                        .foregroundColor(Color.matrixGreen)
+
+                    Text("CHECK-INS")
+                        .font(.system(size: 10, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+                }
+
+                Spacer()
+
+                // Completion rate with progress ring
+                ZStack {
+                    Circle()
+                        .stroke(Color.charcoal, lineWidth: 6)
+                        .frame(width: 60, height: 60)
+
+                    Circle()
+                        .trim(from: 0, to: CGFloat(weeklyStats.rate) / 100)
+                        .stroke(Color.matrixGreen, style: StrokeStyle(lineWidth: 6, lineCap: .round))
+                        .frame(width: 60, height: 60)
+                        .rotationEffect(.degrees(-90))
+
+                    Text("\(weeklyStats.rate)%")
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .foregroundColor(.white)
+                }
+
+                // Comparison to last week
+                if let comparison = weeklyStats.vsLastWeek {
+                    VStack(alignment: .trailing, spacing: 4) {
+                        HStack(spacing: 2) {
+                            Image(systemName: comparison >= 0 ? "arrow.up" : "arrow.down")
+                                .font(.system(size: 12, weight: .bold))
+                            Text("\(abs(comparison))%")
+                                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                        }
+                        .foregroundColor(comparison >= 0 ? Color.matrixGreen : Color.agentRed)
+
+                        Text("VS LAST WEEK")
+                            .font(.system(size: 9, design: .monospaced))
+                            .foregroundColor(Color.mediumGray)
+                    }
+                }
+            }
+            .padding(Spacing.md)
+            .background(Color.darkGray)
+            .cornerRadius(Theme.cornerRadius)
+            .overlay(
+                RoundedRectangle(cornerRadius: Theme.cornerRadius)
+                    .stroke(Color.matrixGreen.opacity(0.3), lineWidth: 1)
+            )
         }
         .padding(.horizontal, Spacing.md)
     }

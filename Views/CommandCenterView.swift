@@ -15,9 +15,11 @@ struct CommandCenterView: View {
     @State private var showWhiteRabbit: Bool = false
     @State private var showHabitTip: Bool = false
     @State private var showGhostTutorial: Bool = false  // P1: First-time user tutorial
+    @State private var showDailyAffirmation: Bool = false  // P2: Daily motivation
     @StateObject private var rabbitManager = WhiteRabbitManager()
     @AppStorage("hasSeenHabitTip") private var hasSeenHabitTip: Bool = false
     @AppStorage("hasSeenGhostTutorial") private var hasSeenGhostTutorial: Bool = false  // P1
+    @AppStorage("lastAffirmationDate") private var lastAffirmationDate: Double = 0  // P2
 
     // Collapsible section states
     @State private var isPowersExpanded: Bool = true
@@ -133,6 +135,14 @@ struct CommandCenterView: View {
                     }
                 }
             }
+            // P2: Show Daily Affirmation once per day (after tutorial)
+            else if hasSeenGhostTutorial && shouldShowDailyAffirmation {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    withAnimation {
+                        showDailyAffirmation = true
+                    }
+                }
+            }
         }
         .onChange(of: rabbitManager.shouldShowRabbit) { _, newValue in
             if newValue {
@@ -160,6 +170,10 @@ struct CommandCenterView: View {
             // P1: Ghost Tutorial for first-time users
             if showGhostTutorial {
                 ghostTutorialOverlay
+            }
+            // P2: Daily Affirmation
+            if showDailyAffirmation {
+                dailyAffirmationOverlay
             }
         }
         .onChange(of: powers.count + agents.count) { oldValue, newValue in
@@ -347,6 +361,89 @@ struct CommandCenterView: View {
         withAnimation {
             showGhostTutorial = false
             hasSeenGhostTutorial = true
+        }
+    }
+
+    // MARK: - P2: Daily Affirmation
+
+    private var shouldShowDailyAffirmation: Bool {
+        let calendar = Calendar.current
+        let lastShown = Date(timeIntervalSince1970: lastAffirmationDate)
+        let today = calendar.startOfDay(for: Date())
+        let lastShownDay = calendar.startOfDay(for: lastShown)
+        return lastShownDay < today && (!powers.isEmpty || !agents.isEmpty)
+    }
+
+    private var bestStreak: (name: String, days: Int)? {
+        var best: (String, Int)? = nil
+        for power in powers {
+            if power.currentStreak > (best?.1 ?? 0) {
+                best = (power.name, power.currentStreak)
+            }
+        }
+        for agent in agents {
+            if agent.currentStreak > (best?.1 ?? 0) {
+                best = (agent.name, agent.currentStreak)
+            }
+        }
+        return best
+    }
+
+    private var dailyAffirmation: String {
+        if let streak = bestStreak, streak.days > 0 {
+            let messages = [
+                "Day \(streak.days) of \(streak.name).\nMost people can't do 3 days.\nYou're not most people.",
+                "\(streak.days) days strong.\nThe Matrix is losing its grip.\nKeep going, Operator.",
+                "Signal strength: \(streak.days) days.\nYou're rewriting your code.\nOne day at a time.",
+                "\(streak.days) consecutive uploads.\nThe old you would have quit.\nBut you're still here.",
+                "Day \(streak.days). The compound effect is real.\nSmall wins create momentum.\nMomentum creates change."
+            ]
+            return messages.randomElement() ?? messages[0]
+        } else {
+            let messages = [
+                "Every master was once a disaster.\nToday is Day 1.\nMake it count.",
+                "The journey of 66 days\nbegins with a single check-in.\nYou've got this.",
+                "Welcome back, Operator.\nThe Matrix is waiting.\nTime to fight back."
+            ]
+            return messages.randomElement() ?? messages[0]
+        }
+    }
+
+    private var dailyAffirmationOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.9)
+                .ignoresSafeArea()
+                .onTapGesture {
+                    dismissAffirmation()
+                }
+
+            VStack(spacing: Spacing.lg) {
+                // Terminal-style header
+                Text("> DAILY TRANSMISSION")
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.matrixGreen)
+
+                // Affirmation text
+                Text(dailyAffirmation)
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                    .lineSpacing(6)
+
+                // Dismiss hint
+                Text("TAP TO CONTINUE")
+                    .font(.system(size: 11, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                    .padding(.top, Spacing.lg)
+            }
+            .padding(Spacing.xl)
+        }
+    }
+
+    private func dismissAffirmation() {
+        withAnimation {
+            showDailyAffirmation = false
+            lastAffirmationDate = Date().timeIntervalSince1970
         }
     }
 

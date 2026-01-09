@@ -30,6 +30,8 @@ struct DialInView: View {
     @State private var showBreachMessage: Bool = false
     @State private var breachComplete: Bool = false
     @State private var showYesterdayConfirm: Bool = false  // P1: Yesterday check-in
+    @State private var showMilestoneCelebration: Bool = false  // P2: Milestone celebrations
+    @State private var milestoneReached: Int = 0  // P2: Which milestone (7, 21, 66)
 
     // MARK: - Constants
     private let holdDuration: Double = 1.5
@@ -283,6 +285,17 @@ struct DialInView: View {
                 BreachMessageOverlay(isPresented: $showBreachMessage)
                     .transition(.opacity)
             }
+
+            // P2: Milestone Celebration Overlay
+            if showMilestoneCelebration {
+                MilestoneCelebrationOverlay(
+                    milestone: milestoneReached,
+                    habitName: title,
+                    isPower: isPower,
+                    isPresented: $showMilestoneCelebration
+                )
+                .transition(.opacity)
+            }
         }
         .alert("CONFIRM BREACH", isPresented: $showBreachConfirm) {
             Button("CANCEL", role: .cancel) { }
@@ -427,8 +440,11 @@ struct DialInView: View {
         // Check achievements
         checkAchievements()
 
-        // Oracle reward chance
-        if Double.random(in: 0...1) < oracleChance {
+        // P2: Check for milestone celebration (7, 21, 66 days)
+        checkMilestone()
+
+        // Oracle reward chance (only if no milestone)
+        if !showMilestoneCelebration && Double.random(in: 0...1) < oracleChance {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                 withAnimation {
                     showOracleReward = true
@@ -458,6 +474,24 @@ struct DialInView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             if achievementManager.showUnlockAnimation {
                 showAchievementToast = true
+            }
+        }
+    }
+
+    // MARK: - P2: Milestone Celebration
+
+    private func checkMilestone() {
+        // Get the updated streak after check-in
+        let newStreak = power?.currentStreak ?? agent?.currentStreak ?? 0
+
+        // Check for milestones: 7, 21, 66 days
+        let milestones = [7, 21, 66]
+        if milestones.contains(newStreak) {
+            milestoneReached = newStreak
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+                    showMilestoneCelebration = true
+                }
             }
         }
     }
@@ -665,6 +699,147 @@ struct BreachMessageOverlay: View {
                 glitchOffset = .zero
                 showContent = true
             }
+        }
+    }
+}
+
+// MARK: - P2: Milestone Celebration Overlay
+
+struct MilestoneCelebrationOverlay: View {
+    let milestone: Int
+    let habitName: String
+    let isPower: Bool
+    @Binding var isPresented: Bool
+
+    @State private var showContent: Bool = false
+    @State private var ringScale: CGFloat = 0.5
+    @State private var ringOpacity: Double = 0
+    @State private var particleOffset: CGFloat = 0
+
+    private var accentColor: Color {
+        isPower ? Color.matrixGreen : Color.matrixGold
+    }
+
+    private var milestoneTitle: String {
+        switch milestone {
+        case 7: return "1 WEEK COMPLETE"
+        case 21: return "21 DAYS — HABIT FORMING"
+        case 66: return "66 DAYS — PROTOCOL COMPLETE"
+        default: return "MILESTONE REACHED"
+        }
+    }
+
+    private var milestoneMessage: String {
+        switch milestone {
+        case 7: return "The first week is the hardest.\nYou've proven you can do this."
+        case 21: return "Neuroscience says 21 days\nbegins to rewire your brain.\nYou're becoming someone new."
+        case 66: return "You did it. 66 days.\nThe protocol is complete.\nYou've escaped the Matrix."
+        default: return "Keep going. You're unstoppable."
+        }
+    }
+
+    private var milestoneIcon: String {
+        switch milestone {
+        case 7: return "star.fill"
+        case 21: return "brain.head.profile"
+        case 66: return "crown.fill"
+        default: return "trophy.fill"
+        }
+    }
+
+    var body: some View {
+        ZStack {
+            // Dark overlay
+            Color.black.opacity(0.95)
+                .ignoresSafeArea()
+
+            // Animated rings
+            ForEach(0..<3, id: \.self) { i in
+                Circle()
+                    .stroke(accentColor.opacity(0.3 - Double(i) * 0.1), lineWidth: 2)
+                    .frame(width: 150 + CGFloat(i) * 60, height: 150 + CGFloat(i) * 60)
+                    .scaleEffect(ringScale + CGFloat(i) * 0.1)
+                    .opacity(ringOpacity)
+            }
+
+            if showContent {
+                VStack(spacing: Spacing.xl) {
+                    // Icon
+                    Image(systemName: milestoneIcon)
+                        .font(.system(size: 60))
+                        .foregroundColor(accentColor)
+                        .shadow(color: accentColor.opacity(0.8), radius: 20)
+
+                    // Title
+                    Text(milestoneTitle)
+                        .font(.system(size: 24, weight: .bold, design: .monospaced))
+                        .foregroundColor(accentColor)
+
+                    // Habit name
+                    Text(habitName.uppercased())
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        .foregroundColor(.white)
+
+                    // Message
+                    Text(milestoneMessage)
+                        .font(.system(size: 16, design: .monospaced))
+                        .foregroundColor(Color.lightGray)
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(4)
+
+                    // XP Bonus
+                    Text("+\(milestone * 5) XP BONUS")
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .foregroundColor(accentColor)
+                        .padding(.top, Spacing.md)
+
+                    // Continue button
+                    Button(action: {
+                        // Award bonus XP
+                        UserProfile.addXP(milestone * 5)
+                        withAnimation {
+                            isPresented = false
+                        }
+                    }) {
+                        Text("CONTINUE")
+                            .font(.system(size: 16, weight: .bold, design: .monospaced))
+                            .foregroundColor(Color.deepBlack)
+                            .frame(width: 200)
+                            .padding(.vertical, Spacing.md)
+                            .background(accentColor)
+                            .cornerRadius(Theme.cornerRadius)
+                    }
+                    .padding(.top, Spacing.lg)
+                }
+                .transition(.scale.combined(with: .opacity))
+            }
+        }
+        .onAppear {
+            animateCelebration()
+        }
+    }
+
+    private func animateCelebration() {
+        // Haptic burst
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+
+        // Ring animation
+        withAnimation(.easeOut(duration: 0.8)) {
+            ringScale = 1.0
+            ringOpacity = 1.0
+        }
+
+        // Content appear
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+                showContent = true
+            }
+        }
+
+        // Pulsing rings
+        withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true).delay(0.8)) {
+            ringScale = 1.1
         }
     }
 }
