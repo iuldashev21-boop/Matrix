@@ -161,30 +161,47 @@ struct SignalAnalysisView: View {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
 
-        // Create a test Power if none exists
+        // Create test habits if none exist
         var testPower: Power
+        var testAgent: Agent
+
         if let existing = powers.first {
             testPower = existing
         } else {
-            testPower = Power(name: "Debug Hack", icon: "bolt")
+            testPower = Power(name: "Morning Walk", icon: "figure.walk")
             modelContext.insert(testPower)
         }
 
-        // Seed 31 days of check-ins with ~80% success rate
-        for dayOffset in 1...31 {
-            guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: today) else { continue }
-
-            // 80% chance of success
-            let isSuccess = Double.random(in: 0...1) < 0.80
-
-            let checkIn = CheckIn(date: date, isSuccess: isSuccess)
-            checkIn.power = testPower
-            testPower.checkIns.append(checkIn)
-            modelContext.insert(checkIn)
+        if let existing = agents.first {
+            testAgent = existing
+        } else {
+            testAgent = Agent(name: "No Doom Scrolling", icon: "iphone.slash")
+            modelContext.insert(testAgent)
         }
 
-        // Add some XP
-        UserProfile.addXP(310) // ~31 days * 10 XP
+        // Seed 66 days of check-ins for full protocol simulation
+        // Power: 90% success rate (realistic for dedicated user)
+        // Agent: 85% success rate with some relapses
+        for dayOffset in 1...66 {
+            guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: today) else { continue }
+
+            // Power check-in (90% success)
+            let powerSuccess = Double.random(in: 0...1) < 0.90
+            let powerCheckIn = CheckIn(date: date, isSuccess: powerSuccess)
+            powerCheckIn.power = testPower
+            testPower.checkIns.append(powerCheckIn)
+            modelContext.insert(powerCheckIn)
+
+            // Agent check-in (85% success, 15% relapse)
+            let agentSuccess = Double.random(in: 0...1) < 0.85
+            let agentCheckIn = CheckIn(date: date, isSuccess: agentSuccess)
+            agentCheckIn.agent = testAgent
+            testAgent.checkIns.append(agentCheckIn)
+            modelContext.insert(agentCheckIn)
+        }
+
+        // Add XP for 66 days (~60 successful days * 10 XP + achievements)
+        UserProfile.addXP(750)
 
         try? modelContext.save()
 

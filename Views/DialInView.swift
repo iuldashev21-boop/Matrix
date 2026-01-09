@@ -32,6 +32,8 @@ struct DialInView: View {
     @State private var showYesterdayConfirm: Bool = false  // P1: Yesterday check-in
     @State private var showMilestoneCelebration: Bool = false  // P2: Milestone celebrations
     @State private var milestoneReached: Int = 0  // P2: Which milestone (7, 21, 66)
+    @State private var pendingMilestone: Bool = false  // Prevents overlay conflicts
+    @State private var showSaveError: Bool = false  // Error handling for save failures
 
     // MARK: - Constants
     private let holdDuration: Double = 1.5
@@ -292,7 +294,8 @@ struct DialInView: View {
                     milestone: milestoneReached,
                     habitName: title,
                     isPower: isPower,
-                    isPresented: $showMilestoneCelebration
+                    isPresented: $showMilestoneCelebration,
+                    onDismiss: { pendingMilestone = false }
                 )
                 .transition(.opacity)
             }
@@ -312,6 +315,11 @@ struct DialInView: View {
             }
         } message: {
             Text("Did you complete this habit yesterday? This will add a check-in for yesterday's date.")
+        }
+        .alert("SAVE FAILED", isPresented: $showSaveError) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Failed to save check-in. Please try again or restart the app.")
         }
         .onChange(of: isHolding) { _, holding in
             if holding {
@@ -443,13 +451,18 @@ struct DialInView: View {
         // P2: Check for milestone celebration (7, 21, 66 days)
         checkMilestone()
 
-        // Oracle reward chance (only if no milestone)
-        if !showMilestoneCelebration && Double.random(in: 0...1) < oracleChance {
+        // Oracle reward chance (only if no milestone pending or showing)
+        if !pendingMilestone && !showMilestoneCelebration && Double.random(in: 0...1) < oracleChance {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                 withAnimation {
                     showOracleReward = true
                 }
             }
+        }
+
+        // Reset processing flag after all async operations complete
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            isProcessing = false
         }
     }
 
@@ -488,6 +501,7 @@ struct DialInView: View {
         let milestones = [7, 21, 66]
         if milestones.contains(newStreak) {
             milestoneReached = newStreak
+            pendingMilestone = true  // Set immediately to prevent overlay conflicts
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
                     showMilestoneCelebration = true
@@ -529,7 +543,14 @@ struct DialInView: View {
         }
 
         modelContext.insert(checkIn)
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+        } catch {
+            showSaveError = true
+            #if DEBUG
+            print("Failed to save check-in: \(error)")
+            #endif
+        }
     }
 
     // MARK: - Breach Logic (Agent Relapse)
@@ -545,7 +566,11 @@ struct DialInView: View {
         a.checkIns.append(checkIn)
 
         modelContext.insert(checkIn)
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+        } catch {
+            showSaveError = true
+        }
 
         // Mark breach complete
         breachComplete = true
@@ -563,6 +588,11 @@ struct DialInView: View {
                 showBreachMessage = true
             }
         }
+
+        // Reset processing flag
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            isProcessing = false
+        }
     }
 
     // MARK: - Yesterday Check-In (P1)
@@ -574,6 +604,16 @@ struct DialInView: View {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else {
+            isProcessing = false
+            return
+        }
+
+        // Verify yesterday doesn't already have a check-in (safety check)
+        let checkIns = power?.checkIns ?? agent?.checkIns ?? []
+        let alreadyHasYesterday = checkIns.contains {
+            calendar.startOfDay(for: $0.date) == yesterday
+        }
+        guard !alreadyHasYesterday else {
             isProcessing = false
             return
         }
@@ -592,14 +632,18 @@ struct DialInView: View {
         }
 
         modelContext.insert(checkIn)
-        try? modelContext.save()
-
-        // Award reduced XP for late check-in
-        UserProfile.addXP(5)
-
-        // Haptic feedback
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
+        do {
+            try modelContext.save()
+            // Award reduced XP for late check-in
+            UserProfile.addXP(5)
+            // Haptic feedback
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.success)
+            // Check for milestones after successful save
+            checkMilestone()
+        } catch {
+            showSaveError = true
+        }
 
         // Reset processing flag
         isProcessing = false
@@ -710,6 +754,7 @@ struct MilestoneCelebrationOverlay: View {
     let habitName: String
     let isPower: Bool
     @Binding var isPresented: Bool
+    var onDismiss: (() -> Void)? = nil
 
     @State private var showContent: Bool = false
     @State private var ringScale: CGFloat = 0.5
@@ -800,6 +845,7 @@ struct MilestoneCelebrationOverlay: View {
                         withAnimation {
                             isPresented = false
                         }
+                        onDismiss?()
                     }) {
                         Text("CONTINUE")
                             .font(.system(size: 16, weight: .bold, design: .monospaced))
