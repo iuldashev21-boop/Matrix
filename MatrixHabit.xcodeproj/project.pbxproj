@@ -47,6 +47,9 @@
 		A10000000000000000000042 /* CodeBreakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000042 /* CodeBreakerView.swift */; };
 		A10000000000000000000043 /* CombatTrainingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000043 /* CombatTrainingView.swift */; };
 		A10000000000000000000044 /* SystemMaintenanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000044 /* SystemMaintenanceView.swift */; };
+		A10000000000000000000045 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000045 /* UserDefaultsKeys.swift */; };
+		A10000000000000000000046 /* GlitchEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000046 /* GlitchEffect.swift */; };
+		A10000000000000000000047 /* AnomalyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000047 /* AnomalyManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -94,6 +97,9 @@
 		A20000000000000000000042 /* CodeBreakerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBreakerView.swift; sourceTree = "<group>"; };
 		A20000000000000000000043 /* CombatTrainingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombatTrainingView.swift; sourceTree = "<group>"; };
 		A20000000000000000000044 /* SystemMaintenanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMaintenanceView.swift; sourceTree = "<group>"; };
+		A20000000000000000000045 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
+		A20000000000000000000046 /* GlitchEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlitchEffect.swift; sourceTree = "<group>"; };
+		A20000000000000000000047 /* AnomalyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnomalyManager.swift; sourceTree = "<group>"; };
 		A30000000000000000000001 /* MatrixHabit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatrixHabit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -183,6 +189,7 @@
 				A20000000000000000000017 /* StreakCalculator.swift */,
 				A20000000000000000000018 /* ExportService.swift */,
 				A20000000000000000000035 /* AchievementManager.swift */,
+				A20000000000000000000047 /* AnomalyManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -194,6 +201,8 @@
 				A20000000000000000000020 /* UserProfile.swift */,
 				A20000000000000000000024 /* RankSystem.swift */,
 				A20000000000000000000039 /* SidequestManager.swift */,
+				A20000000000000000000045 /* UserDefaultsKeys.swift */,
+				A20000000000000000000046 /* GlitchEffect.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -343,6 +352,9 @@
 				A10000000000000000000042 /* CodeBreakerView.swift in Sources */,
 				A10000000000000000000043 /* CombatTrainingView.swift in Sources */,
 				A10000000000000000000044 /* SystemMaintenanceView.swift in Sources */,
+				A10000000000000000000045 /* UserDefaultsKeys.swift in Sources */,
+				A10000000000000000000046 /* GlitchEffect.swift in Sources */,
+				A10000000000000000000047 /* AnomalyManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
