@@ -289,6 +289,7 @@ struct ZionMainframeView: View {
             try modelContext.delete(model: Power.self)
             try modelContext.delete(model: Agent.self)
             try modelContext.delete(model: CheckIn.self)
+            try modelContext.delete(model: Achievement.self)
             try modelContext.save()
         } catch {
             #if DEBUG

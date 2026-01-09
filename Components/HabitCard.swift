@@ -9,7 +9,8 @@ struct HabitCard: View {
     let isPower: Bool // true = Power (green), false = Agent (red)
 
     var progress: Double {
-        Double(currentDay) / Double(targetDays)
+        guard targetDays > 0 else { return 0 }
+        return Double(currentDay) / Double(targetDays)
     }
 
     private var accentColor: Color {

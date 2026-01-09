@@ -159,6 +159,7 @@ struct AnomalyDetailView: View {
 
     @State private var displayedText: String = ""
     @State private var animationProgress: Double = 0
+    @State private var animationTimer: Timer?
 
     private var revealPercentage: Double {
         switch state {
@@ -211,6 +212,10 @@ struct AnomalyDetailView: View {
         .onAppear {
             startTextAnimation()
         }
+        .onDisappear {
+            animationTimer?.invalidate()
+            animationTimer = nil
+        }
     }
 
     // MARK: - Header
@@ -257,7 +262,7 @@ struct AnomalyDetailView: View {
         var iterations = 0
         let maxIterations = 15
 
-        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { timer in
+        animationTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { timer in
             iterations += 1
             let progress = Double(iterations) / Double(maxIterations)
 
@@ -265,6 +270,7 @@ struct AnomalyDetailView: View {
 
             if iterations >= maxIterations {
                 timer.invalidate()
+                animationTimer = nil
                 displayedText = report.content
             }
         }

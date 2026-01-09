@@ -3,7 +3,7 @@ import SwiftData
 
 @Model
 final class Achievement {
-    var id: String
+    @Attribute(.unique) var id: String
     var unlockedAt: Date
 
     init(id: String, unlockedAt: Date = Date()) {

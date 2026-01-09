@@ -46,7 +46,8 @@ final class Agent {
     }
 
     var progressPercent: Double {
-        Double(currentStreak) / Double(targetDays) * 100
+        guard targetDays > 0 else { return 0 }
+        return Double(currentStreak) / Double(targetDays) * 100
     }
 
     var daysRemaining: Int {
