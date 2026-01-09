@@ -84,6 +84,16 @@ struct AwakeningView: View {
             )
             .ignoresSafeArea()
 
+            // P1: Progress indicator (hidden on special phases)
+            if shouldShowProgressIndicator {
+                VStack {
+                    OnboardingProgressBar(currentPhase: currentPhase, totalPhases: totalPhases)
+                        .padding(.top, Spacing.lg)
+                        .padding(.horizontal, Spacing.md)
+                    Spacer()
+                }
+            }
+
             // Main content
             Group {
                 switch currentPhase {
@@ -233,6 +243,12 @@ struct AwakeningView: View {
         case 17: return 2.0       // Contract - fast
         default: return 0.5
         }
+    }
+
+    // P1: Hide progress on special cinematic phases
+    private var shouldShowProgressIndicator: Bool {
+        // Hide on: Red/Blue pill choice (13), The Truth (14), The Way Out (15), Contract (17)
+        ![13, 14, 15, 17].contains(currentPhase)
     }
 
     private func advancePhase() {
@@ -2886,6 +2902,43 @@ struct ManualConceptRow: View {
 }
 
 // MARK: - Shared Components
+
+// P1: Progress indicator for onboarding
+struct OnboardingProgressBar: View {
+    let currentPhase: Int
+    let totalPhases: Int
+
+    private var progress: Double {
+        guard totalPhases > 0 else { return 0 }
+        return Double(currentPhase) / Double(totalPhases - 1)  // -1 because we start at 0
+    }
+
+    var body: some View {
+        VStack(spacing: 6) {
+            // Progress bar
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    // Background track
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(Color.charcoal)
+                        .frame(height: 4)
+
+                    // Progress fill
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(Color.matrixGreen)
+                        .frame(width: geo.size.width * CGFloat(progress), height: 4)
+                        .shadow(color: Color.matrixGreen.opacity(0.5), radius: 4)
+                }
+            }
+            .frame(height: 4)
+
+            // Phase counter
+            Text("PHASE \(currentPhase + 1) OF \(totalPhases)")
+                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                .foregroundColor(Color.mediumGray)
+        }
+    }
+}
 
 struct DiagnosticButton: View {
     let title: String

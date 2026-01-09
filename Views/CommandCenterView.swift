@@ -14,8 +14,10 @@ struct CommandCenterView: View {
     @State private var selectedAgent: Agent? = nil
     @State private var showWhiteRabbit: Bool = false
     @State private var showHabitTip: Bool = false
+    @State private var showGhostTutorial: Bool = false  // P1: First-time user tutorial
     @StateObject private var rabbitManager = WhiteRabbitManager()
     @AppStorage("hasSeenHabitTip") private var hasSeenHabitTip: Bool = false
+    @AppStorage("hasSeenGhostTutorial") private var hasSeenGhostTutorial: Bool = false  // P1
 
     // Collapsible section states
     @State private var isPowersExpanded: Bool = true
@@ -122,6 +124,15 @@ struct CommandCenterView: View {
         }
         .onAppear {
             rabbitManager.checkForRabbit()
+
+            // P1: Show Ghost Tutorial on first launch with habits
+            if !hasSeenGhostTutorial && (!powers.isEmpty || !agents.isEmpty) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    withAnimation {
+                        showGhostTutorial = true
+                    }
+                }
+            }
         }
         .onChange(of: rabbitManager.shouldShowRabbit) { _, newValue in
             if newValue {
@@ -145,6 +156,10 @@ struct CommandCenterView: View {
             // First-time tip overlay
             if showHabitTip {
                 habitTipOverlay
+            }
+            // P1: Ghost Tutorial for first-time users
+            if showGhostTutorial {
+                ghostTutorialOverlay
             }
         }
         .onChange(of: powers.count + agents.count) { oldValue, newValue in
@@ -213,6 +228,125 @@ struct CommandCenterView: View {
         withAnimation {
             showHabitTip = false
             hasSeenHabitTip = true
+        }
+    }
+
+    // MARK: - Ghost Tutorial Overlay (P1)
+
+    private var ghostTutorialOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.85)
+                .ignoresSafeArea()
+
+            VStack(spacing: Spacing.xl) {
+                // Header
+                Text("// OPERATOR BRIEFING")
+                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.matrixGreen)
+
+                Text("HOW TO SYNC")
+                    .font(.system(size: 22, weight: .bold, design: .monospaced))
+                    .foregroundColor(.white)
+
+                VStack(spacing: Spacing.lg) {
+                    // Hack instruction
+                    HStack(spacing: Spacing.md) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.matrixGreen.opacity(0.2))
+                                .frame(width: 50, height: 50)
+                            Image(systemName: "hand.tap.fill")
+                                .font(.system(size: 24))
+                                .foregroundColor(Color.matrixGreen)
+                        }
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("HACKS (Green)")
+                                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                .foregroundColor(Color.matrixGreen)
+                            Text("Tap → Hold to upload")
+                                .font(.system(size: 12, design: .monospaced))
+                                .foregroundColor(Color.lightGray)
+                        }
+
+                        Spacer()
+                    }
+
+                    // Agent instruction
+                    HStack(spacing: Spacing.md) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.agentRed.opacity(0.2))
+                                .frame(width: 50, height: 50)
+                            Image(systemName: "hand.tap.fill")
+                                .font(.system(size: 24))
+                                .foregroundColor(Color.agentRed)
+                        }
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("AGENTS (Red)")
+                                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                .foregroundColor(Color.agentRed)
+                            Text("Tap → Hold to resist")
+                                .font(.system(size: 12, design: .monospaced))
+                                .foregroundColor(Color.lightGray)
+                            Text("Or report breach if you relapsed")
+                                .font(.system(size: 11, design: .monospaced))
+                                .foregroundColor(Color.mediumGray)
+                        }
+
+                        Spacer()
+                    }
+
+                    // Daily goal
+                    HStack(spacing: Spacing.md) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.white.opacity(0.1))
+                                .frame(width: 50, height: 50)
+                            Image(systemName: "calendar")
+                                .font(.system(size: 24))
+                                .foregroundColor(.white)
+                        }
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("DAILY PROTOCOL")
+                                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                .foregroundColor(.white)
+                            Text("Check in every day to build streaks")
+                                .font(.system(size: 12, design: .monospaced))
+                                .foregroundColor(Color.lightGray)
+                        }
+
+                        Spacer()
+                    }
+                }
+                .padding(Spacing.lg)
+                .background(Color.charcoal)
+                .cornerRadius(Theme.cornerRadius)
+                .overlay(
+                    RoundedRectangle(cornerRadius: Theme.cornerRadius)
+                        .stroke(Color.matrixGreen.opacity(0.5), lineWidth: 1)
+                )
+
+                Button(action: dismissGhostTutorial) {
+                    Text("BEGIN PROTOCOL")
+                        .font(.system(size: 16, weight: .bold, design: .monospaced))
+                        .foregroundColor(Color.deepBlack)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(Color.matrixGreen)
+                        .cornerRadius(Theme.cornerRadius)
+                }
+            }
+            .padding(.horizontal, Spacing.xl)
+        }
+    }
+
+    private func dismissGhostTutorial() {
+        withAnimation {
+            showGhostTutorial = false
+            hasSeenGhostTutorial = true
         }
     }
 

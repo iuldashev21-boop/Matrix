@@ -29,6 +29,7 @@ struct DialInView: View {
     @State private var showBreachConfirm: Bool = false
     @State private var showBreachMessage: Bool = false
     @State private var breachComplete: Bool = false
+    @State private var showYesterdayConfirm: Bool = false  // P1: Yesterday check-in
 
     // MARK: - Constants
     private let holdDuration: Double = 1.5
@@ -60,6 +61,24 @@ struct DialInView: View {
         if let p = power { return p.needsRecovery }
         if let a = agent { return a.needsRecovery }
         return false
+    }
+
+    // P1: Check if yesterday was missed (for manual yesterday check-in)
+    private var missedYesterday: Bool {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else { return false }
+
+        let checkIns = power?.checkIns ?? agent?.checkIns ?? []
+        return !checkIns.contains { calendar.startOfDay(for: $0.date) == yesterday }
+    }
+
+    // P1: Only show yesterday option if habit existed before today
+    private var canCheckInYesterday: Bool {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let createdAt = power?.createdAt ?? agent?.createdAt ?? Date()
+        return calendar.startOfDay(for: createdAt) < today && missedYesterday && !needsRecovery
     }
 
     private var accentColor: Color {
@@ -228,6 +247,28 @@ struct DialInView: View {
                     .padding(.top, Spacing.md)
                 }
 
+                // P1: Yesterday check-in option (when yesterday was missed but not EMP Recovery)
+                if canCheckInYesterday && !isCompleted && !isAlreadyCompleted && !breachComplete {
+                    Button(action: { showYesterdayConfirm = true }) {
+                        HStack(spacing: Spacing.xs) {
+                            Image(systemName: "clock.arrow.circlepath")
+                                .font(.system(size: 14))
+                            Text("LOG YESTERDAY")
+                                .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        }
+                        .foregroundColor(Color.warning)
+                        .padding(.horizontal, Spacing.lg)
+                        .padding(.vertical, Spacing.sm)
+                        .background(Color.charcoal)
+                        .cornerRadius(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.warning.opacity(0.5), lineWidth: 1)
+                        )
+                    }
+                    .padding(.top, Spacing.sm)
+                }
+
                 Spacer()
             }
 
@@ -250,6 +291,14 @@ struct DialInView: View {
             }
         } message: {
             Text("Reporting a breach will reset your current streak. Your longest streak will be preserved. Be honest with yourself.")
+        }
+        .alert("LOG YESTERDAY", isPresented: $showYesterdayConfirm) {
+            Button("CANCEL", role: .cancel) { }
+            Button("CONFIRM") {
+                handleYesterdayCheckIn()
+            }
+        } message: {
+            Text("Did you complete this habit yesterday? This will add a check-in for yesterday's date.")
         }
         .onChange(of: isHolding) { _, holding in
             if holding {
@@ -480,6 +529,46 @@ struct DialInView: View {
                 showBreachMessage = true
             }
         }
+    }
+
+    // MARK: - Yesterday Check-In (P1)
+
+    private func handleYesterdayCheckIn() {
+        guard !isProcessing else { return }
+        isProcessing = true
+
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else {
+            isProcessing = false
+            return
+        }
+
+        // Create check-in for yesterday
+        let checkIn = CheckIn(date: yesterday, isSuccess: true, note: "Logged retroactively")
+
+        if let p = power {
+            checkIn.power = p
+            p.checkIns.append(checkIn)
+            p.checkForUnlock()
+        } else if let a = agent {
+            checkIn.agent = a
+            a.checkIns.append(checkIn)
+            a.checkForDefeat()
+        }
+
+        modelContext.insert(checkIn)
+        try? modelContext.save()
+
+        // Award reduced XP for late check-in
+        UserProfile.addXP(5)
+
+        // Haptic feedback
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+
+        // Reset processing flag
+        isProcessing = false
     }
 }
 
