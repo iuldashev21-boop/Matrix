@@ -7,6 +7,7 @@ struct SystemStatusCard: View {
     let todayTotal: Int
     let currentStreak: Int
     let daysActive: Int
+    let relapseCount: Int
 
     @State private var appeared: Bool = false
     @State private var pulseOpacity: Double = 1.0
@@ -33,17 +34,17 @@ struct SystemStatusCard: View {
                 VStack(spacing: 4) {
                     HStack(spacing: 2) {
                         Text("\(todayCompleted)")
-                            .font(.system(size: 22, weight: .bold, design: .monospaced))
+                            .font(.system(size: 20, weight: .bold, design: .monospaced))
                             .foregroundColor(todayColor)
                         Text("/")
-                            .font(.system(size: 16, weight: .medium, design: .monospaced))
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
                             .foregroundColor(Color.mediumGray)
                         Text("\(todayTotal)")
-                            .font(.system(size: 16, weight: .medium, design: .monospaced))
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
                             .foregroundColor(Color.mediumGray)
                     }
                     Text("TODAY")
-                        .font(.system(size: 9, design: .monospaced))
+                        .font(.system(size: 8, design: .monospaced))
                         .foregroundColor(Color.mediumGray)
                 }
                 .frame(maxWidth: .infinity)
@@ -51,42 +52,56 @@ struct SystemStatusCard: View {
                 divider
 
                 // Best Streak
-                HStack(spacing: 4) {
-                    Image(systemName: "flame.fill")
-                        .font(.system(size: 14))
-                        .foregroundColor(currentStreak > 0 ? .orange : Color.mediumGray)
-                    Text("\(currentStreak)")
-                        .font(.system(size: 20, weight: .bold, design: .monospaced))
-                        .foregroundColor(currentStreak > 0 ? .white : Color.mediumGray)
+                VStack(spacing: 4) {
+                    HStack(spacing: 3) {
+                        Image(systemName: "flame.fill")
+                            .font(.system(size: 12))
+                            .foregroundColor(currentStreak > 0 ? .orange : Color.mediumGray)
+                        Text("\(currentStreak)")
+                            .font(.system(size: 18, weight: .bold, design: .monospaced))
+                            .foregroundColor(currentStreak > 0 ? .white : Color.mediumGray)
+                    }
+                    Text("STREAK")
+                        .font(.system(size: 8, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
                 }
                 .frame(maxWidth: .infinity)
-                .overlay(
-                    Text("STREAK")
-                        .font(.system(size: 9, design: .monospaced))
-                        .foregroundColor(Color.mediumGray)
-                        .offset(y: 20)
-                )
 
                 divider
 
                 // Days Active
                 VStack(spacing: 4) {
                     HStack(spacing: 2) {
-                        Text("DAY")
-                            .font(.system(size: 12, weight: .medium, design: .monospaced))
-                            .foregroundColor(Color.mediumGray)
                         Text("\(daysActive)")
-                            .font(.system(size: 20, weight: .bold, design: .monospaced))
+                            .font(.system(size: 18, weight: .bold, design: .monospaced))
                             .foregroundColor(Color.matrixGreen)
                     }
-                    Text("ACTIVE")
-                        .font(.system(size: 9, design: .monospaced))
+                    Text("DAYS")
+                        .font(.system(size: 8, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+                }
+                .frame(maxWidth: .infinity)
+
+                divider
+
+                // Relapses
+                VStack(spacing: 4) {
+                    HStack(spacing: 3) {
+                        Image(systemName: "bolt.slash.fill")
+                            .font(.system(size: 12))
+                            .foregroundColor(relapseCount > 0 ? Color.agentRed : Color.mediumGray)
+                        Text("\(relapseCount)")
+                            .font(.system(size: 18, weight: .bold, design: .monospaced))
+                            .foregroundColor(relapseCount > 0 ? Color.agentRed : Color.mediumGray)
+                    }
+                    Text("RELAPSES")
+                        .font(.system(size: 8, design: .monospaced))
                         .foregroundColor(Color.mediumGray)
                 }
                 .frame(maxWidth: .infinity)
             }
             .padding(.vertical, Spacing.md)
-            .padding(.horizontal, Spacing.sm)
+            .padding(.horizontal, Spacing.xs)
             .background(Color.darkGray)
             .cornerRadius(12)
             .opacity(appeared ? 1 : 0)
@@ -160,28 +175,24 @@ struct SystemStatusCard: View {
                 todayCompleted: 3,
                 todayTotal: 4,
                 currentStreak: 7,
-                daysActive: 23
+                daysActive: 23,
+                relapseCount: 2
             )
 
             SystemStatusCard(
                 todayCompleted: 4,
                 todayTotal: 4,
                 currentStreak: 12,
-                daysActive: 45
+                daysActive: 45,
+                relapseCount: 0
             )
 
             SystemStatusCard(
                 todayCompleted: 1,
                 todayTotal: 4,
                 currentStreak: 0,
-                daysActive: 5
-            )
-
-            SystemStatusCard(
-                todayCompleted: 0,
-                todayTotal: 0,
-                currentStreak: 0,
-                daysActive: 0
+                daysActive: 5,
+                relapseCount: 8
             )
         }
     }

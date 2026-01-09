@@ -255,8 +255,16 @@ struct SignalAnalysisView: View {
             todayCompleted: todayCompletedCount,
             todayTotal: totalHabitsCount,
             currentStreak: bestCurrentStreak,
-            daysActive: daysActiveCount
+            daysActive: daysActiveCount,
+            relapseCount: totalRelapses
         )
+    }
+
+    private var totalRelapses: Int {
+        // Relapses = failed check-ins for Agents (gave in to bad habit)
+        checkIns.filter { checkIn in
+            !checkIn.isSuccess && checkIn.agent != nil
+        }.count
     }
 
     private var todayCompletedCount: Int {
