@@ -302,6 +302,14 @@ struct AwakeningView: View {
         UserDefaults.standard.set(operatorName, forKey: UserDefaultsKeys.operatorName)
         UserDefaults.standard.set(Int(operatorAge) ?? 25, forKey: UserDefaultsKeys.operatorAge)
 
+        // SAFETY: Ensure loadout is never empty (P0 bug fix)
+        if suggestedLoadout.hacks.isEmpty {
+            suggestedLoadout.hacks = [.walk30Min, .drink2LWater, .read10Pages]
+        }
+        if suggestedLoadout.agents.isEmpty {
+            suggestedLoadout.agents = [.noMorningScroll, .noJunkFood, .noPorn]
+        }
+
         // Create Powers (Hacks)
         for hack in suggestedLoadout.hacks {
             let power = Power(name: hack.habitName, icon: hack.icon)
@@ -314,7 +322,14 @@ struct AwakeningView: View {
             modelContext.insert(agentModel)
         }
 
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+        } catch {
+            #if DEBUG
+            print("Failed to save habits: \(error)")
+            #endif
+        }
+
         UserProfile.completeOnboarding()
         isPresented = false
     }

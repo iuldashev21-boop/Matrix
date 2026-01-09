@@ -17,6 +17,8 @@ struct DialInView: View {
     @State private var showAchievementToast: Bool = false
     @State private var isHolding: Bool = false
     @State private var isCompleted: Bool = false
+    @State private var isProcessing: Bool = false  // P0: Prevents double check-ins
+    @State private var holdTimer: Timer?  // P0: Store timer reference to prevent memory leak
     @State private var showShockwave: Bool = false
     @State private var shockwaveScale: CGFloat = 0
     @State private var shockwaveOpacity: Double = 1
@@ -268,6 +270,11 @@ struct DialInView: View {
         .onAppear {
             achievementManager.setContext(modelContext)
         }
+        .onDisappear {
+            // P0: Clean up timer when view dismissed to prevent memory leak
+            holdTimer?.invalidate()
+            holdTimer = nil
+        }
         .overlay {
             // Achievement unlock toast
             if showAchievementToast, let achievement = achievementManager.recentlyUnlocked {
@@ -285,7 +292,8 @@ struct DialInView: View {
     // MARK: - Hold Logic
 
     private func startHold() {
-        guard !isHolding && !isCompleted else { return }
+        // P0: Check isProcessing to prevent race conditions
+        guard !isHolding && !isCompleted && !isProcessing else { return }
         isHolding = true
 
         // Start haptic
@@ -304,10 +312,14 @@ struct DialInView: View {
             holdProgress = 1.0
         }
 
-        // Continuous haptics during hold
-        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+        // P0: Invalidate any existing timer before creating new one
+        holdTimer?.invalidate()
+
+        // Continuous haptics during hold - P0: Store reference to prevent leak
+        holdTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
             if !isHolding || isCompleted {
                 timer.invalidate()
+                holdTimer = nil
                 return
             }
             let generator = UIImpactFeedbackGenerator(style: .light)
@@ -325,6 +337,10 @@ struct DialInView: View {
     private func cancelHold() {
         isHolding = false
 
+        // P0: Invalidate timer on cancel to prevent memory leak
+        holdTimer?.invalidate()
+        holdTimer = nil
+
         withAnimation(.easeOut(duration: 0.3)) {
             holdProgress = 0
             codeRainSpeed = 0.3
@@ -332,8 +348,16 @@ struct DialInView: View {
     }
 
     private func completeCheckIn() {
+        // P0: Prevent double check-ins with processing flag
+        guard !isProcessing else { return }
+        isProcessing = true
+
         isHolding = false
         isCompleted = true
+
+        // P0: Invalidate timer on completion
+        holdTimer?.invalidate()
+        holdTimer = nil
 
         // Heavy haptic
         let generator = UINotificationFeedbackGenerator()
@@ -375,6 +399,11 @@ struct DialInView: View {
             agents: allAgents,
             totalCheckIns: totalCheckIns
         )
+
+        // P0: Check comeback achievement - if this agent had previous relapses, this is a "comeback"
+        if let a = agent, a.totalRelapses > 0 {
+            achievementManager.checkComebackAchievement(hadBrokenStreak: true)
+        }
 
         // Show toast if achievement unlocked
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -423,7 +452,9 @@ struct DialInView: View {
     // MARK: - Breach Logic (Agent Relapse)
 
     private func handleBreach() {
-        guard let a = agent else { return }
+        // P0: Prevent double breach reporting
+        guard let a = agent, !isProcessing else { return }
+        isProcessing = true
 
         // Log failed check-in
         let checkIn = CheckIn(date: Date(), isSuccess: false)

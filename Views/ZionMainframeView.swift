@@ -10,6 +10,7 @@ struct ZionMainframeView: View {
     @State private var showResetAlert: Bool = false
     @State private var showExportSheet: Bool = false
     @State private var showAchievements: Bool = false
+    @State private var showResetErrorAlert: Bool = false  // P0: Show error if reset fails
     @State private var versionTapCount: Int = 0
     @State private var showEasterEgg: Bool = false
     @State private var easterEggGlitch: CGSize = .zero
@@ -56,6 +57,11 @@ struct ZionMainframeView: View {
         }
         .sheet(isPresented: $showAchievements) {
             AchievementsView()
+        }
+        .alert("RESET FAILED", isPresented: $showResetErrorAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Failed to purge system data. Please try again or restart the app.")
         }
     }
 
@@ -271,17 +277,20 @@ struct ZionMainframeView: View {
     // MARK: - Actions
 
     private func resetAllData() {
-        // Clear SwiftData
+        // Clear SwiftData - delete all persisted models
         do {
             try modelContext.delete(model: Power.self)
             try modelContext.delete(model: Agent.self)
             try modelContext.delete(model: CheckIn.self)
             try modelContext.delete(model: Achievement.self)
+            // Note: AnomalyReport is a plain struct, not a SwiftData model
             try modelContext.save()
         } catch {
-            #if DEBUG
-            print("Failed to reset data: \(error)")
-            #endif
+            // P0: Show error to user instead of silent failure
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.error)
+            showResetErrorAlert = true
+            return
         }
 
         // Clear UserDefaults
