@@ -479,3 +479,4 @@ struct ExportDataView: View {
     ZionMainframeView()
         .modelContainer(for: [Power.self, Agent.self, CheckIn.self, Achievement.self], inMemory: true)
 }
+

@@ -355,3 +355,4 @@ struct EMPRecoveryView: View {
     EMPRecoveryView(power: nil, agent: nil)
         .modelContainer(for: [Power.self, Agent.self, CheckIn.self], inMemory: true)
 }
+

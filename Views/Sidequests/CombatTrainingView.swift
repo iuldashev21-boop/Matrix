@@ -276,3 +276,4 @@ struct ShockwaveView: View {
 #Preview {
     CombatTrainingView()
 }
+

@@ -177,3 +177,4 @@ struct ProgramCard: View {
         ConstructLoaderView()
     }
 }
+

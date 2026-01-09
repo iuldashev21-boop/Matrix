@@ -25,3 +25,4 @@ struct ProgressBar: View {
         .frame(height: Theme.progressBarHeight)
     }
 }
+

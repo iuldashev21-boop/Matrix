@@ -1981,3 +1981,4 @@ struct DiagnosticButton: View {
     AwakeningView(isPresented: .constant(true))
         .modelContainer(for: [Power.self, Agent.self, CheckIn.self], inMemory: true)
 }
+

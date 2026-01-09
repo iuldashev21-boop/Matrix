@@ -286,3 +286,4 @@ extension AnomalyRow {
         AnomalyReportsSection()
     }
 }
+

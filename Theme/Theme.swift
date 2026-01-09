@@ -17,3 +17,4 @@ enum Theme {
     // Habit formation constant (days to form a habit)
     static let habitFormationDays: Int = 66
 }
+

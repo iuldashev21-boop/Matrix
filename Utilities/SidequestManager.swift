@@ -168,3 +168,4 @@ enum SidequestManager {
         return xpEarned
     }
 }
+

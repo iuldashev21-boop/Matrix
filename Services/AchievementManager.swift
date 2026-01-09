@@ -255,3 +255,4 @@ class AchievementManager: ObservableObject {
         unlock("perfect_week")
     }
 }
+

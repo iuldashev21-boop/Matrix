@@ -48,3 +48,4 @@ enum PresetHabits {
         Array(Set(agents.map { $0.category })).sorted()
     }
 }
+

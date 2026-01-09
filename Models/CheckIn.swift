@@ -20,3 +20,4 @@ final class CheckIn {
         self.createdAt = Date()
     }
 }
+

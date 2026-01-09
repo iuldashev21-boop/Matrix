@@ -272,3 +272,4 @@ struct CRTScanlineOverlay: View {
 #Preview {
     OracleInsightView()
 }
+

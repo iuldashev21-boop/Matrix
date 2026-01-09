@@ -308,3 +308,4 @@ struct CodeRainTransition: View {
 #Preview {
     PillChoiceView(isPresented: .constant(true))
 }
+

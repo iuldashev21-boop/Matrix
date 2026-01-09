@@ -157,3 +157,4 @@ struct TerminalWakeUpView: View {
 #Preview {
     TerminalWakeUpView()
 }
+

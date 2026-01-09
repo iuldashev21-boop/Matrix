@@ -86,3 +86,4 @@ enum StreakCalculator {
         return longestStreak
     }
 }
+

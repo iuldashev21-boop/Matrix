@@ -213,3 +213,4 @@ class AnomalyManager: ObservableObject {
         return result
     }
 }
+

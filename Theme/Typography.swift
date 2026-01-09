@@ -10,3 +10,4 @@ extension Font {
     static let monoLarge = Font.system(size: 48, weight: .bold, design: .monospaced)
     static let mono = Font.system(size: 24, weight: .medium, design: .monospaced)
 }
+

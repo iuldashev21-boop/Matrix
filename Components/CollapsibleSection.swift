@@ -180,3 +180,4 @@ struct PulseModifier: ViewModifier {
         .padding()
     }
 }
+

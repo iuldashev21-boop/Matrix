@@ -89,3 +89,4 @@ enum RankSystem {
         return Double(xpIntoLevel) / Double(xpNeeded)
     }
 }
+

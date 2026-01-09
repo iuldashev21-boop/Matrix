@@ -291,3 +291,4 @@ struct MainAppView: View {
     FirstHackSetupView(isPresented: .constant(true))
         .modelContainer(for: [Power.self, Agent.self, CheckIn.self], inMemory: true)
 }
+

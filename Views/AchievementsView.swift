@@ -263,3 +263,4 @@ struct AchievementUnlockToast: View {
     AchievementsView()
         .modelContainer(for: [Achievement.self], inMemory: true)
 }
+

@@ -412,3 +412,4 @@ struct EditHabitSheet: View {
     HabitDetailView(power: nil, agent: nil)
         .modelContainer(for: [Power.self, Agent.self, CheckIn.self], inMemory: true)
 }
+

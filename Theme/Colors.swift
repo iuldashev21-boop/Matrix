@@ -23,3 +23,4 @@ extension Color {
     // Achievement colors
     static let matrixGold = Color(red: 255/255, green: 215/255, blue: 0)
 }
+

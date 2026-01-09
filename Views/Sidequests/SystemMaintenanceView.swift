@@ -217,3 +217,4 @@ struct StaticNoiseView: View {
 #Preview {
     SystemMaintenanceView()
 }
+
