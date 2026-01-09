@@ -400,21 +400,7 @@ struct DialInView: View {
     }
 
     private func triggerGlitch() {
-        // Quick jitter effect
-        for i in 0..<5 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.04) {
-                glitchOffset = CGSize(
-                    width: CGFloat.random(in: -4...4),
-                    height: CGFloat.random(in: -4...4)
-                )
-            }
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            withAnimation(.easeOut(duration: 0.1)) {
-                glitchOffset = .zero
-            }
-        }
+        GlitchEffect.triggerLight(offset: $glitchOffset)
     }
 
     private func saveCheckIn() {

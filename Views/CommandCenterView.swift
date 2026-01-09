@@ -318,7 +318,7 @@ struct CommandCenterView: View {
     // MARK: - Header
 
     private var operativeName: String {
-        UserDefaults.standard.string(forKey: "operatorName") ?? "OPERATIVE"
+        UserDefaults.standard.string(forKey: UserDefaultsKeys.operatorName) ?? "OPERATIVE"
     }
 
     private var headerView: some View {

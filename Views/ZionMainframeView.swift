@@ -5,8 +5,8 @@ struct ZionMainframeView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
-    @State private var hapticsEnabled: Bool = UserDefaults.standard.bool(forKey: "hapticsEnabled")
-    @State private var soundEnabled: Bool = UserDefaults.standard.bool(forKey: "soundEnabled")
+    @State private var hapticsEnabled: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.hapticsEnabled)
+    @State private var soundEnabled: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.soundEnabled)
     @State private var showResetAlert: Bool = false
     @State private var showExportSheet: Bool = false
     @State private var showAchievements: Bool = false
@@ -120,7 +120,7 @@ struct ZionMainframeView: View {
                 description: "Physical confirmation of uploaded data.",
                 isOn: $hapticsEnabled
             ) {
-                UserDefaults.standard.set(hapticsEnabled, forKey: "hapticsEnabled")
+                UserDefaults.standard.set(hapticsEnabled, forKey: UserDefaultsKeys.hapticsEnabled)
                 if hapticsEnabled {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
@@ -133,7 +133,7 @@ struct ZionMainframeView: View {
                 description: "System interface sounds.",
                 isOn: $soundEnabled
             ) {
-                UserDefaults.standard.set(soundEnabled, forKey: "soundEnabled")
+                UserDefaults.standard.set(soundEnabled, forKey: UserDefaultsKeys.soundEnabled)
             }
         }
         .padding(.horizontal, Spacing.md)
@@ -265,20 +265,7 @@ struct ZionMainframeView: View {
     }
 
     private func triggerGlitch() {
-        for i in 0..<10 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.03) {
-                easterEggGlitch = CGSize(
-                    width: CGFloat.random(in: -8...8),
-                    height: CGFloat.random(in: -8...8)
-                )
-            }
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            withAnimation(.easeOut(duration: 0.1)) {
-                easterEggGlitch = .zero
-            }
-        }
+        GlitchEffect.triggerHeavy(offset: $easterEggGlitch)
     }
 
     // MARK: - Actions

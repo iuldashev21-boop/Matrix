@@ -246,8 +246,8 @@ struct AwakeningView: View {
     }
 
     private func finalizeAwakening() {
-        UserDefaults.standard.set(operatorName, forKey: "operatorName")
-        UserDefaults.standard.set(Int(operatorAge) ?? 25, forKey: "operatorAge")
+        UserDefaults.standard.set(operatorName, forKey: UserDefaultsKeys.operatorName)
+        UserDefaults.standard.set(Int(operatorAge) ?? 25, forKey: UserDefaultsKeys.operatorAge)
 
         // Create Powers (Hacks)
         for hack in suggestedLoadout.hacks {

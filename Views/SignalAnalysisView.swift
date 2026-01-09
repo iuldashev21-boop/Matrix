@@ -9,7 +9,9 @@ struct SignalAnalysisView: View {
 
     @State private var progressAnimated: Double = 0
     @State private var gridAppeared: Bool = false
+    #if DEBUG
     @State private var hasSeededData: Bool = false
+    #endif
 
     // MARK: - Computed Stats
 
@@ -95,18 +97,21 @@ struct SignalAnalysisView: View {
                 .foregroundColor(.white)
             Spacer()
 
+            #if DEBUG
             // DEBUG: Seed data button
             Button(action: seedTestData) {
                 Image(systemName: "wand.and.stars")
                     .font(.system(size: 16))
                     .foregroundColor(Color.matrixGreen)
             }
+            #endif
         }
         .padding(.horizontal, Spacing.md)
     }
 
     // MARK: - DEBUG: Seed Test Data
 
+    #if DEBUG
     private func seedTestData() {
         guard !hasSeededData else { return }
         hasSeededData = true
@@ -145,6 +150,7 @@ struct SignalAnalysisView: View {
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
     }
+    #endif
 
     // MARK: - Operator Level Card
 

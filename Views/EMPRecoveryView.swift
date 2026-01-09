@@ -333,21 +333,7 @@ struct EMPRecoveryView: View {
     }
 
     private func triggerGlitch() {
-        // Initial glitch effect
-        for i in 0..<6 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.05) {
-                glitchOffset = CGSize(
-                    width: CGFloat.random(in: -6...6),
-                    height: CGFloat.random(in: -6...6)
-                )
-            }
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            withAnimation(.easeOut(duration: 0.1)) {
-                glitchOffset = .zero
-            }
-        }
+        GlitchEffect.triggerStandard(offset: $glitchOffset)
     }
 }
 

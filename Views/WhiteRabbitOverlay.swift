@@ -285,18 +285,18 @@ class WhiteRabbitManager: ObservableObject {
 
     // Reward storage
     static func addCheatKey() {
-        let current = UserDefaults.standard.integer(forKey: "cheatKeys")
-        UserDefaults.standard.set(current + 1, forKey: "cheatKeys")
+        let current = UserDefaults.standard.integer(forKey: UserDefaultsKeys.cheatKeys)
+        UserDefaults.standard.set(current + 1, forKey: UserDefaultsKeys.cheatKeys)
     }
 
     static func getCheatKeys() -> Int {
-        return UserDefaults.standard.integer(forKey: "cheatKeys")
+        return UserDefaults.standard.integer(forKey: UserDefaultsKeys.cheatKeys)
     }
 
     static func useCheatKey() -> Bool {
         let current = getCheatKeys()
         if current > 0 {
-            UserDefaults.standard.set(current - 1, forKey: "cheatKeys")
+            UserDefaults.standard.set(current - 1, forKey: UserDefaultsKeys.cheatKeys)
             return true
         }
         return false
