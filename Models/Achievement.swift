@@ -254,12 +254,15 @@ struct AchievementLibrary {
     ]
 
     // MARK: - All Achievements
-    static var all: [AchievementDefinition] {
-        streakAchievements + consistencyAchievements + specialAchievements
-    }
+    static let all: [AchievementDefinition] = streakAchievements + consistencyAchievements + specialAchievements
+
+    // O(1) lookup dictionary
+    private static let definitionsByID: [String: AchievementDefinition] = {
+        Dictionary(uniqueKeysWithValues: all.map { ($0.id, $0) })
+    }()
 
     static func definition(for id: String) -> AchievementDefinition? {
-        all.first { $0.id == id }
+        definitionsByID[id]
     }
 }
 

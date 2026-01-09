@@ -64,14 +64,19 @@ final class Agent {
         let today = calendar.startOfDay(for: Date())
         guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else { return false }
 
-        // Has check-in for yesterday?
-        let hasYesterdayCheckIn = checkIns.contains {
-            calendar.startOfDay(for: $0.date) == yesterday
-        }
+        // Single pass through checkIns
+        var hasYesterdayCheckIn = false
+        var hasPreviousStreak = false
 
-        // Has any previous check-ins (had a streak)?
-        let hasPreviousStreak = checkIns.contains {
-            calendar.startOfDay(for: $0.date) < yesterday && $0.isSuccess
+        for checkIn in checkIns {
+            let checkInDay = calendar.startOfDay(for: checkIn.date)
+            if checkInDay == yesterday {
+                hasYesterdayCheckIn = true
+            } else if checkInDay < yesterday && checkIn.isSuccess {
+                hasPreviousStreak = true
+            }
+            // Early exit if both conditions found
+            if hasYesterdayCheckIn && hasPreviousStreak { break }
         }
 
         return !hasYesterdayCheckIn && hasPreviousStreak && !resistedToday

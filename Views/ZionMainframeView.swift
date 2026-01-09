@@ -419,47 +419,52 @@ struct ExportDataView: View {
     }
 
     private func generateExportData() -> String? {
-        var export: [String: Any] = [:]
+        let export = ExportData(
+            version: "1.0.0",
+            exportDate: Date(),
+            totalXP: UserProfile.totalXP,
+            rank: UserProfile.currentRank.rawValue,
+            powers: powers.map { ExportData.HabitExport(name: $0.name, icon: $0.icon, currentStreak: $0.currentStreak, longestStreak: $0.longestStreak, createdAt: $0.createdAt) },
+            agents: agents.map { ExportData.HabitExport(name: $0.name, icon: $0.icon, currentStreak: $0.currentStreak, longestStreak: $0.longestStreak, createdAt: $0.createdAt) },
+            checkIns: checkIns.map { ExportData.CheckInExport(date: $0.date, isSuccess: $0.isSuccess, note: $0.note ?? "") }
+        )
 
-        export["version"] = "1.0.0"
-        export["exportDate"] = ISO8601DateFormatter().string(from: Date())
-        export["totalXP"] = UserProfile.totalXP
-        export["rank"] = UserProfile.currentRank.rawValue
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        encoder.dateEncodingStrategy = .iso8601
 
-        export["powers"] = powers.map { power in
-            [
-                "name": power.name,
-                "icon": power.icon,
-                "currentStreak": power.currentStreak,
-                "longestStreak": power.longestStreak,
-                "createdAt": ISO8601DateFormatter().string(from: power.createdAt)
-            ]
+        guard let jsonData = try? encoder.encode(export),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            return nil
         }
 
-        export["agents"] = agents.map { agent in
-            [
-                "name": agent.name,
-                "icon": agent.icon,
-                "currentStreak": agent.currentStreak,
-                "longestStreak": agent.longestStreak,
-                "createdAt": ISO8601DateFormatter().string(from: agent.createdAt)
-            ]
-        }
+        return jsonString
+    }
+}
 
-        export["checkIns"] = checkIns.map { checkIn in
-            [
-                "date": ISO8601DateFormatter().string(from: checkIn.date),
-                "isSuccess": checkIn.isSuccess,
-                "note": checkIn.note ?? ""
-            ]
-        }
+// MARK: - Export Data Models
 
-        if let jsonData = try? JSONSerialization.data(withJSONObject: export, options: .prettyPrinted),
-           let jsonString = String(data: jsonData, encoding: .utf8) {
-            return jsonString
-        }
+private struct ExportData: Codable {
+    let version: String
+    let exportDate: Date
+    let totalXP: Int
+    let rank: String
+    let powers: [HabitExport]
+    let agents: [HabitExport]
+    let checkIns: [CheckInExport]
 
-        return nil
+    struct HabitExport: Codable {
+        let name: String
+        let icon: String
+        let currentStreak: Int
+        let longestStreak: Int
+        let createdAt: Date
+    }
+
+    struct CheckInExport: Codable {
+        let date: Date
+        let isSuccess: Bool
+        let note: String
     }
 }
 
