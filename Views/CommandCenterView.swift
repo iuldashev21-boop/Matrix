@@ -660,6 +660,8 @@ struct AchievementsTabView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var unlockedAchievements: [Achievement]
 
+    @State private var selectedAchievement: AchievementDefinition? = nil
+
     private var unlockedIds: Set<String> {
         Set(unlockedAchievements.map { $0.id })
     }
@@ -671,6 +673,8 @@ struct AchievementsTabView: View {
     private var totalCount: Int {
         AchievementLibrary.all.count
     }
+
+    private let gridColumns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 5)
 
     var body: some View {
         VStack(spacing: 0) {
@@ -711,19 +715,19 @@ struct AchievementsTabView: View {
                     // Progress Ring
                     progressHeader
 
-                    // Categories
-                    achievementSection(
-                        title: "// STREAK DECRYPTIONS",
+                    // Categories - Icon Grid
+                    achievementGridSection(
+                        title: "STREAK DECRYPTIONS",
                         achievements: AchievementLibrary.streakAchievements
                     )
 
-                    achievementSection(
-                        title: "// CONSISTENCY PROTOCOLS",
+                    achievementGridSection(
+                        title: "CONSISTENCY PROTOCOLS",
                         achievements: AchievementLibrary.consistencyAchievements
                     )
 
-                    achievementSection(
-                        title: "// SPECIAL OPS",
+                    achievementGridSection(
+                        title: "SPECIAL OPS",
                         achievements: AchievementLibrary.specialAchievements
                     )
 
@@ -731,6 +735,15 @@ struct AchievementsTabView: View {
                 }
                 .padding(.top, Spacing.md)
             }
+        }
+        .sheet(item: $selectedAchievement) { achievement in
+            AchievementDetailSheet(
+                achievement: achievement,
+                isUnlocked: unlockedIds.contains(achievement.id),
+                unlockedAt: unlockedAchievements.first { $0.id == achievement.id }?.unlockedAt
+            )
+            .presentationDetents([.height(280)])
+            .presentationDragIndicator(.visible)
         }
     }
 
@@ -765,7 +778,7 @@ struct AchievementsTabView: View {
                 .font(.system(size: 11, design: .monospaced))
                 .foregroundColor(Color.matrixGreen)
         }
-        .padding(.vertical, Spacing.lg)
+        .padding(.vertical, Spacing.md)
     }
 
     private var totalXPEarned: Int {
@@ -774,83 +787,42 @@ struct AchievementsTabView: View {
         }.reduce(0, +)
     }
 
-    private func achievementSection(title: String, achievements: [AchievementDefinition]) -> some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
-            Text(title)
-                .font(.system(size: 11, weight: .bold, design: .monospaced))
-                .foregroundColor(Color.lightGray)
-                .padding(.horizontal, Spacing.lg)
+    private func achievementGridSection(title: String, achievements: [AchievementDefinition]) -> some View {
+        let unlockedInSection = achievements.filter { unlockedIds.contains($0.id) }.count
 
-            ForEach(achievements) { achievement in
-                AchievementRowCompact(
-                    achievement: achievement,
-                    isUnlocked: unlockedIds.contains(achievement.id)
-                )
-                .padding(.horizontal, Spacing.lg)
-            }
-        }
-    }
-}
-
-// MARK: - Compact Achievement Row
-
-struct AchievementRowCompact: View {
-    let achievement: AchievementDefinition
-    let isUnlocked: Bool
-
-    var body: some View {
-        HStack(spacing: Spacing.md) {
-            // Icon
-            ZStack {
-                Circle()
-                    .fill(isUnlocked ? rarityColor.opacity(0.2) : Color.charcoal)
-                    .frame(width: 44, height: 44)
-
-                Image(systemName: achievement.icon)
-                    .font(.system(size: 18))
-                    .foregroundColor(isUnlocked ? rarityColor : Color.mediumGray)
-            }
-
-            // Details
-            VStack(alignment: .leading, spacing: 2) {
-                HStack {
-                    Text(achievement.name)
-                        .font(.system(size: 13, weight: .bold, design: .monospaced))
-                        .foregroundColor(isUnlocked ? .white : Color.mediumGray)
-
-                    Spacer()
-
-                    Text(achievement.rarity.rawValue)
-                        .font(.system(size: 8, weight: .bold, design: .monospaced))
-                        .foregroundColor(rarityColor)
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 2)
-                        .background(rarityColor.opacity(0.2))
-                        .cornerRadius(4)
-                }
-
-                Text(isUnlocked ? achievement.description : "???")
-                    .font(.system(size: 10, design: .monospaced))
+        return VStack(alignment: .leading, spacing: Spacing.sm) {
+            // Section Header
+            HStack {
+                Text("// \(title)")
+                    .font(.system(size: 11, weight: .bold, design: .monospaced))
                     .foregroundColor(Color.lightGray)
-                    .lineLimit(1)
-            }
-        }
-        .padding(Spacing.sm)
-        .background(isUnlocked ? Color.charcoal : Color.charcoal.opacity(0.5))
-        .cornerRadius(8)
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(isUnlocked ? rarityColor.opacity(0.5) : Color.mediumGray.opacity(0.3), lineWidth: 1)
-        )
-        .opacity(isUnlocked ? 1.0 : 0.6)
-    }
 
-    private var rarityColor: Color {
-        switch achievement.rarity {
-        case .common: return Color.lightGray
-        case .rare: return Color.matrixGreen
-        case .epic: return Color.matrixGold
-        case .legendary: return Color.purple
+                Spacer()
+
+                Text("\(unlockedInSection)/\(achievements.count)")
+                    .font(.system(size: 11, weight: .bold, design: .monospaced))
+                    .foregroundColor(unlockedInSection == achievements.count ? Color.matrixGreen : Color.mediumGray)
+            }
+            .padding(.horizontal, Spacing.lg)
+
+            // Icon Grid
+            LazyVGrid(columns: gridColumns, spacing: 12) {
+                ForEach(achievements) { achievement in
+                    AchievementBadge(
+                        achievement: achievement,
+                        isUnlocked: unlockedIds.contains(achievement.id)
+                    )
+                    .onTapGesture {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                        selectedAchievement = achievement
+                    }
+                }
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.vertical, Spacing.sm)
+            .background(Color.darkGray.opacity(0.5))
+            .cornerRadius(12)
+            .padding(.horizontal, Spacing.md)
         }
     }
 }
