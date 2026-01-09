@@ -50,6 +50,8 @@
 		A10000000000000000000045 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000045 /* UserDefaultsKeys.swift */; };
 		A10000000000000000000046 /* GlitchEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000046 /* GlitchEffect.swift */; };
 		A10000000000000000000047 /* AnomalyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000047 /* AnomalyManager.swift */; };
+		A10000000000000000000050 /* ProgramStatusList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000050 /* ProgramStatusList.swift */; };
+		A10000000000000000000051 /* SystemStatusCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000051 /* SystemStatusCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +102,8 @@
 		A20000000000000000000045 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		A20000000000000000000046 /* GlitchEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlitchEffect.swift; sourceTree = "<group>"; };
 		A20000000000000000000047 /* AnomalyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnomalyManager.swift; sourceTree = "<group>"; };
+		A20000000000000000000050 /* ProgramStatusList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramStatusList.swift; sourceTree = "<group>"; };
+		A20000000000000000000051 /* SystemStatusCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemStatusCard.swift; sourceTree = "<group>"; };
 		A30000000000000000000001 /* MatrixHabit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatrixHabit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -165,6 +169,8 @@
 				A20000000000000000000010 /* ProgressBar.swift */,
 				A20000000000000000000011 /* EmptyStateView.swift */,
 				A20000000000000000000038 /* CollapsibleSection.swift */,
+				A20000000000000000000050 /* ProgramStatusList.swift */,
+				A20000000000000000000051 /* SystemStatusCard.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -355,6 +361,8 @@
 				A10000000000000000000045 /* UserDefaultsKeys.swift in Sources */,
 				A10000000000000000000046 /* GlitchEffect.swift in Sources */,
 				A10000000000000000000047 /* AnomalyManager.swift in Sources */,
+				A10000000000000000000050 /* ProgramStatusList.swift in Sources */,
+				A10000000000000000000051 /* SystemStatusCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -44,6 +44,9 @@ struct AchievementsView: View {
                             achievements: AchievementLibrary.specialAchievements
                         )
 
+                        // Anomaly Reports (Progress Milestones)
+                        AnomalyReportsSection()
+
                         Spacer(minLength: 50)
                     }
                     .padding(.top, Spacing.md)

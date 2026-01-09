@@ -64,14 +64,11 @@ struct SignalAnalysisView: View {
                     // The Grid (Compact)
                     gridSection
 
-                    // Program Analytics (per-habit)
-                    programAnalyticsSection
+                    // System Status (compact stats)
+                    systemStatusSection
 
-                    // System Metrics
-                    metricsSection
-
-                    // Anomaly Reports
-                    AnomalyReportsSection()
+                    // Program Status (horizontal bars)
+                    programStatusSection
 
                     Spacer(minLength: 100)
                 }
@@ -251,51 +248,81 @@ struct SignalAnalysisView: View {
         }
     }
 
-    // MARK: - Program Analytics Section
+    // MARK: - System Status Section
 
-    private var programAnalyticsSection: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
-            Text("// PROGRAM ANALYTICS")
-                .font(.system(size: 12, weight: .bold, design: .monospaced))
-                .foregroundColor(Color.lightGray)
-                .padding(.horizontal, Spacing.md)
+    private var systemStatusSection: some View {
+        SystemStatusCard(
+            todayCompleted: todayCompletedCount,
+            todayTotal: totalHabitsCount,
+            currentStreak: bestCurrentStreak,
+            daysActive: daysActiveCount
+        )
+    }
 
-            if powers.isEmpty && agents.isEmpty {
-                Text("No programs loaded")
-                    .font(.system(size: 12, design: .monospaced))
-                    .foregroundColor(Color.mediumGray)
-                    .padding(.horizontal, Spacing.md)
-            } else {
-                VStack(spacing: Spacing.sm) {
-                    // Powers
-                    ForEach(powers) { power in
-                        HabitAnalyticsCard(
-                            name: power.name,
-                            icon: power.icon,
-                            currentStreak: power.currentStreak,
-                            longestStreak: power.longestStreak,
-                            completionRate: calculateCompletionRate(checkIns: power.checkIns),
-                            last7Days: getLast7Days(checkIns: power.checkIns),
-                            isPower: true
-                        )
-                    }
+    private var todayCompletedCount: Int {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        return checkIns.filter {
+            calendar.startOfDay(for: $0.date) == today && $0.isSuccess
+        }.count
+    }
 
-                    // Agents
-                    ForEach(agents) { agent in
-                        HabitAnalyticsCard(
-                            name: agent.name,
-                            icon: agent.icon,
-                            currentStreak: agent.currentStreak,
-                            longestStreak: agent.longestStreak,
-                            completionRate: calculateCompletionRate(checkIns: agent.checkIns),
-                            last7Days: getLast7Days(checkIns: agent.checkIns),
-                            isPower: false
-                        )
-                    }
-                }
-                .padding(.horizontal, Spacing.md)
-            }
+    private var totalHabitsCount: Int {
+        powers.count + agents.count
+    }
+
+    private var bestCurrentStreak: Int {
+        let powerStreaks = powers.map { $0.currentStreak }
+        let agentStreaks = agents.map { $0.currentStreak }
+        return (powerStreaks + agentStreaks).max() ?? 0
+    }
+
+    private var daysActiveCount: Int {
+        guard let firstCheckIn = checkIns.map({ $0.date }).min() else { return 0 }
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let firstDay = calendar.startOfDay(for: firstCheckIn)
+        let components = calendar.dateComponents([.day], from: firstDay, to: today)
+        return (components.day ?? 0) + 1
+    }
+
+    // MARK: - Program Status Section
+
+    private var programStatusSection: some View {
+        ProgramStatusList(programs: programStatusData)
+    }
+
+    private var programStatusData: [ProgramStatus] {
+        var programs: [ProgramStatus] = []
+        var sortOrder = 0
+
+        // Add powers
+        for power in powers {
+            programs.append(ProgramStatus(
+                name: power.name,
+                icon: power.icon,
+                completionRate: calculateCompletionRate(checkIns: power.checkIns),
+                currentStreak: power.currentStreak,
+                isPower: true,
+                sortOrder: sortOrder
+            ))
+            sortOrder += 1
         }
+
+        // Add agents
+        for agent in agents {
+            programs.append(ProgramStatus(
+                name: agent.name,
+                icon: agent.icon,
+                completionRate: calculateCompletionRate(checkIns: agent.checkIns),
+                currentStreak: agent.currentStreak,
+                isPower: false,
+                sortOrder: sortOrder
+            ))
+            sortOrder += 1
+        }
+
+        return programs
     }
 
     // MARK: - Analytics Helpers
@@ -304,47 +331,6 @@ struct SignalAnalysisView: View {
         guard !checkIns.isEmpty else { return 0 }
         let successful = checkIns.filter { $0.isSuccess }.count
         return Int((Double(successful) / Double(checkIns.count)) * 100)
-    }
-
-    private func getLast7Days(checkIns: [CheckIn]) -> [GridCellState] {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-
-        return (0..<7).map { dayOffset in
-            guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: today) else {
-                return .empty
-            }
-
-            let hasSuccess = checkIns.contains {
-                calendar.startOfDay(for: $0.date) == date && $0.isSuccess
-            }
-            let hasFail = checkIns.contains {
-                calendar.startOfDay(for: $0.date) == date && !$0.isSuccess
-            }
-
-            if hasSuccess { return .success }
-            if hasFail { return .fail }
-            return .empty
-        }.reversed()
-    }
-
-    // MARK: - Metrics Section
-
-    private var metricsSection: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
-            // Section header
-            Text("// SYSTEM METRICS")
-                .font(.system(size: 12, weight: .bold, design: .monospaced))
-                .foregroundColor(Color.lightGray)
-                .padding(.horizontal, Spacing.md)
-
-            HStack(spacing: Spacing.md) {
-                MetricItem(value: "\(systemIntegrity)%", label: "SYSTEM\nINTEGRITY")
-                MetricItem(value: "\(totalCheckIns)", label: "PACKETS\nUPLOADED")
-                MetricItem(value: "\(maxSignalStrength)", label: "MAX\nSIGNAL")
-            }
-            .padding(.horizontal, Spacing.md)
-        }
     }
 
     // MARK: - Grid Helpers
