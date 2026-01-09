@@ -88,13 +88,14 @@ struct AwakeningView: View {
             if shouldShowProgressIndicator {
                 VStack {
                     OnboardingProgressBar(currentPhase: currentPhase, totalPhases: totalPhases)
-                        .padding(.top, Spacing.lg)
-                        .padding(.horizontal, Spacing.md)
+                        .padding(.top, Spacing.xl)
+                        .padding(.horizontal, Spacing.lg)
                     Spacer()
                 }
+                .zIndex(100)  // Ensure progress bar stays on top
             }
 
-            // Main content
+            // Main content with top padding to avoid progress bar overlap
             Group {
                 switch currentPhase {
                 case 0:
@@ -614,7 +615,7 @@ struct PrisonerRecordPhase: View {
                 Spacer()
             }
             .padding(.horizontal, Spacing.lg)
-            .padding(.top, Spacing.xl)
+            .padding(.top, 72)  // Clear the progress bar
             .padding(.bottom, Spacing.lg)
 
             // Terminal text
@@ -806,7 +807,7 @@ struct HookQuestionPhase: View {
                 Spacer()
             }
             .padding(.horizontal, Spacing.lg)
-            .padding(.top, Spacing.lg)
+            .padding(.top, 72)  // Clear the progress bar
 
             Spacer()
 
@@ -882,7 +883,7 @@ struct ProblemSelectionPhase: View {
                 Spacer()
             }
             .padding(.horizontal, Spacing.lg)
-            .padding(.top, Spacing.lg)
+            .padding(.top, 72)  // Clear the progress bar
 
             if showContent {
                 VStack(spacing: Spacing.sm) {
@@ -1041,7 +1042,7 @@ struct YearsDeletedPhase: View {
                 Spacer()
             }
             .padding(.horizontal, Spacing.lg)
-            .padding(.top, Spacing.lg)
+            .padding(.top, 72)  // Clear the progress bar
 
             Spacer()
 
@@ -1177,7 +1178,7 @@ struct BrokenPromisesPhase: View {
                 Spacer()
             }
             .padding(.horizontal, Spacing.lg)
-            .padding(.top, Spacing.lg)
+            .padding(.top, 72)  // Clear the progress bar
 
             Spacer()
 
@@ -1256,7 +1257,7 @@ struct PostScrollEmotionPhase: View {
                 Spacer()
             }
             .padding(.horizontal, Spacing.lg)
-            .padding(.top, Spacing.lg)
+            .padding(.top, 72)  // Clear the progress bar
 
             Spacer()
 
@@ -1329,7 +1330,7 @@ struct NeglectedDreamPhase: View {
                 Spacer()
             }
             .padding(.horizontal, Spacing.lg)
-            .padding(.top, Spacing.lg)
+            .padding(.top, 72)  // Clear the progress bar
 
             Spacer()
 
@@ -1403,7 +1404,7 @@ struct MentalClarityPhase: View {
                 Spacer()
             }
             .padding(.horizontal, Spacing.lg)
-            .padding(.top, Spacing.lg)
+            .padding(.top, 72)  // Clear the progress bar
 
             Spacer()
 
@@ -1484,7 +1485,7 @@ struct ScreenOverPersonPhase: View {
                 Spacer()
             }
             .padding(.horizontal, Spacing.lg)
-            .padding(.top, Spacing.lg)
+            .padding(.top, 72)  // Clear the progress bar
 
             Spacer()
 
@@ -1560,7 +1561,7 @@ struct MotivationCheckPhase: View {
                 Spacer()
             }
             .padding(.horizontal, Spacing.lg)
-            .padding(.top, Spacing.lg)
+            .padding(.top, 72)  // Clear the progress bar
 
             Spacer()
 
@@ -1635,7 +1636,7 @@ struct YearProjectionPhase: View {
                 Spacer()
             }
             .padding(.horizontal, Spacing.lg)
-            .padding(.top, Spacing.lg)
+            .padding(.top, 72)  // Clear the progress bar
 
             Spacer()
 
@@ -1724,7 +1725,7 @@ struct RedBluePillPhase: View {
                     Spacer()
                 }
                 .padding(.horizontal, Spacing.lg)
-                .padding(.top, Spacing.lg)
+                .padding(.top, 72)  // Clear the progress bar
 
                 Spacer()
 
@@ -1902,7 +1903,7 @@ struct SolutionProtocolPhase: View {
                     Spacer()
                 }
                 .padding(.horizontal, Spacing.lg)
-                .padding(.top, Spacing.lg)
+                .padding(.top, 72)  // Clear the progress bar
 
                 if showContent {
                     VStack(spacing: Spacing.sm) {
@@ -2138,7 +2139,7 @@ struct ContractPhase: View {
                     Spacer()
                 }
                 .padding(.horizontal, Spacing.lg)
-                .padding(.top, Spacing.lg)
+                .padding(.top, 72)  // Clear the progress bar
 
                 Spacer()
 
@@ -2267,7 +2268,7 @@ struct TerminologyCardPhase: View {
                 Spacer()
             }
             .padding(.horizontal, Spacing.lg)
-            .padding(.top, Spacing.lg)
+            .padding(.top, 72)  // Clear the progress bar
 
             Spacer()
 
@@ -2398,7 +2399,7 @@ struct LoadoutExpectationPhase: View {
                 Spacer()
             }
             .padding(.horizontal, Spacing.lg)
-            .padding(.top, Spacing.lg)
+            .padding(.top, 72)  // Clear the progress bar
 
             Spacer()
 
@@ -2528,7 +2529,7 @@ struct TheTruthPhase: View {
                     Spacer()
                 }
                 .padding(.horizontal, Spacing.lg)
-                .padding(.top, Spacing.lg)
+                .padding(.top, 72)  // Clear the progress bar
 
                 Spacer()
 
@@ -2682,7 +2683,7 @@ struct TheWayOutPhase: View {
                     Spacer()
                 }
                 .padding(.horizontal, Spacing.lg)
-                .padding(.top, Spacing.lg)
+                .padding(.top, 72)  // Clear the progress bar
 
                 Spacer()
 
@@ -2914,29 +2915,35 @@ struct OnboardingProgressBar: View {
     }
 
     var body: some View {
-        VStack(spacing: 6) {
-            // Progress bar
+        VStack(spacing: 8) {
+            // Phase counter - moved to top for better hierarchy
+            Text("PHASE \(currentPhase + 1) OF \(totalPhases)")
+                .font(.system(size: 11, weight: .bold, design: .monospaced))
+                .foregroundColor(Color.lightGray)
+
+            // Progress bar - taller and more visible
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     // Background track
-                    RoundedRectangle(cornerRadius: 2)
+                    RoundedRectangle(cornerRadius: 3)
                         .fill(Color.charcoal)
-                        .frame(height: 4)
+                        .frame(height: 6)
 
                     // Progress fill
-                    RoundedRectangle(cornerRadius: 2)
+                    RoundedRectangle(cornerRadius: 3)
                         .fill(Color.matrixGreen)
-                        .frame(width: geo.size.width * CGFloat(progress), height: 4)
-                        .shadow(color: Color.matrixGreen.opacity(0.5), radius: 4)
+                        .frame(width: geo.size.width * CGFloat(progress), height: 6)
+                        .shadow(color: Color.matrixGreen.opacity(0.6), radius: 6)
                 }
             }
-            .frame(height: 4)
-
-            // Phase counter
-            Text("PHASE \(currentPhase + 1) OF \(totalPhases)")
-                .font(.system(size: 10, weight: .medium, design: .monospaced))
-                .foregroundColor(Color.mediumGray)
+            .frame(height: 6)
         }
+        .padding(.horizontal, Spacing.sm)
+        .padding(.vertical, Spacing.sm)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.black.opacity(0.7))
+        )
     }
 }
 
