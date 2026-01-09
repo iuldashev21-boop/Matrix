@@ -474,7 +474,7 @@ struct MetricItem: View {
     }
 }
 
-// MARK: - Habit Analytics Card
+// MARK: - Habit Analytics Card (Compact Visual)
 
 struct HabitAnalyticsCard: View {
     let name: String
@@ -490,98 +490,68 @@ struct HabitAnalyticsCard: View {
     }
 
     var body: some View {
-        VStack(spacing: Spacing.sm) {
-            // Header row
-            HStack(spacing: Spacing.sm) {
-                // Icon
-                Image(systemName: icon)
-                    .font(.system(size: 16))
+        HStack(spacing: Spacing.md) {
+            // Left: Mini progress ring with streak
+            ZStack {
+                // Background ring
+                Circle()
+                    .stroke(Color.charcoal, lineWidth: 4)
+                    .frame(width: 44, height: 44)
+
+                // Progress ring
+                Circle()
+                    .trim(from: 0, to: CGFloat(min(completionRate, 100)) / 100)
+                    .stroke(accentColor, style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                    .frame(width: 44, height: 44)
+                    .rotationEffect(.degrees(-90))
+
+                // Streak number
+                Text("\(currentStreak)")
+                    .font(.system(size: 14, weight: .bold, design: .monospaced))
                     .foregroundColor(accentColor)
-                    .frame(width: 28, height: 28)
-                    .background(accentColor.opacity(0.2))
-                    .cornerRadius(6)
-
-                // Name
-                Text(name.uppercased())
-                    .font(.system(size: 12, weight: .bold, design: .monospaced))
-                    .foregroundColor(.white)
-                    .lineLimit(1)
-
-                Spacer()
-
-                // Type badge
-                Text(isPower ? "HACK" : "AGENT")
-                    .font(.system(size: 8, weight: .bold, design: .monospaced))
-                    .foregroundColor(accentColor)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(accentColor.opacity(0.2))
-                    .cornerRadius(4)
             }
 
-            // Stats row
-            HStack(spacing: Spacing.md) {
-                // Current Streak
-                VStack(spacing: 2) {
-                    Text("\(currentStreak)")
-                        .font(.system(size: 18, weight: .bold, design: .monospaced))
+            // Middle: Name + 7-day bar chart
+            VStack(alignment: .leading, spacing: 6) {
+                // Name row
+                HStack {
+                    Image(systemName: icon)
+                        .font(.system(size: 10))
                         .foregroundColor(accentColor)
-                    Text("STREAK")
-                        .font(.system(size: 8, design: .monospaced))
-                        .foregroundColor(Color.mediumGray)
-                }
-                .frame(maxWidth: .infinity)
-
-                // Divider
-                Rectangle()
-                    .fill(Color.charcoal)
-                    .frame(width: 1, height: 30)
-
-                // Longest
-                VStack(spacing: 2) {
-                    Text("\(longestStreak)")
-                        .font(.system(size: 18, weight: .bold, design: .monospaced))
+                    Text(name.uppercased())
+                        .font(.system(size: 11, weight: .bold, design: .monospaced))
                         .foregroundColor(.white)
-                    Text("BEST")
-                        .font(.system(size: 8, design: .monospaced))
-                        .foregroundColor(Color.mediumGray)
+                        .lineLimit(1)
                 }
-                .frame(maxWidth: .infinity)
 
-                // Divider
-                Rectangle()
-                    .fill(Color.charcoal)
-                    .frame(width: 1, height: 30)
-
-                // Completion Rate
-                VStack(spacing: 2) {
-                    Text("\(completionRate)%")
-                        .font(.system(size: 18, weight: .bold, design: .monospaced))
-                        .foregroundColor(.white)
-                    Text("RATE")
-                        .font(.system(size: 8, design: .monospaced))
-                        .foregroundColor(Color.mediumGray)
-                }
-                .frame(maxWidth: .infinity)
-
-                // Divider
-                Rectangle()
-                    .fill(Color.charcoal)
-                    .frame(width: 1, height: 30)
-
-                // 7-day trend
-                VStack(spacing: 2) {
-                    HStack(spacing: 2) {
-                        ForEach(0..<7, id: \.self) { index in
-                            Circle()
-                                .fill(dotColor(for: last7Days.indices.contains(index) ? last7Days[index] : .empty))
-                                .frame(width: 6, height: 6)
-                        }
+                // 7-day mini bar chart
+                HStack(spacing: 3) {
+                    ForEach(0..<7, id: \.self) { index in
+                        let state = last7Days.indices.contains(index) ? last7Days[index] : .empty
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(barColor(for: state))
+                            .frame(width: 8, height: barHeight(for: state))
                     }
-                    Text("7 DAYS")
-                        .font(.system(size: 8, design: .monospaced))
-                        .foregroundColor(Color.mediumGray)
                 }
+                .frame(height: 16, alignment: .bottom)
+            }
+
+            Spacer()
+
+            // Right: Best streak + rate
+            VStack(alignment: .trailing, spacing: 2) {
+                HStack(spacing: 4) {
+                    Image(systemName: "trophy.fill")
+                        .font(.system(size: 8))
+                        .foregroundColor(Color.mediumGray)
+                    Text("\(longestStreak)")
+                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                        .foregroundColor(.white)
+                }
+
+                Text("\(completionRate)%")
+                    .font(.system(size: 10, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
             }
         }
         .padding(Spacing.sm)
@@ -593,12 +563,21 @@ struct HabitAnalyticsCard: View {
         )
     }
 
-    private func dotColor(for state: GridCellState) -> Color {
+    private func barColor(for state: GridCellState) -> Color {
         switch state {
-        case .success: return isPower ? Color.matrixGreen : Color.agentRed
+        case .success: return accentColor
         case .fail: return Color.agentRed.opacity(0.5)
         case .missed: return Color.charcoal
-        case .empty: return Color.charcoal
+        case .empty: return Color.charcoal.opacity(0.5)
+        }
+    }
+
+    private func barHeight(for state: GridCellState) -> CGFloat {
+        switch state {
+        case .success: return 16
+        case .fail: return 10
+        case .missed: return 4
+        case .empty: return 4
         }
     }
 }
