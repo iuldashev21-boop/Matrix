@@ -70,7 +70,7 @@ struct AwakeningView: View {
     @State private var choseRedPill: Bool = false
     @State private var suggestedLoadout: ProtocolLoadout = ProtocolLoadout()
 
-    private let totalPhases = 14
+    private let totalPhases = 18
 
     var body: some View {
         ZStack {
@@ -94,67 +94,77 @@ struct AwakeningView: View {
                         onComplete: { advancePhase() }
                     )
                 case 1:
+                    TerminologyCardPhase(
+                        onBack: { goBack() },
+                        onComplete: { advancePhase() }
+                    )
+                case 2:
+                    LoadoutExpectationPhase(
+                        onBack: { goBack() },
+                        onComplete: { advancePhase() }
+                    )
+                case 3:
                     HookQuestionPhase(
                         answer: $livingBelowPotential,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
-                case 2:
+                case 4:
                     ProblemSelectionPhase(
                         selectedProblems: $selectedProblems,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
-                case 3:
+                case 5:
                     YearsDeletedPhase(
                         age: Int(operatorAge) ?? 25,
                         hoursLost: $hoursLost,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
-                case 4:
+                case 6:
                     BrokenPromisesPhase(
                         answer: $brokenPromises,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
-                case 5:
+                case 7:
                     PostScrollEmotionPhase(
                         answer: $postScrollEmotion,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
-                case 6:
+                case 8:
                     NeglectedDreamPhase(
                         answer: $neglectedDream,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
-                case 7:
+                case 9:
                     MentalClarityPhase(
                         clarity: $mentalClarity,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
-                case 8:
+                case 10:
                     ScreenOverPersonPhase(
                         answer: $screenOverPerson,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
-                case 9:
+                case 11:
                     MotivationCheckPhase(
                         answer: $motivationType,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
-                case 10:
+                case 12:
                     YearProjectionPhase(
                         answer: $yearProjection,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
-                case 11:
+                case 13:
                     RedBluePillPhase(
                         choseRedPill: $choseRedPill,
                         onBack: { goBack() },
@@ -164,13 +174,23 @@ struct AwakeningView: View {
                         },
                         onBluePill: { handleBluePill() }
                     )
-                case 12:
+                case 14:
+                    TheTruthPhase(
+                        onBack: { goBack() },
+                        onComplete: { advancePhase() }
+                    )
+                case 15:
+                    TheWayOutPhase(
+                        onBack: { goBack() },
+                        onComplete: { advancePhase() }
+                    )
+                case 16:
                     SolutionProtocolPhase(
                         loadout: $suggestedLoadout,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
-                case 13:
+                case 17:
                     ContractPhase(
                         onBack: { goBack() },
                         onComplete: { finalizeAwakening() }
@@ -189,22 +209,28 @@ struct AwakeningView: View {
 
     private var codeRainOpacity: Double {
         switch currentPhase {
-        case 0...3: return 0.08
-        case 4...7: return 0.12
-        case 8...10: return 0.18
-        case 11: return 0.0 // Red/Blue pill - pure black
-        case 12...13: return 0.25
+        case 0...2: return 0.08   // Name/Age, Terminology, Loadout Expectation
+        case 3...5: return 0.08   // First diagnostic questions
+        case 6...9: return 0.12   // Middle diagnostic questions
+        case 10...12: return 0.18 // Final diagnostic questions
+        case 13: return 0.0       // Red/Blue pill - pure black
+        case 14: return 0.05      // The Truth - dark, minimal rain
+        case 15: return 0.25      // The Way Out - hopeful, more rain
+        case 16...17: return 0.25 // Protocol + Contract
         default: return 0.1
         }
     }
 
     private var codeRainSpeed: Double {
         switch currentPhase {
-        case 0...5: return 0.3
-        case 6...10: return 0.5
-        case 11: return 0.0
-        case 12: return 1.0
-        case 13: return 2.0
+        case 0...2: return 0.3    // Slow intro
+        case 3...7: return 0.3    // Diagnostic questions
+        case 8...12: return 0.5   // Building tension
+        case 13: return 0.0       // Red/Blue pill - still
+        case 14: return 0.2       // The Truth - slow, contemplative
+        case 15: return 0.8       // The Way Out - energized
+        case 16: return 1.0       // Protocol reveal
+        case 17: return 2.0       // Contract - fast
         default: return 0.5
         }
     }
@@ -2183,6 +2209,560 @@ struct ContractPhase: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { withAnimation(.easeOut(duration: 0.3)) { showFlash = false } }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { withAnimation { showFinalText = true } }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { onComplete() }
+    }
+}
+
+// MARK: - Phase: Terminology Card (Single Card)
+
+struct TerminologyCardPhase: View {
+    let onBack: () -> Void
+    let onComplete: () -> Void
+
+    @State private var showContent: Bool = false
+    @State private var showButton: Bool = false
+
+    var body: some View {
+        VStack(spacing: Spacing.xl) {
+            // Back button
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("BACK")
+                    }
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.top, Spacing.lg)
+
+            Spacer()
+
+            if showContent {
+                VStack(spacing: Spacing.lg) {
+                    // Header - make it clear this is a guide
+                    Text("> OPERATOR MANUAL")
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .foregroundColor(Color.matrixGreen)
+                        .matrixGlow()
+
+                    Text("How The Construct Works")
+                        .font(.system(size: 12, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+
+                    // Single unified card
+                    VStack(spacing: Spacing.lg) {
+                        // Hacks Section (renamed from Powers)
+                        HStack(spacing: Spacing.md) {
+                            Image(systemName: "bolt.fill")
+                                .font(.system(size: 28))
+                                .foregroundColor(Color.matrixGreen)
+                                .shadow(color: Color.matrixGreen.opacity(0.6), radius: 6)
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("HACKS")
+                                    .font(.system(size: 16, weight: .bold, design: .monospaced))
+                                    .foregroundColor(Color.matrixGreen)
+
+                                Text("Good habits to UPLOAD daily")
+                                    .font(.system(size: 12, design: .monospaced))
+                                    .foregroundColor(Color.lightGray)
+
+                                Text("Exercise, Reading, Hydration...")
+                                    .font(.system(size: 11, design: .monospaced))
+                                    .foregroundColor(Color.mediumGray)
+                            }
+
+                            Spacer()
+                        }
+                        .padding(Spacing.md)
+                        .background(Color.charcoal)
+                        .cornerRadius(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.matrixGreen.opacity(0.5), lineWidth: 1)
+                        )
+
+                        // Agents Section
+                        HStack(spacing: Spacing.md) {
+                            Image(systemName: "exclamationmark.shield.fill")
+                                .font(.system(size: 28))
+                                .foregroundColor(Color.agentRed)
+                                .shadow(color: Color.agentRed.opacity(0.6), radius: 6)
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("AGENTS")
+                                    .font(.system(size: 16, weight: .bold, design: .monospaced))
+                                    .foregroundColor(Color.agentRed)
+
+                                Text("Bad habits to RESIST daily")
+                                    .font(.system(size: 12, design: .monospaced))
+                                    .foregroundColor(Color.lightGray)
+
+                                Text("Scrolling, Junk food, Vices...")
+                                    .font(.system(size: 11, design: .monospaced))
+                                    .foregroundColor(Color.mediumGray)
+                            }
+
+                            Spacer()
+                        }
+                        .padding(Spacing.md)
+                        .background(Color.charcoal)
+                        .cornerRadius(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.agentRed.opacity(0.5), lineWidth: 1)
+                        )
+
+                        // Protocol Duration
+                        VStack(spacing: Spacing.xs) {
+                            Text("PROTOCOL DURATION")
+                                .font(.system(size: 11, weight: .bold, design: .monospaced))
+                                .foregroundColor(Color.mediumGray)
+
+                            Text("66 DAYS")
+                                .font(.system(size: 32, weight: .bold, design: .monospaced))
+                                .foregroundColor(.white)
+
+                            Text("to rewire your code")
+                                .font(.system(size: 12, design: .monospaced))
+                                .foregroundColor(Color.matrixGreen)
+                                .matrixGlow()
+                        }
+                        .padding(.top, Spacing.sm)
+                    }
+                    .padding(Spacing.lg)
+                    .background(Color.darkGray.opacity(0.5))
+                    .cornerRadius(12)
+                    .padding(.horizontal, Spacing.lg)
+                }
+                .transition(.opacity)
+            }
+
+            Spacer()
+
+            if showButton {
+                PrimaryButton(title: "NEXT_") {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    onComplete()
+                }
+                .padding(.horizontal, Spacing.xl)
+                .padding(.bottom, Spacing.xxl)
+                .transition(.opacity.combined(with: .move(edge: .bottom)))
+            }
+        }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                withAnimation(.easeIn(duration: 0.4)) { showContent = true }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                withAnimation { showButton = true }
+            }
+        }
+    }
+}
+
+// MARK: - Phase: Loadout Expectation
+
+struct LoadoutExpectationPhase: View {
+    let onBack: () -> Void
+    let onComplete: () -> Void
+
+    @State private var showContent: Bool = false
+    @State private var iconPulse: Bool = false
+
+    var body: some View {
+        VStack(spacing: Spacing.xl) {
+            // Back button
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("BACK")
+                    }
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.top, Spacing.lg)
+
+            Spacer()
+
+            if showContent {
+                VStack(spacing: Spacing.lg) {
+                    Text("> DAILY SUPPLEMENTS")
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .foregroundColor(Color.matrixGreen)
+                        .matrixGlow()
+
+                    Text("Your Personalized Habit Stack")
+                        .font(.system(size: 12, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+
+                    // Pulsing icon
+                    Image(systemName: "pills.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(.white)
+                        .opacity(iconPulse ? 1.0 : 0.7)
+                        .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: iconPulse)
+
+                    VStack(spacing: Spacing.md) {
+                        Text("Based on your diagnostic,")
+                            .font(.system(size: 16, weight: .medium, design: .monospaced))
+                            .foregroundColor(Color.lightGray)
+
+                        Text("we'll prescribe a starting protocol.")
+                            .font(.system(size: 16, weight: .medium, design: .monospaced))
+                            .foregroundColor(Color.lightGray)
+
+                        Text("These are RECOMMENDATIONS.")
+                            .font(.system(size: 14, weight: .bold, design: .monospaced))
+                            .foregroundColor(.white)
+                            .padding(.top, Spacing.sm)
+
+                        Text("Not a prescription.")
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
+                            .foregroundColor(Color.mediumGray)
+
+                        VStack(spacing: Spacing.xs) {
+                            Text("Add habits that matter to you.")
+                                .foregroundColor(Color.matrixGreen)
+                            Text("Remove what doesn't fit.")
+                                .foregroundColor(Color.matrixGreen)
+                            Text("You write the code.")
+                                .foregroundColor(Color.matrixGreen)
+                                .fontWeight(.bold)
+                        }
+                        .font(.system(size: 13, design: .monospaced))
+                        .matrixGlow()
+                        .padding(.top, Spacing.sm)
+                    }
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, Spacing.lg)
+                }
+                .transition(.opacity)
+            }
+
+            Spacer()
+
+            PrimaryButton(title: "BEGIN DIAGNOSTIC_") {
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                onComplete()
+            }
+            .padding(.horizontal, Spacing.xl)
+            .padding(.bottom, Spacing.xxl)
+        }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                withAnimation { showContent = true }
+                iconPulse = true
+            }
+        }
+    }
+}
+
+// MARK: - Phase: The Truth (Revelation 1)
+
+struct TheTruthPhase: View {
+    let onBack: () -> Void
+    let onComplete: () -> Void
+
+    @State private var revealedLines: Int = 0
+    @State private var showButton: Bool = false
+
+    private let lines: [(text: String, color: Color, isBold: Bool)] = [
+        ("You are not lazy.", Color.white, false),
+        ("You are not broken.", Color.white, false),
+        ("You are PROGRAMMED.", Color.white, true),
+        ("", Color.clear, false), // spacer
+        ("Your brain didn't evolve for", Color.lightGray, false),
+        ("infinite scroll feeds and", Color.lightGray, false),
+        ("dopamine slot machines.", Color.lightGray, false),
+        ("", Color.clear, false), // spacer
+        ("Big Tech spent BILLIONS", Color.agentRed, true),
+        ("engineering your addiction.", Color.agentRed, false),
+        ("", Color.clear, false), // spacer
+        ("The Matrix is not a metaphor.", Color.matrixGreen, true),
+        ("It's your notification tray.", Color.matrixGreen, false),
+        ("", Color.clear, false), // spacer
+        ("But you found this app.", Color.white, false),
+        ("That's the first crack", Color.white, false),
+        ("in the simulation.", Color.matrixGreen, true)
+    ]
+
+    var body: some View {
+        ZStack {
+            // Heavier vignette
+            RadialGradient(
+                gradient: Gradient(colors: [.clear, .black.opacity(0.8)]),
+                center: .center,
+                startRadius: UIScreen.main.bounds.width * 0.2,
+                endRadius: UIScreen.main.bounds.width * 0.7
+            )
+            .ignoresSafeArea()
+
+            VStack(spacing: 0) {
+                // Back button
+                HStack {
+                    Button(action: onBack) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "chevron.left")
+                            Text("BACK")
+                        }
+                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal, Spacing.lg)
+                .padding(.top, Spacing.lg)
+
+                Spacer()
+
+                // Header
+                Text("> ANALYSIS COMPLETE")
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                    .padding(.bottom, Spacing.lg)
+
+                // Revelation text
+                VStack(spacing: Spacing.sm) {
+                    ForEach(0..<lines.count, id: \.self) { index in
+                        if index < revealedLines {
+                            let line = lines[index]
+                            if line.text.isEmpty {
+                                Spacer().frame(height: Spacing.sm)
+                            } else {
+                                Text(line.text)
+                                    .font(.system(size: 16, weight: line.isBold ? .bold : .medium, design: .monospaced))
+                                    .foregroundColor(line.color)
+                                    .multilineTextAlignment(.center)
+                                    .transition(.opacity)
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal, Spacing.xl)
+
+                Spacer()
+
+                // Continue button
+                if showButton {
+                    PrimaryButton(title: "CONTINUE_") {
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        onComplete()
+                    }
+                    .padding(.horizontal, Spacing.xl)
+                    .padding(.bottom, Spacing.xxl)
+                    .transition(.opacity)
+                }
+            }
+        }
+        .onAppear {
+            revealLines()
+        }
+    }
+
+    private func revealLines() {
+        for i in 0..<lines.count {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.15) {
+                withAnimation(.easeIn(duration: 0.2)) {
+                    revealedLines = i + 1
+                }
+                // Haptic on important lines
+                if lines[i].isBold {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            }
+        }
+
+        // Show button after all lines
+        DispatchQueue.main.asyncAfter(deadline: .now() + Double(lines.count) * 0.15 + 0.5) {
+            withAnimation { showButton = true }
+        }
+    }
+}
+
+// MARK: - Phase: The Way Out (Revelation 2)
+
+struct TheWayOutPhase: View {
+    let onBack: () -> Void
+    let onComplete: () -> Void
+
+    @State private var showContent: Bool = false
+    @State private var showIcon: Bool = false
+    @State private var iconState: Int = 0 // 0 = lock, 1 = unlocked, 2 = checkmark
+    @State private var showButton: Bool = false
+    @State private var buttonPulse: Bool = false
+
+    var body: some View {
+        VStack(spacing: Spacing.xl) {
+            // Back button
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("BACK")
+                    }
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.top, Spacing.lg)
+
+            Spacer()
+
+            if showContent {
+                VStack(spacing: Spacing.lg) {
+                    Text("> THE WAY OUT")
+                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                        .foregroundColor(Color.matrixGreen)
+                        .matrixGlow()
+
+                    // Animated icon
+                    if showIcon {
+                        ZStack {
+                            Circle()
+                                .fill(Color.matrixGreen.opacity(0.1))
+                                .frame(width: 100, height: 100)
+
+                            Circle()
+                                .stroke(Color.matrixGreen, lineWidth: 2)
+                                .frame(width: 100, height: 100)
+                                .shadow(color: Color.matrixGreen.opacity(0.6), radius: 10)
+
+                            Image(systemName: iconState == 0 ? "lock.fill" : (iconState == 1 ? "lock.open.fill" : "checkmark.circle.fill"))
+                                .font(.system(size: 40))
+                                .foregroundColor(Color.matrixGreen)
+                        }
+                        .transition(.scale.combined(with: .opacity))
+                    }
+
+                    VStack(spacing: Spacing.md) {
+                        // Main hook
+                        Text("Take back control.")
+                            .font(.system(size: 20, weight: .bold, design: .monospaced))
+                            .foregroundColor(.white)
+
+                        Text("Start living to your full potential.")
+                            .font(.system(size: 16, weight: .medium, design: .monospaced))
+                            .foregroundColor(Color.matrixGreen)
+                            .matrixGlow()
+
+                        // The method
+                        VStack(spacing: Spacing.xs) {
+                            Text("Small actions, tracked daily.")
+                                .font(.system(size: 15, weight: .medium, design: .monospaced))
+                                .foregroundColor(Color.lightGray)
+
+                            Text("That's the hack.")
+                                .font(.system(size: 15, weight: .bold, design: .monospaced))
+                                .foregroundColor(.white)
+                        }
+                        .padding(.top, Spacing.sm)
+
+                        // The principles
+                        VStack(spacing: Spacing.xs) {
+                            HStack(spacing: 0) {
+                                Text("Not motivation. ")
+                                    .foregroundColor(Color.lightGray)
+                                Text("SYSTEMS.")
+                                    .foregroundColor(.white)
+                                    .fontWeight(.bold)
+                            }
+
+                            HStack(spacing: 0) {
+                                Text("Not willpower. ")
+                                    .foregroundColor(Color.lightGray)
+                                Text("AWARENESS.")
+                                    .foregroundColor(.white)
+                                    .fontWeight(.bold)
+                            }
+
+                            HStack(spacing: 0) {
+                                Text("Not perfection. ")
+                                    .foregroundColor(Color.lightGray)
+                                Text("CONSISTENCY.")
+                                    .foregroundColor(.white)
+                                    .fontWeight(.bold)
+                            }
+                        }
+                        .font(.system(size: 14, design: .monospaced))
+                        .padding(.top, Spacing.sm)
+
+                        // The promise
+                        VStack(spacing: Spacing.xs) {
+                            Text("66 days from now,")
+                                .font(.system(size: 14, design: .monospaced))
+                                .foregroundColor(Color.lightGray)
+
+                            Text("you won't recognize yourself.")
+                                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                                .foregroundColor(Color.matrixGreen)
+                                .matrixGlow()
+
+                            Text("The best version of you is waiting.")
+                                .font(.system(size: 13, design: .monospaced))
+                                .foregroundColor(Color.matrixGreen)
+                                .opacity(0.8)
+                        }
+                        .padding(.top, Spacing.md)
+                    }
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, Spacing.lg)
+                }
+                .transition(.opacity)
+            }
+
+            Spacer()
+
+            if showButton {
+                Button(action: {
+                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                    onComplete()
+                }) {
+                    Text("INITIALIZE PROTOCOL_")
+                        .font(.system(size: 16, weight: .bold, design: .monospaced))
+                        .foregroundColor(Color.deepBlack)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 56)
+                        .background(Color.matrixGreen)
+                        .cornerRadius(Theme.cornerRadius)
+                        .shadow(color: Color.matrixGreen.opacity(buttonPulse ? 0.8 : 0.4), radius: buttonPulse ? 15 : 8)
+                }
+                .padding(.horizontal, Spacing.xl)
+                .padding(.bottom, Spacing.xxl)
+                .transition(.opacity.combined(with: .move(edge: .bottom)))
+            }
+        }
+        .onAppear {
+            // Sequence the animations
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                withAnimation { showContent = true }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) { showIcon = true }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+                withAnimation { iconState = 1 }
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
+                withAnimation { iconState = 2 }
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
+                withAnimation { showButton = true }
+                buttonPulse = true
+            }
+        }
+        .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: buttonPulse)
     }
 }
 
