@@ -96,57 +96,68 @@ struct AwakeningView: View {
                 case 1:
                     HookQuestionPhase(
                         answer: $livingBelowPotential,
+                        onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 2:
                     ProblemSelectionPhase(
                         selectedProblems: $selectedProblems,
+                        onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 3:
                     YearsDeletedPhase(
                         age: Int(operatorAge) ?? 25,
                         hoursLost: $hoursLost,
+                        onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 4:
                     BrokenPromisesPhase(
                         answer: $brokenPromises,
+                        onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 5:
                     PostScrollEmotionPhase(
                         answer: $postScrollEmotion,
+                        onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 6:
                     NeglectedDreamPhase(
                         answer: $neglectedDream,
+                        onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 7:
                     MentalClarityPhase(
                         clarity: $mentalClarity,
+                        onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 8:
                     ScreenOverPersonPhase(
                         answer: $screenOverPerson,
+                        onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 9:
                     MotivationCheckPhase(
                         answer: $motivationType,
+                        onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 10:
                     YearProjectionPhase(
                         answer: $yearProjection,
+                        onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 11:
                     RedBluePillPhase(
                         choseRedPill: $choseRedPill,
+                        onBack: { goBack() },
                         onRedPill: {
                             generateLoadout()
                             advancePhase()
@@ -156,10 +167,12 @@ struct AwakeningView: View {
                 case 12:
                     SolutionProtocolPhase(
                         loadout: $suggestedLoadout,
+                        onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 13:
                     ContractPhase(
+                        onBack: { goBack() },
                         onComplete: { finalizeAwakening() }
                     )
                 default:
@@ -203,6 +216,20 @@ struct AwakeningView: View {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             currentPhase += 1
+            withAnimation(.easeIn(duration: 0.2)) {
+                transitionOpacity = 1.0
+            }
+        }
+    }
+
+    private func goBack() {
+        guard currentPhase > 0 else { return }
+        withAnimation(.easeOut(duration: 0.2)) {
+            transitionOpacity = 0
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            currentPhase -= 1
             withAnimation(.easeIn(duration: 0.2)) {
                 transitionOpacity = 1.0
             }
@@ -702,12 +729,28 @@ struct PrisonerRecordPhase: View {
 
 struct HookQuestionPhase: View {
     @Binding var answer: Bool?
+    let onBack: () -> Void
     let onComplete: () -> Void
 
     @State private var showContent: Bool = false
 
     var body: some View {
         VStack(spacing: Spacing.xl) {
+            // Back button
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("BACK")
+                    }
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.top, Spacing.lg)
+
             Spacer()
 
             if showContent {
@@ -762,18 +805,34 @@ struct HookQuestionPhase: View {
 
 struct ProblemSelectionPhase: View {
     @Binding var selectedProblems: Set<ModernProblem>
+    let onBack: () -> Void
     let onComplete: () -> Void
 
     @State private var showContent: Bool = false
 
     var body: some View {
         VStack(spacing: 0) {
+            // Back button
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("BACK")
+                    }
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.top, Spacing.lg)
+
             if showContent {
                 VStack(spacing: Spacing.sm) {
                     Text("DIAGNOSTIC 2/10")
                         .font(.system(size: 12, weight: .bold, design: .monospaced))
                         .foregroundColor(Color.mediumGray)
-                        .padding(.top, Spacing.xl)
+                        .padding(.top, Spacing.md)
 
                     Text("SYSTEM:")
                         .font(.system(size: 14, weight: .bold, design: .monospaced))
@@ -894,6 +953,7 @@ struct ProblemCard: View {
 struct YearsDeletedPhase: View {
     let age: Int
     @Binding var hoursLost: Int
+    let onBack: () -> Void
     let onComplete: () -> Void
 
     @State private var showContent: Bool = false
@@ -911,6 +971,21 @@ struct YearsDeletedPhase: View {
 
     var body: some View {
         VStack(spacing: Spacing.xl) {
+            // Back button
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("BACK")
+                    }
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.top, Spacing.lg)
+
             Spacer()
 
             if showContent && !showResult {
@@ -1025,12 +1100,28 @@ struct YearsDeletedPhase: View {
 
 struct BrokenPromisesPhase: View {
     @Binding var answer: BrokenPromisesOption?
+    let onBack: () -> Void
     let onComplete: () -> Void
 
     @State private var showContent: Bool = false
 
     var body: some View {
         VStack(spacing: Spacing.xl) {
+            // Back button
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("BACK")
+                    }
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.top, Spacing.lg)
+
             Spacer()
 
             if showContent {
@@ -1088,12 +1179,28 @@ struct BrokenPromisesPhase: View {
 
 struct PostScrollEmotionPhase: View {
     @Binding var answer: ScrollEmotion?
+    let onBack: () -> Void
     let onComplete: () -> Void
 
     @State private var showContent: Bool = false
 
     var body: some View {
         VStack(spacing: Spacing.xl) {
+            // Back button
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("BACK")
+                    }
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.top, Spacing.lg)
+
             Spacer()
 
             if showContent {
@@ -1145,12 +1252,28 @@ struct PostScrollEmotionPhase: View {
 
 struct NeglectedDreamPhase: View {
     @Binding var answer: DreamCategory?
+    let onBack: () -> Void
     let onComplete: () -> Void
 
     @State private var showContent: Bool = false
 
     var body: some View {
         VStack(spacing: Spacing.xl) {
+            // Back button
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("BACK")
+                    }
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.top, Spacing.lg)
+
             Spacer()
 
             if showContent {
@@ -1203,12 +1326,28 @@ struct NeglectedDreamPhase: View {
 
 struct MentalClarityPhase: View {
     @Binding var clarity: Double
+    let onBack: () -> Void
     let onComplete: () -> Void
 
     @State private var showContent: Bool = false
 
     var body: some View {
         VStack(spacing: Spacing.xl) {
+            // Back button
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("BACK")
+                    }
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.top, Spacing.lg)
+
             Spacer()
 
             if showContent {
@@ -1268,12 +1407,28 @@ struct MentalClarityPhase: View {
 
 struct ScreenOverPersonPhase: View {
     @Binding var answer: Bool?
+    let onBack: () -> Void
     let onComplete: () -> Void
 
     @State private var showContent: Bool = false
 
     var body: some View {
         VStack(spacing: Spacing.xl) {
+            // Back button
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("BACK")
+                    }
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.top, Spacing.lg)
+
             Spacer()
 
             if showContent {
@@ -1328,12 +1483,28 @@ struct ScreenOverPersonPhase: View {
 
 struct MotivationCheckPhase: View {
     @Binding var answer: MotivationType?
+    let onBack: () -> Void
     let onComplete: () -> Void
 
     @State private var showContent: Bool = false
 
     var body: some View {
         VStack(spacing: Spacing.xl) {
+            // Back button
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("BACK")
+                    }
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.top, Spacing.lg)
+
             Spacer()
 
             if showContent {
@@ -1387,12 +1558,28 @@ struct MotivationCheckPhase: View {
 
 struct YearProjectionPhase: View {
     @Binding var answer: YearProjectionOption?
+    let onBack: () -> Void
     let onComplete: () -> Void
 
     @State private var showContent: Bool = false
 
     var body: some View {
         VStack(spacing: Spacing.xl) {
+            // Back button
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("BACK")
+                    }
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color.mediumGray)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.top, Spacing.lg)
+
             Spacer()
 
             if showContent {
@@ -1445,6 +1632,7 @@ struct YearProjectionPhase: View {
 
 struct RedBluePillPhase: View {
     @Binding var choseRedPill: Bool
+    let onBack: () -> Void
     let onRedPill: () -> Void
     let onBluePill: () -> Void
 
@@ -1466,6 +1654,21 @@ struct RedBluePillPhase: View {
             }
 
             VStack(spacing: Spacing.xxl) {
+                // Back button
+                HStack {
+                    Button(action: onBack) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "chevron.left")
+                            Text("BACK")
+                        }
+                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal, Spacing.lg)
+                .padding(.top, Spacing.lg)
+
                 Spacer()
 
                 if showContent && !showExitText {
@@ -1615,6 +1818,7 @@ struct AwakeningPillButton: View {
 
 struct SolutionProtocolPhase: View {
     @Binding var loadout: ProtocolLoadout
+    let onBack: () -> Void
     let onComplete: () -> Void
 
     @State private var showContent: Bool = false
@@ -1628,13 +1832,27 @@ struct SolutionProtocolPhase: View {
     var body: some View {
         ScrollView {
             VStack(spacing: Spacing.lg) {
+                // Back button
+                HStack {
+                    Button(action: onBack) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "chevron.left")
+                            Text("BACK")
+                        }
+                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal, Spacing.lg)
+                .padding(.top, Spacing.lg)
+
                 if showContent {
                     VStack(spacing: Spacing.sm) {
                         Text("YOUR PROTOCOL")
                             .font(.system(size: 14, weight: .bold, design: .monospaced))
                             .foregroundColor(Color.matrixGreen)
                             .matrixGlow()
-                            .padding(.top, Spacing.xl)
 
                         Text("> INITIALIZING LOADOUT...")
                             .font(.system(size: 12, design: .monospaced))
@@ -1832,6 +2050,7 @@ struct AgentCard: View {
 // MARK: - Phase 13: Contract
 
 struct ContractPhase: View {
+    let onBack: () -> Void
     let onComplete: () -> Void
 
     @State private var showText: Bool = false
@@ -1849,6 +2068,21 @@ struct ContractPhase: View {
                 .ignoresSafeArea()
 
             VStack(spacing: Spacing.xxl) {
+                // Back button
+                HStack {
+                    Button(action: onBack) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "chevron.left")
+                            Text("BACK")
+                        }
+                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal, Spacing.lg)
+                .padding(.top, Spacing.lg)
+
                 Spacer()
 
                 if showText {

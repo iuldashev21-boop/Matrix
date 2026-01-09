@@ -5,6 +5,7 @@ struct CommandCenterView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var powers: [Power]
     @Query private var agents: [Agent]
+    @Query private var checkIns: [CheckIn]
 
     @State private var selectedTab: Int = 0
     @State private var showAddHabit: Bool = false
@@ -59,6 +60,33 @@ struct CommandCenterView: View {
 
     private var agentsCompletedCount: Int {
         agents.filter { $0.resistedToday || $0.relapsedToday }.count
+    }
+
+    // MARK: - System Status Card Data
+
+    private var todayCompletedCount: Int {
+        powersCompletedCount + agents.filter { $0.resistedToday }.count
+    }
+
+    private var totalHabitsCount: Int {
+        powers.count + agents.count
+    }
+
+    private var bestCurrentStreak: Int {
+        let powerStreaks = powers.map { $0.currentStreak }
+        let agentStreaks = agents.map { $0.currentStreak }
+        return (powerStreaks + agentStreaks).max() ?? 0
+    }
+
+    private var daysActiveCount: Int {
+        let allDates = checkIns.map { $0.date }
+        return Set(allDates).count
+    }
+
+    private var totalRelapses: Int {
+        checkIns.filter { checkIn in
+            !checkIn.isSuccess && checkIn.agent != nil
+        }.count
     }
 
     var body: some View {
@@ -198,6 +226,18 @@ struct CommandCenterView: View {
             // Content
             ScrollView {
                 VStack(spacing: Spacing.md) {
+                    // System Status Card - shown when all habits are completed
+                    if allHabitsCompleted && (!powers.isEmpty || !agents.isEmpty) {
+                        SystemStatusCard(
+                            todayCompleted: todayCompletedCount,
+                            todayTotal: totalHabitsCount,
+                            currentStreak: bestCurrentStreak,
+                            daysActive: daysActiveCount,
+                            relapseCount: totalRelapses
+                        )
+                        .transition(.opacity.combined(with: .move(edge: .top)))
+                    }
+
                     // Powers Section (collapsible)
                     if !powers.isEmpty {
                         CollapsibleSection(
