@@ -286,6 +286,7 @@ struct ZionMainframeView: View {
 
         // Clear UserDefaults
         UserProfile.reset()
+        SidequestManager.reset()
 
         // Feedback
         let generator = UINotificationFeedbackGenerator()

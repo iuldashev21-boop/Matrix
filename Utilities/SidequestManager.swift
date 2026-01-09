@@ -167,5 +167,20 @@ enum SidequestManager {
         addSidequestXP(xpEarned)
         return xpEarned
     }
+
+    // MARK: - Full Reset
+
+    static func reset() {
+        defaults.removeObject(forKey: Keys.lastOracleDate)
+        defaults.removeObject(forKey: Keys.oracleUsesToday)
+        defaults.removeObject(forKey: Keys.lastCodeBreakerDate)
+        defaults.removeObject(forKey: Keys.codeBreakerCompletedToday)
+        defaults.removeObject(forKey: Keys.lastCombatDate)
+        defaults.removeObject(forKey: Keys.combatUsesToday)
+        defaults.removeObject(forKey: Keys.lastMaintenanceDate)
+        defaults.removeObject(forKey: Keys.maintenanceUsesToday)
+        defaults.removeObject(forKey: Keys.sidequestXPToday)
+        defaults.removeObject(forKey: Keys.lastXPResetDate)
+    }
 }
 
