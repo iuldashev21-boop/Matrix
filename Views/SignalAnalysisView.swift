@@ -68,26 +68,43 @@ struct SignalAnalysisView: View {
         let totalHabits = powers.count + agents.count
         let totalPossible = totalHabits * 7
 
-        // This week's check-ins
-        let thisWeekCheckIns = checkIns.filter { checkIn in
+        // This week's check-ins - count unique (habit, date) pairs to avoid duplicates
+        var thisWeekUniqueCheckIns = Set<String>()
+        for checkIn in checkIns {
             let date = calendar.startOfDay(for: checkIn.date)
-            return date >= weekStart && date <= today && checkIn.isSuccess
-        }.count
+            guard date >= weekStart && date <= today && checkIn.isSuccess else { continue }
 
-        let thisWeekRate = totalPossible > 0 ? Int((Double(thisWeekCheckIns) / Double(totalPossible)) * 100) : 0
+            // Create unique key: habitID + date
+            let habitId = checkIn.power?.id.uuidString ?? checkIn.agent?.id.uuidString ?? ""
+            if !habitId.isEmpty {
+                let key = "\(habitId)-\(date.timeIntervalSince1970)"
+                thisWeekUniqueCheckIns.insert(key)
+            }
+        }
+        let thisWeekCount = thisWeekUniqueCheckIns.count
 
-        // Last week's check-ins
-        let lastWeekCheckIns = checkIns.filter { checkIn in
+        let thisWeekRate = totalPossible > 0 ? min(100, Int((Double(thisWeekCount) / Double(totalPossible)) * 100)) : 0
+
+        // Last week's check-ins - same unique counting
+        var lastWeekUniqueCheckIns = Set<String>()
+        for checkIn in checkIns {
             let date = calendar.startOfDay(for: checkIn.date)
-            return date >= lastWeekStart && date <= lastWeekEnd && checkIn.isSuccess
-        }.count
+            guard date >= lastWeekStart && date <= lastWeekEnd && checkIn.isSuccess else { continue }
 
-        let lastWeekRate = totalPossible > 0 ? Int((Double(lastWeekCheckIns) / Double(totalPossible)) * 100) : 0
+            let habitId = checkIn.power?.id.uuidString ?? checkIn.agent?.id.uuidString ?? ""
+            if !habitId.isEmpty {
+                let key = "\(habitId)-\(date.timeIntervalSince1970)"
+                lastWeekUniqueCheckIns.insert(key)
+            }
+        }
+        let lastWeekCount = lastWeekUniqueCheckIns.count
+
+        let lastWeekRate = totalPossible > 0 ? min(100, Int((Double(lastWeekCount) / Double(totalPossible)) * 100)) : 0
 
         // Only show comparison if we have last week data
-        let comparison: Int? = lastWeekCheckIns > 0 ? thisWeekRate - lastWeekRate : nil
+        let comparison: Int? = lastWeekCount > 0 ? thisWeekRate - lastWeekRate : nil
 
-        return (thisWeekCheckIns, totalPossible, thisWeekRate, comparison)
+        return (thisWeekCount, totalPossible, thisWeekRate, comparison)
     }
 
     var body: some View {
