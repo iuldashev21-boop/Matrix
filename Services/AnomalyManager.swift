@@ -153,8 +153,11 @@ class AnomalyManager: ObservableObject {
     private func saveProgress() {
         UserDefaults.standard.set(Array(unlockedReports), forKey: unlockedKey)
 
-        if let encoded = try? JSONEncoder().encode(decryptionProgress) {
+        do {
+            let encoded = try JSONEncoder().encode(decryptionProgress)
             UserDefaults.standard.set(encoded, forKey: progressKey)
+        } catch {
+            ErrorLogger.logEncodingFailure(error, context: "AnomalyManager.saveProgress")
         }
     }
 
@@ -163,9 +166,12 @@ class AnomalyManager: ObservableObject {
             unlockedReports = Set(saved)
         }
 
-        if let data = UserDefaults.standard.data(forKey: progressKey),
-           let decoded = try? JSONDecoder().decode([String: Int].self, from: data) {
-            decryptionProgress = decoded
+        if let data = UserDefaults.standard.data(forKey: progressKey) {
+            do {
+                decryptionProgress = try JSONDecoder().decode([String: Int].self, from: data)
+            } catch {
+                ErrorLogger.logDecodingFailure(error, context: "AnomalyManager.loadProgress")
+            }
         }
     }
 

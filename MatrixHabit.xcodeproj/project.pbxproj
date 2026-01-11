@@ -52,6 +52,37 @@
 		A10000000000000000000047 /* AnomalyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000047 /* AnomalyManager.swift */; };
 		A10000000000000000000050 /* ProgramStatusList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000050 /* ProgramStatusList.swift */; };
 		A10000000000000000000051 /* SystemStatusCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000051 /* SystemStatusCard.swift */; };
+		A10000000000000000000052 /* TierPromotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000052 /* TierPromotionManager.swift */; };
+		A10000000000000000000053 /* TierPromotionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000053 /* TierPromotionSheet.swift */; };
+		A10000000000000000000054 /* ProtocolCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000054 /* ProtocolCompleteView.swift */; };
+		A10000000000000000000055 /* HabitTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000055 /* HabitTypes.swift */; };
+		A10000000000000000000060 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000060 /* TestHelpers.swift */; };
+		A10000000000000000000061 /* StreakCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000061 /* StreakCalculatorTests.swift */; };
+		A10000000000000000000062 /* RankSystemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000062 /* RankSystemTests.swift */; };
+		A10000000000000000000100 /* OnboardingComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000100 /* OnboardingComponents.swift */; };
+		A10000000000000000000101 /* OnboardingTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000101 /* OnboardingTypes.swift */; };
+		A10000000000000000000102 /* PrisonerRecordPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000102 /* PrisonerRecordPhase.swift */; };
+		A10000000000000000000103 /* HookQuestionPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000103 /* HookQuestionPhase.swift */; };
+		A10000000000000000000104 /* ProblemSelectionPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000104 /* ProblemSelectionPhase.swift */; };
+		A10000000000000000000105 /* YearsDeletedPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000105 /* YearsDeletedPhase.swift */; };
+		A10000000000000000000106 /* BrokenPromisesPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000106 /* BrokenPromisesPhase.swift */; };
+		A10000000000000000000107 /* PostScrollEmotionPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000107 /* PostScrollEmotionPhase.swift */; };
+		A10000000000000000000108 /* KineticIntegrityPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000108 /* KineticIntegrityPhase.swift */; };
+		A10000000000000000000109 /* FuelPurityPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000109 /* FuelPurityPhase.swift */; };
+		A10000000000000000000110 /* RechargeCyclePhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000110 /* RechargeCyclePhase.swift */; };
+		A10000000000000000000111 /* MotivationCheckPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000111 /* MotivationCheckPhase.swift */; };
+		A10000000000000000000112 /* RedBluePillPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000112 /* RedBluePillPhase.swift */; };
+		A10000000000000000000113 /* TheTruthPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000113 /* TheTruthPhase.swift */; };
+		A10000000000000000000114 /* TheWayOutPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000114 /* TheWayOutPhase.swift */; };
+		A10000000000000000000115 /* SolutionProtocolPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000115 /* SolutionProtocolPhase.swift */; };
+		A10000000000000000000116 /* ContractPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000116 /* ContractPhase.swift */; };
+		A10000000000000000000117 /* TerminologyCardPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000117 /* TerminologyCardPhase.swift */; };
+		A10000000000000000000118 /* LoadoutExpectationPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000118 /* LoadoutExpectationPhase.swift */; };
+		A10000000000000000000119 /* ErrorLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000119 /* ErrorLogger.swift */; };
+		A10000000000000000000120 /* AddHabitSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000120 /* AddHabitSheet.swift */; };
+		A10000000000000000000121 /* AchievementsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000121 /* AchievementsTabView.swift */; };
+		A10000000000000000000122 /* CommandCenterOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000122 /* CommandCenterOverlays.swift */; };
+		A10000000000000000000123 /* HabitProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000123 /* HabitProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -104,8 +135,50 @@
 		A20000000000000000000047 /* AnomalyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnomalyManager.swift; sourceTree = "<group>"; };
 		A20000000000000000000050 /* ProgramStatusList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramStatusList.swift; sourceTree = "<group>"; };
 		A20000000000000000000051 /* SystemStatusCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemStatusCard.swift; sourceTree = "<group>"; };
+		A20000000000000000000052 /* TierPromotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierPromotionManager.swift; sourceTree = "<group>"; };
+		A20000000000000000000053 /* TierPromotionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierPromotionSheet.swift; sourceTree = "<group>"; };
+		A20000000000000000000054 /* ProtocolCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolCompleteView.swift; sourceTree = "<group>"; };
+		A20000000000000000000055 /* HabitTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTypes.swift; sourceTree = "<group>"; };
+		A20000000000000000000060 /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
+		A20000000000000000000061 /* StreakCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakCalculatorTests.swift; sourceTree = "<group>"; };
+		A20000000000000000000062 /* RankSystemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankSystemTests.swift; sourceTree = "<group>"; };
+		A20000000000000000000100 /* OnboardingComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingComponents.swift; sourceTree = "<group>"; };
+		A20000000000000000000101 /* OnboardingTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTypes.swift; sourceTree = "<group>"; };
+		A20000000000000000000102 /* PrisonerRecordPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrisonerRecordPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000103 /* HookQuestionPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HookQuestionPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000104 /* ProblemSelectionPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProblemSelectionPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000105 /* YearsDeletedPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsDeletedPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000106 /* BrokenPromisesPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrokenPromisesPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000107 /* PostScrollEmotionPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostScrollEmotionPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000108 /* KineticIntegrityPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KineticIntegrityPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000109 /* FuelPurityPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuelPurityPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000110 /* RechargeCyclePhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RechargeCyclePhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000111 /* MotivationCheckPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotivationCheckPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000112 /* RedBluePillPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedBluePillPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000113 /* TheTruthPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TheTruthPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000114 /* TheWayOutPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TheWayOutPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000115 /* SolutionProtocolPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolutionProtocolPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000116 /* ContractPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000117 /* TerminologyCardPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminologyCardPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000118 /* LoadoutExpectationPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadoutExpectationPhase.swift; sourceTree = "<group>"; };
+		A20000000000000000000119 /* ErrorLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorLogger.swift; sourceTree = "<group>"; };
+		A20000000000000000000120 /* AddHabitSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHabitSheet.swift; sourceTree = "<group>"; };
+		A20000000000000000000121 /* AchievementsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementsTabView.swift; sourceTree = "<group>"; };
+		A20000000000000000000122 /* CommandCenterOverlays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandCenterOverlays.swift; sourceTree = "<group>"; };
+		A20000000000000000000123 /* HabitProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitProtocol.swift; sourceTree = "<group>"; };
 		A30000000000000000000001 /* MatrixHabit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatrixHabit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A30000000000000000000002 /* MatrixHabitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MatrixHabitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXContainerItemProxy section */
+		C10000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A60000000000000000000001;
+			remoteInfo = MatrixHabit;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A40000000000000000000001 /* Frameworks */ = {
@@ -115,15 +188,41 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A40000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C20000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A60000000000000000000001 /* MatrixHabit */;
+			targetProxy = C10000000000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXGroup section */
 		A50000000000000000000001 = {
 			isa = PBXGroup;
 			children = (
 				A50000000000000000000002 /* MatrixHabit */,
+				A50000000000000000000011 /* MatrixHabitTests */,
 				A50000000000000000000003 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		A50000000000000000000011 /* MatrixHabitTests */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000060 /* TestHelpers.swift */,
+				A20000000000000000000061 /* StreakCalculatorTests.swift */,
+				A20000000000000000000062 /* RankSystemTests.swift */,
+			);
+			path = MatrixHabitTests;
 			sourceTree = "<group>";
 		};
 		A50000000000000000000002 /* MatrixHabit */ = {
@@ -145,6 +244,7 @@
 			isa = PBXGroup;
 			children = (
 				A30000000000000000000001 /* MatrixHabit.app */,
+				A30000000000000000000002 /* MatrixHabitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -171,6 +271,8 @@
 				A20000000000000000000038 /* CollapsibleSection.swift */,
 				A20000000000000000000050 /* ProgramStatusList.swift */,
 				A20000000000000000000051 /* SystemStatusCard.swift */,
+				A20000000000000000000053 /* TierPromotionSheet.swift */,
+				A20000000000000000000054 /* ProtocolCompleteView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -184,6 +286,8 @@
 				A20000000000000000000015 /* PresetHabits.swift */,
 				A20000000000000000000031 /* AnomalyReport.swift */,
 				A20000000000000000000034 /* Achievement.swift */,
+				A20000000000000000000055 /* HabitTypes.swift */,
+				A20000000000000000000123 /* HabitProtocol.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -196,6 +300,8 @@
 				A20000000000000000000018 /* ExportService.swift */,
 				A20000000000000000000035 /* AchievementManager.swift */,
 				A20000000000000000000047 /* AnomalyManager.swift */,
+				A20000000000000000000052 /* TierPromotionManager.swift */,
+				A20000000000000000000119 /* ErrorLogger.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -220,6 +326,9 @@
 				A20000000000000000000022 /* PillChoiceView.swift */,
 				A20000000000000000000023 /* FirstHackSetupView.swift */,
 				A20000000000000000000025 /* CommandCenterView.swift */,
+				A20000000000000000000120 /* AddHabitSheet.swift */,
+				A20000000000000000000121 /* AchievementsTabView.swift */,
+				A20000000000000000000122 /* CommandCenterOverlays.swift */,
 				A20000000000000000000026 /* DialInView.swift */,
 				A20000000000000000000027 /* EMPRecoveryView.swift */,
 				A20000000000000000000028 /* SignalAnalysisView.swift */,
@@ -231,8 +340,35 @@
 				A20000000000000000000037 /* HabitDetailView.swift */,
 				A20000000000000000000040 /* ConstructLoaderView.swift */,
 				A50000000000000000000010 /* Sidequests */,
+				A50000000000000000000012 /* Onboarding */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		A50000000000000000000012 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000100 /* OnboardingComponents.swift */,
+				A20000000000000000000101 /* OnboardingTypes.swift */,
+				A20000000000000000000102 /* PrisonerRecordPhase.swift */,
+				A20000000000000000000103 /* HookQuestionPhase.swift */,
+				A20000000000000000000104 /* ProblemSelectionPhase.swift */,
+				A20000000000000000000105 /* YearsDeletedPhase.swift */,
+				A20000000000000000000106 /* BrokenPromisesPhase.swift */,
+				A20000000000000000000107 /* PostScrollEmotionPhase.swift */,
+				A20000000000000000000108 /* KineticIntegrityPhase.swift */,
+				A20000000000000000000109 /* FuelPurityPhase.swift */,
+				A20000000000000000000110 /* RechargeCyclePhase.swift */,
+				A20000000000000000000111 /* MotivationCheckPhase.swift */,
+				A20000000000000000000112 /* RedBluePillPhase.swift */,
+				A20000000000000000000113 /* TheTruthPhase.swift */,
+				A20000000000000000000114 /* TheWayOutPhase.swift */,
+				A20000000000000000000115 /* SolutionProtocolPhase.swift */,
+				A20000000000000000000116 /* ContractPhase.swift */,
+				A20000000000000000000117 /* TerminologyCardPhase.swift */,
+				A20000000000000000000118 /* LoadoutExpectationPhase.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		A50000000000000000000010 /* Sidequests */ = {
@@ -266,6 +402,24 @@
 			productReference = A30000000000000000000001 /* MatrixHabit.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A60000000000000000000002 /* MatrixHabitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A80000000000000000000003 /* Build configuration list for PBXNativeTarget "MatrixHabitTests" */;
+			buildPhases = (
+				A70000000000000000000002 /* Sources */,
+				A40000000000000000000002 /* Frameworks */,
+				A90000000000000000000002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C20000000000000000000001 /* PBXTargetDependency */,
+			);
+			name = MatrixHabitTests;
+			productName = MatrixHabitTests;
+			productReference = A30000000000000000000002 /* MatrixHabitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -278,6 +432,10 @@
 				TargetAttributes = {
 					A60000000000000000000001 = {
 						CreatedOnToolsVersion = 15.0;
+					};
+					A60000000000000000000002 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = A60000000000000000000001;
 					};
 				};
 			};
@@ -295,12 +453,20 @@
 			projectRoot = "";
 			targets = (
 				A60000000000000000000001 /* MatrixHabit */,
+				A60000000000000000000002 /* MatrixHabitTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		A90000000000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A90000000000000000000002 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -363,6 +529,44 @@
 				A10000000000000000000047 /* AnomalyManager.swift in Sources */,
 				A10000000000000000000050 /* ProgramStatusList.swift in Sources */,
 				A10000000000000000000051 /* SystemStatusCard.swift in Sources */,
+				A10000000000000000000052 /* TierPromotionManager.swift in Sources */,
+				A10000000000000000000053 /* TierPromotionSheet.swift in Sources */,
+				A10000000000000000000054 /* ProtocolCompleteView.swift in Sources */,
+				A10000000000000000000055 /* HabitTypes.swift in Sources */,
+				A10000000000000000000100 /* OnboardingComponents.swift in Sources */,
+				A10000000000000000000101 /* OnboardingTypes.swift in Sources */,
+				A10000000000000000000102 /* PrisonerRecordPhase.swift in Sources */,
+				A10000000000000000000103 /* HookQuestionPhase.swift in Sources */,
+				A10000000000000000000104 /* ProblemSelectionPhase.swift in Sources */,
+				A10000000000000000000105 /* YearsDeletedPhase.swift in Sources */,
+				A10000000000000000000106 /* BrokenPromisesPhase.swift in Sources */,
+				A10000000000000000000107 /* PostScrollEmotionPhase.swift in Sources */,
+				A10000000000000000000108 /* KineticIntegrityPhase.swift in Sources */,
+				A10000000000000000000109 /* FuelPurityPhase.swift in Sources */,
+				A10000000000000000000110 /* RechargeCyclePhase.swift in Sources */,
+				A10000000000000000000111 /* MotivationCheckPhase.swift in Sources */,
+				A10000000000000000000112 /* RedBluePillPhase.swift in Sources */,
+				A10000000000000000000113 /* TheTruthPhase.swift in Sources */,
+				A10000000000000000000114 /* TheWayOutPhase.swift in Sources */,
+				A10000000000000000000115 /* SolutionProtocolPhase.swift in Sources */,
+				A10000000000000000000116 /* ContractPhase.swift in Sources */,
+				A10000000000000000000117 /* TerminologyCardPhase.swift in Sources */,
+				A10000000000000000000118 /* LoadoutExpectationPhase.swift in Sources */,
+				A10000000000000000000119 /* ErrorLogger.swift in Sources */,
+				A10000000000000000000120 /* AddHabitSheet.swift in Sources */,
+				A10000000000000000000121 /* AchievementsTabView.swift in Sources */,
+				A10000000000000000000122 /* CommandCenterOverlays.swift in Sources */,
+				A10000000000000000000123 /* HabitProtocol.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A70000000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000060 /* TestHelpers.swift in Sources */,
+				A10000000000000000000061 /* StreakCalculatorTests.swift in Sources */,
+				A10000000000000000000062 /* RankSystemTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -544,6 +748,44 @@
 			};
 			name = Release;
 		};
+		B30000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.construct.MatrixHabitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MatrixHabit.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MatrixHabit";
+			};
+			name = Debug;
+		};
+		B30000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.construct.MatrixHabitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MatrixHabit.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MatrixHabit";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -561,6 +803,15 @@
 			buildConfigurations = (
 				B10000000000000000000001 /* Debug */,
 				B10000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A80000000000000000000003 /* Build configuration list for PBXNativeTarget "MatrixHabitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B30000000000000000000001 /* Debug */,
+				B30000000000000000000002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

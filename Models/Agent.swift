@@ -7,6 +7,7 @@ final class Agent {
     var name: String
     var icon: String
     var createdAt: Date
+    var updatedAt: Date
     var targetDays: Int
     var isDefeated: Bool
     var defeatedAt: Date?
@@ -19,10 +20,16 @@ final class Agent {
         self.name = name
         self.icon = icon
         self.createdAt = Date()
+        self.updatedAt = Date()
         self.targetDays = Theme.habitFormationDays
         self.isDefeated = false
         self.defeatedAt = nil
         self.checkIns = []
+    }
+
+    /// Call this whenever the model is modified to track changes for sync
+    func touch() {
+        self.updatedAt = Date()
     }
 
     // MARK: - Computed Properties
@@ -88,6 +95,7 @@ final class Agent {
         if currentStreak >= targetDays && !isDefeated {
             isDefeated = true
             defeatedAt = Date()
+            touch()
         }
     }
 }

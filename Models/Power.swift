@@ -7,6 +7,7 @@ final class Power {
     var name: String
     var icon: String
     var createdAt: Date
+    var updatedAt: Date
     var targetDays: Int
     var isUnlocked: Bool
     var unlockedAt: Date?
@@ -19,10 +20,16 @@ final class Power {
         self.name = name
         self.icon = icon
         self.createdAt = Date()
+        self.updatedAt = Date()
         self.targetDays = Theme.habitFormationDays
         self.isUnlocked = false
         self.unlockedAt = nil
         self.checkIns = []
+    }
+
+    /// Call this whenever the model is modified to track changes for sync
+    func touch() {
+        self.updatedAt = Date()
     }
 
     // MARK: - Computed Properties
@@ -73,6 +80,7 @@ final class Power {
         if currentStreak >= targetDays && !isUnlocked {
             isUnlocked = true
             unlockedAt = Date()
+            touch()
         }
     }
 }

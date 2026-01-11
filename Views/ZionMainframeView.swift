@@ -4,6 +4,8 @@ import SwiftData
 struct ZionMainframeView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Query private var powers: [Power]
+    @Query private var agents: [Agent]
 
     @State private var hapticsEnabled: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.hapticsEnabled)
     @State private var soundEnabled: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.soundEnabled)
@@ -33,6 +35,11 @@ struct ZionMainframeView: View {
 
                     // System Info Section
                     systemInfoSection
+
+                    // Debug Section (for testing)
+                    #if DEBUG
+                    debugSection
+                    #endif
 
                     Spacer(minLength: 50)
                 }
@@ -147,7 +154,12 @@ struct ZionMainframeView: View {
 
     private var unlockedAchievementCount: Int {
         let descriptor = FetchDescriptor<Achievement>()
-        return (try? modelContext.fetchCount(descriptor)) ?? 0
+        do {
+            return try modelContext.fetchCount(descriptor)
+        } catch {
+            ErrorLogger.logFetchFailure(error, context: "ZionMainframeView.unlockedAchievementCount")
+            return 0
+        }
     }
 
     // MARK: - Memory Section
@@ -230,6 +242,304 @@ struct ZionMainframeView: View {
         }
         .padding(.horizontal, Spacing.md)
     }
+
+    // MARK: - Debug Section
+
+    #if DEBUG
+    private var debugSection: some View {
+        VStack(alignment: .leading, spacing: Spacing.md) {
+            SectionHeader(title: "DEBUG TOOLS")
+
+            VStack(spacing: Spacing.sm) {
+                // Simulate 14-day streak
+                Button(action: simulate14DayStreak) {
+                    HStack {
+                        Image(systemName: "flame.fill")
+                            .foregroundColor(.orange)
+                        Text("SIMULATE 14-DAY STREAK")
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        Spacer()
+                    }
+                    .foregroundColor(.white)
+                    .padding(Spacing.md)
+                    .background(Color.orange.opacity(0.2))
+                    .cornerRadius(8)
+                }
+
+                // Simulate 28-day streak
+                Button(action: simulate28DayStreak) {
+                    HStack {
+                        Image(systemName: "flame.fill")
+                            .foregroundColor(.red)
+                        Text("SIMULATE 28-DAY STREAK")
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        Spacer()
+                    }
+                    .foregroundColor(.white)
+                    .padding(Spacing.md)
+                    .background(Color.red.opacity(0.2))
+                    .cornerRadius(8)
+                }
+
+                // Simulate 65-day streak (for testing 66-day celebration)
+                Button(action: simulate65DayStreak) {
+                    HStack {
+                        Image(systemName: "crown.fill")
+                            .foregroundColor(.matrixGold)
+                        Text("SIMULATE 65-DAY STREAK")
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        Spacer()
+                    }
+                    .foregroundColor(.white)
+                    .padding(Spacing.md)
+                    .background(Color.matrixGold.opacity(0.2))
+                    .cornerRadius(8)
+                }
+
+                // Clear simulated streaks
+                Button(action: clearSimulatedStreaks) {
+                    HStack {
+                        Image(systemName: "trash.fill")
+                            .foregroundColor(.gray)
+                        Text("CLEAR SIMULATED STREAKS")
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        Spacer()
+                    }
+                    .foregroundColor(.white)
+                    .padding(Spacing.md)
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(8)
+                }
+
+                Divider()
+                    .background(Color.matrixGreen.opacity(0.3))
+                    .padding(.vertical, Spacing.xs)
+
+                // Auto-submit all habits
+                Button(action: autoSubmitAllHabits) {
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.matrixGreen)
+                        Text("AUTO-SUBMIT ALL HABITS")
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        Spacer()
+                    }
+                    .foregroundColor(.white)
+                    .padding(Spacing.md)
+                    .background(Color.matrixGreen.opacity(0.2))
+                    .cornerRadius(8)
+                }
+
+                // Clear today's check-ins
+                Button(action: clearTodayCheckIns) {
+                    HStack {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.yellow)
+                        Text("CLEAR TODAY'S CHECK-INS")
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        Spacer()
+                    }
+                    .foregroundColor(.white)
+                    .padding(Spacing.md)
+                    .background(Color.yellow.opacity(0.2))
+                    .cornerRadius(8)
+                }
+            }
+
+            Text("These tools are for testing only")
+                .font(.system(size: 10, design: .monospaced))
+                .foregroundColor(Color.darkGray)
+                .frame(maxWidth: .infinity)
+        }
+        .padding(.horizontal, Spacing.md)
+    }
+
+    private func simulate14DayStreak() {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+
+        // Add 14 days of check-ins for all habits
+        for dayOffset in 0..<14 {
+            guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: today) else { continue }
+
+            for power in powers {
+                let checkIn = CheckIn(date: date, isSuccess: true)
+                checkIn.power = power
+                modelContext.insert(checkIn)
+            }
+
+            for agent in agents {
+                let checkIn = CheckIn(date: date, isSuccess: true)
+                checkIn.agent = agent
+                modelContext.insert(checkIn)
+            }
+        }
+
+        do {
+            try modelContext.save()
+        } catch {
+            ErrorLogger.logSaveFailure(error, context: "ZionMainframeView.simulate14DayStreak")
+        }
+
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+    }
+
+    private func simulate28DayStreak() {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+
+        // Add 28 days of check-ins for all habits
+        for dayOffset in 0..<28 {
+            guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: today) else { continue }
+
+            for power in powers {
+                let checkIn = CheckIn(date: date, isSuccess: true)
+                checkIn.power = power
+                modelContext.insert(checkIn)
+            }
+
+            for agent in agents {
+                let checkIn = CheckIn(date: date, isSuccess: true)
+                checkIn.agent = agent
+                modelContext.insert(checkIn)
+            }
+        }
+
+        do {
+            try modelContext.save()
+        } catch {
+            ErrorLogger.logSaveFailure(error, context: "ZionMainframeView.simulate28DayStreak")
+        }
+
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+    }
+
+    private func simulate65DayStreak() {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+
+        // Add 65 days of check-ins for all habits (NOT including today)
+        // This means the next check-in will be day 66
+        for dayOffset in 1..<66 {
+            guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: today) else { continue }
+
+            for power in powers {
+                let checkIn = CheckIn(date: date, isSuccess: true)
+                checkIn.power = power
+                modelContext.insert(checkIn)
+            }
+
+            for agent in agents {
+                let checkIn = CheckIn(date: date, isSuccess: true)
+                checkIn.agent = agent
+                modelContext.insert(checkIn)
+            }
+        }
+
+        do {
+            try modelContext.save()
+        } catch {
+            ErrorLogger.logSaveFailure(error, context: "ZionMainframeView.simulate65DayStreak")
+        }
+
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+    }
+
+    private func clearSimulatedStreaks() {
+        // Delete all check-ins
+        for power in powers {
+            for checkIn in power.checkIns {
+                modelContext.delete(checkIn)
+            }
+        }
+
+        for agent in agents {
+            for checkIn in agent.checkIns {
+                modelContext.delete(checkIn)
+            }
+        }
+
+        do {
+            try modelContext.save()
+        } catch {
+            ErrorLogger.logSaveFailure(error, context: "ZionMainframeView.clearSimulatedStreaks")
+        }
+
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.warning)
+    }
+
+    private func autoSubmitAllHabits() {
+        let today = Calendar.current.startOfDay(for: Date())
+
+        // Check-in all powers
+        for power in powers {
+            let alreadyCheckedIn = power.checkIns.contains {
+                Calendar.current.startOfDay(for: $0.date) == today
+            }
+            if !alreadyCheckedIn {
+                let checkIn = CheckIn(date: Date(), isSuccess: true)
+                checkIn.power = power
+                modelContext.insert(checkIn)
+            }
+        }
+
+        // Check-in all agents (resisted)
+        for agent in agents {
+            let alreadyCheckedIn = agent.checkIns.contains {
+                Calendar.current.startOfDay(for: $0.date) == today
+            }
+            if !alreadyCheckedIn {
+                let checkIn = CheckIn(date: Date(), isSuccess: true)
+                checkIn.agent = agent
+                modelContext.insert(checkIn)
+            }
+        }
+
+        do {
+            try modelContext.save()
+        } catch {
+            ErrorLogger.logSaveFailure(error, context: "ZionMainframeView.autoSubmitAllHabits")
+        }
+
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+    }
+
+    private func clearTodayCheckIns() {
+        let today = Calendar.current.startOfDay(for: Date())
+
+        // Remove today's check-ins from powers
+        for power in powers {
+            for checkIn in power.checkIns {
+                if Calendar.current.startOfDay(for: checkIn.date) == today {
+                    modelContext.delete(checkIn)
+                }
+            }
+        }
+
+        // Remove today's check-ins from agents
+        for agent in agents {
+            for checkIn in agent.checkIns {
+                if Calendar.current.startOfDay(for: checkIn.date) == today {
+                    modelContext.delete(checkIn)
+                }
+            }
+        }
+
+        do {
+            try modelContext.save()
+        } catch {
+            ErrorLogger.logSaveFailure(error, context: "ZionMainframeView.clearTodayCheckIns")
+        }
+
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.warning)
+    }
+    #endif
 
     // MARK: - Easter Egg
 
@@ -443,12 +753,13 @@ struct ExportDataView: View {
         encoder.outputFormatting = .prettyPrinted
         encoder.dateEncodingStrategy = .iso8601
 
-        guard let jsonData = try? encoder.encode(export),
-              let jsonString = String(data: jsonData, encoding: .utf8) else {
+        do {
+            let jsonData = try encoder.encode(export)
+            return String(data: jsonData, encoding: .utf8)
+        } catch {
+            ErrorLogger.logEncodingFailure(error, context: "ExportDataView.generateExportData")
             return nil
         }
-
-        return jsonString
     }
 }
 

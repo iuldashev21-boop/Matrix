@@ -7,6 +7,7 @@ struct HabitCard: View {
     let targetDays: Int
     let isCompletedToday: Bool
     let isPower: Bool // true = Power (green), false = Agent (red)
+    var subtitle: String? = nil // Optional short explanation
 
     var progress: Double {
         guard targetDays > 0 else { return 0 }
@@ -59,6 +60,14 @@ struct HabitCard: View {
                     // Show countdown timer
                     UnlockCountdownView()
                 } else {
+                    // Show subtitle/description if provided
+                    if let subtitle = subtitle, !subtitle.isEmpty {
+                        Text(subtitle)
+                            .font(.system(size: 11, design: .monospaced))
+                            .foregroundColor(Theme.secondaryText.opacity(0.8))
+                            .lineLimit(1)
+                    }
+
                     Text("DAY \(currentDay) OF \(targetDays)")
                         .font(.caption)
                         .foregroundColor(Theme.secondaryText)

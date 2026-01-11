@@ -8,6 +8,7 @@ final class CheckIn {
     var isSuccess: Bool
     var note: String?
     var createdAt: Date
+    var updatedAt: Date
 
     var power: Power?
     var agent: Agent?
@@ -18,6 +19,12 @@ final class CheckIn {
         self.isSuccess = isSuccess
         self.note = note
         self.createdAt = Date()
+        self.updatedAt = Date()
+    }
+
+    /// Call this whenever the model is modified to track changes for sync
+    func touch() {
+        self.updatedAt = Date()
     }
 }
 

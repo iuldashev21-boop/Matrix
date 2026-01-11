@@ -5,10 +5,17 @@ import SwiftData
 final class Achievement {
     @Attribute(.unique) var id: String
     var unlockedAt: Date
+    var updatedAt: Date
 
     init(id: String, unlockedAt: Date = Date()) {
         self.id = id
         self.unlockedAt = unlockedAt
+        self.updatedAt = Date()
+    }
+
+    /// Call this whenever the model is modified to track changes for sync
+    func touch() {
+        self.updatedAt = Date()
     }
 }
 

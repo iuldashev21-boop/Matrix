@@ -33,6 +33,7 @@ struct DialInView: View {
     @State private var showMilestoneCelebration: Bool = false  // P2: Milestone celebrations
     @State private var milestoneReached: Int = 0  // P2: Which milestone (7, 21, 66)
     @State private var pendingMilestone: Bool = false  // Prevents overlay conflicts
+    @State private var showProtocolComplete: Bool = false  // 66-day epic celebration
     @State private var showSaveError: Bool = false  // Error handling for save failures
 
     // MARK: - Constants
@@ -288,13 +289,24 @@ struct DialInView: View {
                     .transition(.opacity)
             }
 
-            // P2: Milestone Celebration Overlay
+            // P2: Milestone Celebration Overlay (7, 21 days)
             if showMilestoneCelebration {
                 MilestoneCelebrationOverlay(
                     milestone: milestoneReached,
                     habitName: title,
                     isPower: isPower,
                     isPresented: $showMilestoneCelebration,
+                    onDismiss: { pendingMilestone = false }
+                )
+                .transition(.opacity)
+            }
+
+            // 66-Day Protocol Complete - Epic Celebration
+            if showProtocolComplete {
+                ProtocolCompleteView(
+                    habitName: title,
+                    isPower: isPower,
+                    isPresented: $showProtocolComplete,
                     onDismiss: { pendingMilestone = false }
                 )
                 .transition(.opacity)
@@ -452,7 +464,7 @@ struct DialInView: View {
         checkMilestone()
 
         // Oracle reward chance (only if no milestone pending or showing)
-        if !pendingMilestone && !showMilestoneCelebration && Double.random(in: 0...1) < oracleChance {
+        if !pendingMilestone && !showMilestoneCelebration && !showProtocolComplete && Double.random(in: 0...1) < oracleChance {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                 withAnimation {
                     showOracleReward = true
@@ -504,7 +516,13 @@ struct DialInView: View {
             pendingMilestone = true  // Set immediately to prevent overlay conflicts
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
-                    showMilestoneCelebration = true
+                    if newStreak == 66 {
+                        // Epic 66-day celebration
+                        showProtocolComplete = true
+                    } else {
+                        // Standard milestone celebration (7, 21 days)
+                        showMilestoneCelebration = true
+                    }
                 }
             }
         }

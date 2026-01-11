@@ -20,8 +20,13 @@ class AchievementManager: ObservableObject {
         let descriptor = FetchDescriptor<Achievement>(
             predicate: #Predicate { $0.id == achievementId }
         )
-        let results = (try? context.fetch(descriptor)) ?? []
-        return !results.isEmpty
+        do {
+            let results = try context.fetch(descriptor)
+            return !results.isEmpty
+        } catch {
+            ErrorLogger.logFetchFailure(error, context: "AchievementManager.isUnlocked(\(achievementId))")
+            return false
+        }
     }
 
     // MARK: - Unlock Achievement
@@ -32,7 +37,11 @@ class AchievementManager: ObservableObject {
 
         let achievement = Achievement(id: achievementId)
         context.insert(achievement)
-        try? context.save()
+        do {
+            try context.save()
+        } catch {
+            ErrorLogger.logSaveFailure(error, context: "AchievementManager.unlock(\(achievementId))")
+        }
 
         // Award XP
         if let definition = AchievementLibrary.definition(for: achievementId) {
@@ -60,7 +69,12 @@ class AchievementManager: ObservableObject {
         let descriptor = FetchDescriptor<Achievement>(
             sortBy: [SortDescriptor(\.unlockedAt, order: .reverse)]
         )
-        return (try? context.fetch(descriptor)) ?? []
+        do {
+            return try context.fetch(descriptor)
+        } catch {
+            ErrorLogger.logFetchFailure(error, context: "AchievementManager.getUnlockedAchievements")
+            return []
+        }
     }
 
     func getUnlockedCount() -> Int {
