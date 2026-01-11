@@ -68,38 +68,40 @@ struct SignalAnalysisView: View {
         let totalHabits = powers.count + agents.count
         let totalPossible = totalHabits * 7
 
-        // This week's check-ins - count unique (habit, date) pairs to avoid duplicates
-        var thisWeekUniqueCheckIns = Set<String>()
-        for checkIn in checkIns {
-            let date = calendar.startOfDay(for: checkIn.date)
-            guard date >= weekStart && date <= today && checkIn.isSuccess else { continue }
+        // Count from habits' perspective (more reliable than checking orphaned check-ins)
+        var thisWeekCount = 0
+        var lastWeekCount = 0
 
-            // Create unique key: habitID + date
-            let habitId = checkIn.power?.id.uuidString ?? checkIn.agent?.id.uuidString ?? ""
-            if !habitId.isEmpty {
-                let key = "\(habitId)-\(date.timeIntervalSince1970)"
-                thisWeekUniqueCheckIns.insert(key)
+        // Count Power check-ins
+        for power in powers {
+            for checkIn in power.checkIns where checkIn.isSuccess {
+                let checkInDate = calendar.startOfDay(for: checkIn.date)
+                if checkInDate >= weekStart && checkInDate <= today {
+                    thisWeekCount += 1
+                } else if checkInDate >= lastWeekStart && checkInDate <= lastWeekEnd {
+                    lastWeekCount += 1
+                }
             }
         }
-        let thisWeekCount = thisWeekUniqueCheckIns.count
 
-        let thisWeekRate = totalPossible > 0 ? min(100, Int((Double(thisWeekCount) / Double(totalPossible)) * 100)) : 0
-
-        // Last week's check-ins - same unique counting
-        var lastWeekUniqueCheckIns = Set<String>()
-        for checkIn in checkIns {
-            let date = calendar.startOfDay(for: checkIn.date)
-            guard date >= lastWeekStart && date <= lastWeekEnd && checkIn.isSuccess else { continue }
-
-            let habitId = checkIn.power?.id.uuidString ?? checkIn.agent?.id.uuidString ?? ""
-            if !habitId.isEmpty {
-                let key = "\(habitId)-\(date.timeIntervalSince1970)"
-                lastWeekUniqueCheckIns.insert(key)
+        // Count Agent check-ins
+        for agent in agents {
+            for checkIn in agent.checkIns where checkIn.isSuccess {
+                let checkInDate = calendar.startOfDay(for: checkIn.date)
+                if checkInDate >= weekStart && checkInDate <= today {
+                    thisWeekCount += 1
+                } else if checkInDate >= lastWeekStart && checkInDate <= lastWeekEnd {
+                    lastWeekCount += 1
+                }
             }
         }
-        let lastWeekCount = lastWeekUniqueCheckIns.count
 
-        let lastWeekRate = totalPossible > 0 ? min(100, Int((Double(lastWeekCount) / Double(totalPossible)) * 100)) : 0
+        // Cap at total possible (in case of duplicate check-ins on same day)
+        thisWeekCount = min(thisWeekCount, totalPossible)
+        lastWeekCount = min(lastWeekCount, totalPossible)
+
+        let thisWeekRate = totalPossible > 0 ? Int((Double(thisWeekCount) / Double(totalPossible)) * 100) : 0
+        let lastWeekRate = totalPossible > 0 ? Int((Double(lastWeekCount) / Double(totalPossible)) * 100) : 0
 
         // Only show comparison if we have last week data
         let comparison: Int? = lastWeekCount > 0 ? thisWeekRate - lastWeekRate : nil
