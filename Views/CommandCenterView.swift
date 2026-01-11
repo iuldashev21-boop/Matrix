@@ -12,6 +12,11 @@ struct CommandCenterView: View {
     @State private var showSettings: Bool = false
     @State private var selectedPower: Power? = nil
     @State private var selectedAgent: Agent? = nil
+    @State private var editingPower: Power? = nil
+    @State private var editingAgent: Agent? = nil
+    @State private var deletingPower: Power? = nil
+    @State private var deletingAgent: Agent? = nil
+    @State private var showDeleteConfirmation: Bool = false
     @State private var showWhiteRabbit: Bool = false
     @State private var showHabitTip: Bool = false
     @State private var showGhostTutorial: Bool = false
@@ -176,6 +181,12 @@ struct CommandCenterView: View {
         .sheet(item: $selectedAgent) { agent in
             DialInView(power: nil, agent: agent)
         }
+        .sheet(item: $editingPower) { power in
+            EditHabitSheet(power: power, agent: nil)
+        }
+        .sheet(item: $editingAgent) { agent in
+            EditHabitSheet(power: nil, agent: agent)
+        }
         .sheet(item: $promotionCandidate) { candidate in
             TierPromotionSheet(
                 candidate: candidate,
@@ -200,6 +211,35 @@ struct CommandCenterView: View {
                     withAnimation { showHabitTip = true }
                 }
             }
+        }
+        .alert("DELETE PROGRAM?", isPresented: $showDeleteConfirmation) {
+            Button("DELETE", role: .destructive) {
+                deleteSelectedHabit()
+            }
+            Button("CANCEL", role: .cancel) {
+                deletingPower = nil
+                deletingAgent = nil
+            }
+        } message: {
+            Text("This will permanently delete this program and all its check-in history. This cannot be undone.")
+        }
+    }
+
+    // MARK: - Delete Habit
+
+    private func deleteSelectedHabit() {
+        if let power = deletingPower {
+            modelContext.delete(power)
+            deletingPower = nil
+        } else if let agent = deletingAgent {
+            modelContext.delete(agent)
+            deletingAgent = nil
+        }
+
+        do {
+            try modelContext.save()
+        } catch {
+            ErrorLogger.logSaveFailure(error, context: "CommandCenterView.deleteSelectedHabit")
         }
     }
 
@@ -364,7 +404,12 @@ struct CommandCenterView: View {
                     targetDays: power.targetDays,
                     isCompletedToday: isCompleted,
                     isPower: true,
-                    subtitle: hackHabit?.shortDescription
+                    subtitle: hackHabit?.shortDescription,
+                    onEdit: { editingPower = power },
+                    onDelete: {
+                        deletingPower = power
+                        showDeleteConfirmation = true
+                    }
                 )
                 .padding(.horizontal, Spacing.md)
                 .onTapGesture {
@@ -374,7 +419,6 @@ struct CommandCenterView: View {
             }
             // Non-scheduled habits (rest day)
             ForEach(powers.filter { !$0.isScheduledToday }) { power in
-                let hackHabit = HackHabit.allCases.first { $0.rawValue == power.name }
                 HabitCard(
                     title: power.name,
                     icon: power.icon,
@@ -383,7 +427,12 @@ struct CommandCenterView: View {
                     isCompletedToday: false,
                     isPower: true,
                     subtitle: "REST DAY",
-                    isRestDay: true
+                    isRestDay: true,
+                    onEdit: { editingPower = power },
+                    onDelete: {
+                        deletingPower = power
+                        showDeleteConfirmation = true
+                    }
                 )
                 .padding(.horizontal, Spacing.md)
                 .opacity(0.5)
@@ -406,7 +455,12 @@ struct CommandCenterView: View {
                     targetDays: agent.targetDays,
                     isCompletedToday: isCompleted,
                     isPower: false,
-                    subtitle: agentHabit?.shortDescription
+                    subtitle: agentHabit?.shortDescription,
+                    onEdit: { editingAgent = agent },
+                    onDelete: {
+                        deletingAgent = agent
+                        showDeleteConfirmation = true
+                    }
                 )
                 .padding(.horizontal, Spacing.md)
                 .onTapGesture {
@@ -416,7 +470,6 @@ struct CommandCenterView: View {
             }
             // Non-scheduled habits (rest day)
             ForEach(agents.filter { !$0.isScheduledToday }) { agent in
-                let agentHabit = AgentHabit.allCases.first { $0.rawValue == agent.name }
                 HabitCard(
                     title: agent.name,
                     icon: agent.icon,
@@ -425,7 +478,12 @@ struct CommandCenterView: View {
                     isCompletedToday: false,
                     isPower: false,
                     subtitle: "REST DAY",
-                    isRestDay: true
+                    isRestDay: true,
+                    onEdit: { editingAgent = agent },
+                    onDelete: {
+                        deletingAgent = agent
+                        showDeleteConfirmation = true
+                    }
                 )
                 .padding(.horizontal, Spacing.md)
                 .opacity(0.5)

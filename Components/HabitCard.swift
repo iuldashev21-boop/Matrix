@@ -9,6 +9,8 @@ struct HabitCard: View {
     let isPower: Bool // true = Power (green), false = Agent (red)
     var subtitle: String? = nil // Optional short explanation
     var isRestDay: Bool = false // Not scheduled for today
+    var onEdit: (() -> Void)? = nil
+    var onDelete: (() -> Void)? = nil
 
     var progress: Double {
         guard targetDays > 0 else { return 0 }
@@ -86,21 +88,41 @@ struct HabitCard: View {
 
             Spacer()
 
-            // Chevron only when not completed and not rest day (tappable hint)
-            if isRestDay {
-                // Sleep icon for rest day
-                Image(systemName: "zzz")
-                    .font(.system(size: 14))
-                    .foregroundColor(Color.mediumGray)
-            } else if !isCompletedToday {
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(Color.mediumGray)
+            // Three-dot menu for edit/delete
+            if onEdit != nil || onDelete != nil {
+                Menu {
+                    if let onEdit = onEdit {
+                        Button(action: onEdit) {
+                            Label("Edit", systemImage: "pencil")
+                        }
+                    }
+                    if let onDelete = onDelete {
+                        Button(role: .destructive, action: onDelete) {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(Color.mediumGray)
+                        .frame(width: 32, height: 32)
+                        .contentShape(Rectangle())
+                }
             } else {
-                // Lock icon when completed
-                Image(systemName: "lock.fill")
-                    .font(.system(size: 14))
-                    .foregroundColor(Color.mediumGray)
+                // Fallback icons when no menu actions
+                if isRestDay {
+                    Image(systemName: "zzz")
+                        .font(.system(size: 14))
+                        .foregroundColor(Color.mediumGray)
+                } else if !isCompletedToday {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(Color.mediumGray)
+                } else {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 14))
+                        .foregroundColor(Color.mediumGray)
+                }
             }
         }
         .padding(Spacing.md)
