@@ -45,35 +45,46 @@ struct CommandCenterView: View {
         min(3.0, 0.5 + Double(totalSignalStrength) * 0.1)
     }
 
+    // Filter habits scheduled for today
+    private var powersScheduledToday: [Power] {
+        powers.filter { $0.isScheduledToday }
+    }
+
+    private var agentsScheduledToday: [Agent] {
+        agents.filter { $0.isScheduledToday }
+    }
+
     private var allPowersCompleted: Bool {
-        !powers.isEmpty && powers.allSatisfy { $0.completedToday }
+        let scheduled = powersScheduledToday
+        return !scheduled.isEmpty && scheduled.allSatisfy { $0.completedToday }
     }
 
     private var allAgentsCompleted: Bool {
-        !agents.isEmpty && agents.allSatisfy { $0.resistedToday || $0.relapsedToday }
+        let scheduled = agentsScheduledToday
+        return !scheduled.isEmpty && scheduled.allSatisfy { $0.resistedToday || $0.relapsedToday }
     }
 
     private var allHabitsCompleted: Bool {
-        let hasHabits = !powers.isEmpty || !agents.isEmpty
-        let powersOk = powers.isEmpty || allPowersCompleted
-        let agentsOk = agents.isEmpty || allAgentsCompleted
-        return hasHabits && powersOk && agentsOk
+        let hasScheduled = !powersScheduledToday.isEmpty || !agentsScheduledToday.isEmpty
+        let powersOk = powersScheduledToday.isEmpty || allPowersCompleted
+        let agentsOk = agentsScheduledToday.isEmpty || allAgentsCompleted
+        return hasScheduled && powersOk && agentsOk
     }
 
     private var powersCompletedCount: Int {
-        powers.filter { $0.completedToday }.count
+        powersScheduledToday.filter { $0.completedToday }.count
     }
 
     private var agentsCompletedCount: Int {
-        agents.filter { $0.resistedToday || $0.relapsedToday }.count
+        agentsScheduledToday.filter { $0.resistedToday || $0.relapsedToday }.count
     }
 
     private var todayCompletedCount: Int {
-        powersCompletedCount + agents.filter { $0.resistedToday }.count
+        powersCompletedCount + agentsScheduledToday.filter { $0.resistedToday }.count
     }
 
     private var totalHabitsCount: Int {
-        powers.count + agents.count
+        powersScheduledToday.count + agentsScheduledToday.count
     }
 
     private var bestCurrentStreak: Int {
@@ -280,9 +291,14 @@ struct CommandCenterView: View {
                     }
 
                     if !powers.isEmpty {
+                        let scheduledCount = powersScheduledToday.count
+                        let subtitle = allPowersCompleted ? "ALL SYNCED" :
+                            (scheduledCount < powers.count ?
+                                "\(powersCompletedCount)/\(scheduledCount) TODAY" :
+                                "\(powersCompletedCount)/\(powers.count) UPLOADED")
                         CollapsibleSection(
                             title: "// LOADED HACKS",
-                            subtitle: allPowersCompleted ? "ALL SYNCED" : "\(powersCompletedCount)/\(powers.count) UPLOADED",
+                            subtitle: subtitle,
                             accentColor: Color.matrixGreen,
                             isExpanded: $isPowersExpanded
                         ) {
@@ -291,9 +307,14 @@ struct CommandCenterView: View {
                     }
 
                     if !agents.isEmpty {
+                        let scheduledCount = agentsScheduledToday.count
+                        let subtitle = allAgentsCompleted ? "ALL CONTAINED" :
+                            (scheduledCount < agents.count ?
+                                "\(agentsCompletedCount)/\(scheduledCount) TODAY" :
+                                "\(agentsCompletedCount)/\(agents.count) RESISTED")
                         CollapsibleSection(
                             title: "// DETECTED AGENTS",
-                            subtitle: allAgentsCompleted ? "ALL CONTAINED" : "\(agentsCompletedCount)/\(agents.count) RESISTED",
+                            subtitle: subtitle,
                             accentColor: Color.agentRed,
                             isExpanded: $isAgentsExpanded
                         ) {
@@ -332,7 +353,8 @@ struct CommandCenterView: View {
 
     private var powersContent: some View {
         VStack(spacing: Spacing.sm) {
-            ForEach(powers) { power in
+            // Scheduled habits first
+            ForEach(powers.filter { $0.isScheduledToday }) { power in
                 let isCompleted = power.completedToday
                 let hackHabit = HackHabit.allCases.first { $0.rawValue == power.name }
                 HabitCard(
@@ -350,6 +372,22 @@ struct CommandCenterView: View {
                     selectedPower = power
                 }
             }
+            // Non-scheduled habits (rest day)
+            ForEach(powers.filter { !$0.isScheduledToday }) { power in
+                let hackHabit = HackHabit.allCases.first { $0.rawValue == power.name }
+                HabitCard(
+                    title: power.name,
+                    icon: power.icon,
+                    currentDay: power.currentStreak,
+                    targetDays: power.targetDays,
+                    isCompletedToday: false,
+                    isPower: true,
+                    subtitle: "REST DAY",
+                    isRestDay: true
+                )
+                .padding(.horizontal, Spacing.md)
+                .opacity(0.5)
+            }
         }
     }
 
@@ -357,7 +395,8 @@ struct CommandCenterView: View {
 
     private var agentsContent: some View {
         VStack(spacing: Spacing.sm) {
-            ForEach(agents) { agent in
+            // Scheduled habits first
+            ForEach(agents.filter { $0.isScheduledToday }) { agent in
                 let isCompleted = agent.resistedToday || agent.relapsedToday
                 let agentHabit = AgentHabit.allCases.first { $0.rawValue == agent.name }
                 HabitCard(
@@ -374,6 +413,22 @@ struct CommandCenterView: View {
                     guard !isCompleted else { return }
                     selectedAgent = agent
                 }
+            }
+            // Non-scheduled habits (rest day)
+            ForEach(agents.filter { !$0.isScheduledToday }) { agent in
+                let agentHabit = AgentHabit.allCases.first { $0.rawValue == agent.name }
+                HabitCard(
+                    title: agent.name,
+                    icon: agent.icon,
+                    currentDay: agent.currentStreak,
+                    targetDays: agent.targetDays,
+                    isCompletedToday: false,
+                    isPower: false,
+                    subtitle: "REST DAY",
+                    isRestDay: true
+                )
+                .padding(.horizontal, Spacing.md)
+                .opacity(0.5)
             }
         }
     }

@@ -9,6 +9,11 @@ struct AddHabitSheet: View {
     @State private var isAgent: Bool = false
     @State private var selectedIcon: String = "bolt"
     @State private var showSaveError: Bool = false
+    @State private var selectedDays: Set<Int> = Set(1...7) // 1=Sun...7=Sat, all days by default
+
+    private let weekdays: [(id: Int, short: String)] = [
+        (1, "S"), (2, "M"), (3, "T"), (4, "W"), (5, "T"), (6, "F"), (7, "S")
+    ]
 
     private let powerIcons = ["bolt", "figure.run", "book", "brain.head.profile", "drop.fill", "pencil.and.scribble"]
     private let agentIcons = ["xmark.shield", "iphone", "moon.zzz", "cup.and.saucer", "tv", "creditcard"]
@@ -64,6 +69,40 @@ struct AddHabitSheet: View {
                     }
                     .padding(.horizontal, Spacing.md)
 
+                    // Day Selection
+                    VStack(alignment: .leading, spacing: Spacing.sm) {
+                        Text("FREQUENCY")
+                            .font(.system(size: 12, weight: .bold, design: .monospaced))
+                            .foregroundColor(Color.lightGray)
+
+                        HStack(spacing: Spacing.xs) {
+                            ForEach(weekdays, id: \.id) { day in
+                                Button(action: {
+                                    if selectedDays.contains(day.id) {
+                                        // Don't allow deselecting all days
+                                        if selectedDays.count > 1 {
+                                            selectedDays.remove(day.id)
+                                        }
+                                    } else {
+                                        selectedDays.insert(day.id)
+                                    }
+                                }) {
+                                    Text(day.short)
+                                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                        .foregroundColor(selectedDays.contains(day.id) ? Color.deepBlack : Color.mediumGray)
+                                        .frame(width: 36, height: 36)
+                                        .background(selectedDays.contains(day.id) ? (isAgent ? Color.agentRed : Color.matrixGreen) : Color.charcoal)
+                                        .cornerRadius(8)
+                                }
+                            }
+                        }
+
+                        Text(selectedDays.count == 7 ? "DAILY" : "\(selectedDays.count) DAYS/WEEK")
+                            .font(.system(size: 11, design: .monospaced))
+                            .foregroundColor(Color.mediumGray)
+                    }
+                    .padding(.horizontal, Spacing.md)
+
                     Spacer()
 
                     // Upload Button
@@ -100,11 +139,12 @@ struct AddHabitSheet: View {
 
     private func createHabit() -> Bool {
         let name = habitName.trimmingCharacters(in: .whitespaces)
+        let days = Array(selectedDays).sorted()
         if isAgent {
-            let agent = Agent(name: name, icon: selectedIcon)
+            let agent = Agent(name: name, icon: selectedIcon, scheduledDays: days)
             modelContext.insert(agent)
         } else {
-            let power = Power(name: name, icon: selectedIcon)
+            let power = Power(name: name, icon: selectedIcon, scheduledDays: days)
             modelContext.insert(power)
         }
         do {

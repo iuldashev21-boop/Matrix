@@ -8,6 +8,7 @@ struct HabitCard: View {
     let isCompletedToday: Bool
     let isPower: Bool // true = Power (green), false = Agent (red)
     var subtitle: String? = nil // Optional short explanation
+    var isRestDay: Bool = false // Not scheduled for today
 
     var progress: Double {
         guard targetDays > 0 else { return 0 }
@@ -25,13 +26,20 @@ struct HabitCard: View {
                 Image(systemName: icon)
                     .font(.title)
                     .foregroundColor(accentColor)
-                    .opacity(isCompletedToday ? 0.5 : 1.0)
+                    .opacity(isCompletedToday || isRestDay ? 0.5 : 1.0)
                     .frame(width: 44, height: 44)
 
                 if isCompletedToday {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.system(size: 18))
                         .foregroundColor(accentColor)
+                        .background(Color.matrixBlack)
+                        .clipShape(Circle())
+                        .offset(x: 14, y: 14)
+                } else if isRestDay {
+                    Image(systemName: "moon.zzz.fill")
+                        .font(.system(size: 14))
+                        .foregroundColor(Color.mediumGray)
                         .background(Color.matrixBlack)
                         .clipShape(Circle())
                         .offset(x: 14, y: 14)
@@ -78,8 +86,13 @@ struct HabitCard: View {
 
             Spacer()
 
-            // Chevron only when not completed (tappable hint)
-            if !isCompletedToday {
+            // Chevron only when not completed and not rest day (tappable hint)
+            if isRestDay {
+                // Sleep icon for rest day
+                Image(systemName: "zzz")
+                    .font(.system(size: 14))
+                    .foregroundColor(Color.mediumGray)
+            } else if !isCompletedToday {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(Color.mediumGray)

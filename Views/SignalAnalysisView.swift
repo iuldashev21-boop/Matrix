@@ -65,8 +65,34 @@ struct SignalAnalysisView: View {
             return (0, 0, 0, nil)
         }
 
-        let totalHabits = powers.count + agents.count
-        let totalPossible = totalHabits * 7
+        // Helper to count scheduled days in a date range for a habit
+        func countScheduledDays(scheduledDays: [Int], from start: Date, to end: Date) -> Int {
+            var count = 0
+            var date = start
+            while date <= end {
+                let weekday = calendar.component(.weekday, from: date)
+                if scheduledDays.isEmpty || scheduledDays.count == 7 || scheduledDays.contains(weekday) {
+                    count += 1
+                }
+                guard let next = calendar.date(byAdding: .day, value: 1, to: date) else { break }
+                date = next
+            }
+            return count
+        }
+
+        // Calculate total possible for this week and last week
+        var thisWeekTotal = 0
+        var lastWeekTotal = 0
+
+        for power in powers {
+            thisWeekTotal += countScheduledDays(scheduledDays: power.scheduledDays, from: weekStart, to: today)
+            lastWeekTotal += countScheduledDays(scheduledDays: power.scheduledDays, from: lastWeekStart, to: lastWeekEnd)
+        }
+
+        for agent in agents {
+            thisWeekTotal += countScheduledDays(scheduledDays: agent.scheduledDays, from: weekStart, to: today)
+            lastWeekTotal += countScheduledDays(scheduledDays: agent.scheduledDays, from: lastWeekStart, to: lastWeekEnd)
+        }
 
         // Count from habits' perspective (more reliable than checking orphaned check-ins)
         var thisWeekCount = 0
@@ -97,16 +123,16 @@ struct SignalAnalysisView: View {
         }
 
         // Cap at total possible (in case of duplicate check-ins on same day)
-        thisWeekCount = min(thisWeekCount, totalPossible)
-        lastWeekCount = min(lastWeekCount, totalPossible)
+        thisWeekCount = min(thisWeekCount, thisWeekTotal)
+        lastWeekCount = min(lastWeekCount, lastWeekTotal)
 
-        let thisWeekRate = totalPossible > 0 ? Int((Double(thisWeekCount) / Double(totalPossible)) * 100) : 0
-        let lastWeekRate = totalPossible > 0 ? Int((Double(lastWeekCount) / Double(totalPossible)) * 100) : 0
+        let thisWeekRate = thisWeekTotal > 0 ? Int((Double(thisWeekCount) / Double(thisWeekTotal)) * 100) : 0
+        let lastWeekRate = lastWeekTotal > 0 ? Int((Double(lastWeekCount) / Double(lastWeekTotal)) * 100) : 0
 
         // Only show comparison if we have last week data
         let comparison: Int? = lastWeekCount > 0 ? thisWeekRate - lastWeekRate : nil
 
-        return (thisWeekCount, totalPossible, thisWeekRate, comparison)
+        return (thisWeekCount, thisWeekTotal, thisWeekRate, comparison)
     }
 
     var body: some View {
