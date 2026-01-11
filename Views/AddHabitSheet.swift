@@ -1,6 +1,36 @@
 import SwiftUI
 import SwiftData
 
+// MARK: - Habit Suggestion Model
+
+struct HabitSuggestion: Identifiable {
+    let id = UUID()
+    let name: String
+    let icon: String
+    let scheduledDays: Set<Int>
+    let frequencyLabel: String
+}
+
+// MARK: - Suggested Habits
+
+private let hackSuggestions: [HabitSuggestion] = [
+    HabitSuggestion(name: "Supplements", icon: "pill.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+    HabitSuggestion(name: "Gym", icon: "figure.strengthtraining.traditional", scheduledDays: Set([2, 4, 6]), frequencyLabel: "3x Week"),
+    HabitSuggestion(name: "Meditation", icon: "brain.head.profile", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+    HabitSuggestion(name: "Reading", icon: "book.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+    HabitSuggestion(name: "Hydration", icon: "drop.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+    HabitSuggestion(name: "Journaling", icon: "pencil.and.scribble", scheduledDays: Set(1...7), frequencyLabel: "Daily")
+]
+
+private let agentSuggestions: [HabitSuggestion] = [
+    HabitSuggestion(name: "No Doom Scrolling", icon: "iphone", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+    HabitSuggestion(name: "No Junk Food", icon: "fork.knife", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+    HabitSuggestion(name: "No Late Nights", icon: "moon.zzz", scheduledDays: Set([2, 3, 4, 5, 6]), frequencyLabel: "Weekdays"),
+    HabitSuggestion(name: "No Gaming", icon: "gamecontroller.fill", scheduledDays: Set([2, 3, 4, 5, 6]), frequencyLabel: "Weekdays"),
+    HabitSuggestion(name: "No Excess Caffeine", icon: "cup.and.saucer.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+    HabitSuggestion(name: "No Binge Watching", icon: "tv.fill", scheduledDays: Set([2, 3, 4, 5, 6]), frequencyLabel: "Weekdays")
+]
+
 struct AddHabitSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -14,6 +44,10 @@ struct AddHabitSheet: View {
     private let weekdays: [(id: Int, short: String)] = [
         (1, "S"), (2, "M"), (3, "T"), (4, "W"), (5, "T"), (6, "F"), (7, "S")
     ]
+
+    private var suggestions: [HabitSuggestion] {
+        isAgent ? agentSuggestions : hackSuggestions
+    }
 
     private var canUpload: Bool {
         !habitName.trimmingCharacters(in: .whitespaces).isEmpty && !selectedDays.isEmpty
@@ -46,10 +80,48 @@ struct AddHabitSheet: View {
                     HStack(spacing: Spacing.md) {
                         TypeToggleButton(title: "HACK", isSelected: !isAgent) {
                             isAgent = false
+                            selectedIcon = "bolt"
                         }
                         TypeToggleButton(title: "AGENT", isSelected: isAgent) {
                             isAgent = true
+                            selectedIcon = "xmark.shield"
                         }
+                    }
+                    .padding(.horizontal, Spacing.md)
+
+                    // Quick Suggestions
+                    VStack(alignment: .leading, spacing: Spacing.sm) {
+                        Text("QUICK ADD")
+                            .font(.system(size: 12, weight: .bold, design: .monospaced))
+                            .foregroundColor(Color.lightGray)
+                            .padding(.horizontal, Spacing.md)
+
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: Spacing.sm) {
+                                ForEach(suggestions) { suggestion in
+                                    SuggestionChip(
+                                        suggestion: suggestion,
+                                        accentColor: isAgent ? Color.agentRed : Color.matrixGreen
+                                    ) {
+                                        selectSuggestion(suggestion)
+                                    }
+                                }
+                            }
+                            .padding(.horizontal, Spacing.md)
+                        }
+                    }
+
+                    // Divider
+                    HStack {
+                        Rectangle()
+                            .fill(Color.charcoal)
+                            .frame(height: 1)
+                        Text("OR CREATE CUSTOM")
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundColor(Color.mediumGray)
+                        Rectangle()
+                            .fill(Color.charcoal)
+                            .frame(height: 1)
                     }
                     .padding(.horizontal, Spacing.md)
 
@@ -182,6 +254,12 @@ struct AddHabitSheet: View {
         }
     }
 
+    private func selectSuggestion(_ suggestion: HabitSuggestion) {
+        habitName = suggestion.name
+        selectedIcon = suggestion.icon
+        selectedDays = suggestion.scheduledDays
+    }
+
     private func createHabit() -> Bool {
         let name = habitName.trimmingCharacters(in: .whitespaces)
         let days = Array(selectedDays).sorted()
@@ -198,6 +276,39 @@ struct AddHabitSheet: View {
         } catch {
             ErrorLogger.logSaveFailure(error, context: "AddHabitSheet.createHabit")
             return false
+        }
+    }
+}
+
+// MARK: - Suggestion Chip
+
+struct SuggestionChip: View {
+    let suggestion: HabitSuggestion
+    let accentColor: Color
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: Spacing.xs) {
+                Image(systemName: suggestion.icon)
+                    .font(.system(size: 14))
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(suggestion.name)
+                        .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                    Text(suggestion.frequencyLabel)
+                        .font(.system(size: 9, design: .monospaced))
+                        .opacity(0.7)
+                }
+            }
+            .foregroundColor(accentColor)
+            .padding(.horizontal, Spacing.sm)
+            .padding(.vertical, Spacing.xs)
+            .background(accentColor.opacity(0.15))
+            .cornerRadius(8)
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(accentColor.opacity(0.3), lineWidth: 1)
+            )
         }
     }
 }
