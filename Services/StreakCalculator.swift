@@ -33,9 +33,6 @@ enum StreakCalculator {
             lastScheduledDay = prev
         }
 
-        // Check if most recent check-in is on the last scheduled day or the one before
-        let daysDiff = calendar.dateComponents([.day], from: mostRecentDay, to: lastScheduledDay).day ?? 0
-
         // Find how many scheduled days are between mostRecent and lastScheduledDay
         var scheduledDaysMissed = 0
         var checkDate = lastScheduledDay
@@ -115,8 +112,7 @@ enum StreakCalculator {
 
             // Count scheduled days between previousDate and currentDate (exclusive of both)
             var missedScheduledDays = 0
-            var checkDate = previousDate
-            guard var nextDay = calendar.date(byAdding: .day, value: 1, to: checkDate) else { continue }
+            guard var nextDay = calendar.date(byAdding: .day, value: 1, to: previousDate) else { continue }
 
             while nextDay < currentDate {
                 if isScheduled(nextDay) {

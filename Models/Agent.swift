@@ -85,7 +85,6 @@ final class Agent {
     var needsRecovery: Bool {
         // Check if missed yesterday but had a streak before
         let calendar = Calendar.current
-        let today = DateHelper.today
         let yesterday = DateHelper.yesterday
 
         // Single pass through checkIns

@@ -75,7 +75,6 @@ final class Power {
     var needsRecovery: Bool {
         // Check if missed yesterday but had a streak before
         let calendar = Calendar.current
-        let today = DateHelper.today
         let yesterday = DateHelper.yesterday
 
         // Has check-in for yesterday?

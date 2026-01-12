@@ -254,7 +254,7 @@ struct SignalAnalysisView: View {
             let generator = UINotificationFeedbackGenerator()
             generator.notificationOccurred(.success)
         } catch {
-            print("DEBUG: Failed to seed test data: \(error)")
+            ErrorLogger.logSaveFailure(error, context: "SignalAnalysisView.seedTestData")
         }
     }
     #endif
