@@ -3,6 +3,27 @@ import Foundation
 enum SidequestManager {
     private static let defaults = UserDefaults.standard
 
+    // MARK: - Cached Day (prevents midnight race conditions)
+
+    /// Cached "today" value - refreshed only when explicitly requested
+    /// This prevents race conditions where Date() changes mid-operation at midnight
+    private static var _cachedToday: Date?
+    private static var _lastCacheTime: Date?
+
+    /// Get today's date, cached for 1 second to prevent midnight flicker
+    private static var today: Date {
+        let now = Date()
+        if let cached = _cachedToday,
+           let lastCache = _lastCacheTime,
+           now.timeIntervalSince(lastCache) < 1.0 {
+            return cached
+        }
+        let newToday = Calendar.current.startOfDay(for: now)
+        _cachedToday = newToday
+        _lastCacheTime = now
+        return newToday
+    }
+
     // MARK: - Keys
 
     private enum Keys {
@@ -35,16 +56,17 @@ enum SidequestManager {
     // MARK: - Daily Reset Check
 
     private static func resetIfNewDay() {
-        let today = Calendar.current.startOfDay(for: Date())
+        let currentDay = today  // Use cached value to prevent midnight race
         let lastReset = defaults.object(forKey: Keys.lastXPResetDate) as? Date ?? .distantPast
+        let lastResetDay = Calendar.current.startOfDay(for: lastReset)
 
-        if Calendar.current.startOfDay(for: lastReset) < today {
+        if lastResetDay < currentDay {
             defaults.set(0, forKey: Keys.oracleUsesToday)
             defaults.set(false, forKey: Keys.codeBreakerCompletedToday)
             defaults.set(0, forKey: Keys.combatUsesToday)
             defaults.set(0, forKey: Keys.maintenanceUsesToday)
             defaults.set(0, forKey: Keys.sidequestXPToday)
-            defaults.set(today, forKey: Keys.lastXPResetDate)
+            defaults.set(currentDay, forKey: Keys.lastXPResetDate)
         }
     }
 

@@ -3,6 +3,8 @@ import SwiftData
 
 @main
 struct MatrixHabitApp: App {
+    @Environment(\.scenePhase) private var scenePhase
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Power.self,
@@ -37,6 +39,16 @@ struct MatrixHabitApp: App {
                 .preferredColorScheme(.dark)
         }
         .modelContainer(sharedModelContainer)
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                // Refresh cached dates when app becomes active (prevents midnight bugs)
+                DateHelper.invalidateCache()
+                // Clear notification badge
+                Task { @MainActor in
+                    NotificationManager.shared.clearBadge()
+                }
+            }
+        }
     }
 }
 

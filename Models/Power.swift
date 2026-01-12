@@ -34,7 +34,7 @@ final class Power {
 
     /// Check if today is a scheduled day for this habit
     var isScheduledToday: Bool {
-        let weekday = Calendar.current.component(.weekday, from: Date())
+        let weekday = Calendar.current.component(.weekday, from: DateHelper.today)
         return scheduledDays.isEmpty || scheduledDays.contains(weekday)
     }
 
@@ -60,7 +60,7 @@ final class Power {
     }
 
     var completedToday: Bool {
-        let today = Calendar.current.startOfDay(for: Date())
+        let today = DateHelper.today
         return checkIns.contains { Calendar.current.startOfDay(for: $0.date) == today && $0.isSuccess }
     }
 
@@ -75,8 +75,8 @@ final class Power {
     var needsRecovery: Bool {
         // Check if missed yesterday but had a streak before
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else { return false }
+        let today = DateHelper.today
+        let yesterday = DateHelper.yesterday
 
         // Has check-in for yesterday?
         let hasYesterdayCheckIn = checkIns.contains {

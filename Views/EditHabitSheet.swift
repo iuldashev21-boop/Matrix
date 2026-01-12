@@ -13,7 +13,9 @@ struct EditHabitSheet: View {
     @State private var selectedDays: Set<Int> = []
     @State private var showSaveError: Bool = false
     @State private var showDeleteConfirmation: Bool = false
+    @State private var isSaving: Bool = false
 
+    private let maxNameLength = 30
     private let weekdays: [(id: Int, short: String)] = [
         (1, "S"), (2, "M"), (3, "T"), (4, "W"), (5, "T"), (6, "F"), (7, "S")
     ]
@@ -22,8 +24,13 @@ struct EditHabitSheet: View {
         agent != nil
     }
 
+    private var trimmedName: String {
+        habitName.trimmingCharacters(in: .whitespaces)
+    }
+
     private var canSave: Bool {
-        !habitName.trimmingCharacters(in: .whitespaces).isEmpty && !selectedDays.isEmpty
+        let name = trimmedName
+        return !name.isEmpty && name.count <= maxNameLength && !selectedDays.isEmpty && !isSaving
     }
 
     private var frequencyLabel: String {
@@ -161,10 +168,18 @@ struct EditHabitSheet: View {
 
                         // Save Button
                         VStack(spacing: Spacing.md) {
-                            PrimaryButton(title: "SAVE CHANGES") {
+                            if !trimmedName.isEmpty && trimmedName.count > maxNameLength {
+                                Text("NAME TOO LONG (\(trimmedName.count)/\(maxNameLength))")
+                                    .font(.system(size: 11, design: .monospaced))
+                                    .foregroundColor(Color.agentRed)
+                            }
+
+                            PrimaryButton(title: isSaving ? "SAVING..." : "SAVE CHANGES") {
+                                isSaving = true
                                 if saveChanges() {
                                     dismiss()
                                 } else {
+                                    isSaving = false
                                     showSaveError = true
                                 }
                             }
@@ -249,7 +264,7 @@ struct EditHabitSheet: View {
     }
 
     private func saveChanges() -> Bool {
-        let name = habitName.trimmingCharacters(in: .whitespaces)
+        let name = trimmedName
         let days = Array(selectedDays).sorted()
 
         if let power = power {

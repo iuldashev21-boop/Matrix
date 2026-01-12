@@ -108,6 +108,11 @@ enum StreakCalculator {
         for i in 1..<sorted.count {
             let currentDate = calendar.startOfDay(for: sorted[i].date)
 
+            // Skip duplicate check-ins on the same day
+            if currentDate == previousDate {
+                continue
+            }
+
             // Count scheduled days between previousDate and currentDate (exclusive of both)
             var missedScheduledDays = 0
             var checkDate = previousDate

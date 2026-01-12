@@ -10,6 +10,7 @@ enum UserProfile {
         static let hasCompletedOnboarding = "hasCompletedOnboarding"
         static let firstLaunchDate = "firstLaunchDate"
         static let totalXP = "totalXP"
+        static let empTokens = "empTokens"
     }
 
     // MARK: - Properties
@@ -32,6 +33,11 @@ enum UserProfile {
     static var totalXP: Int {
         get { defaults.integer(forKey: Keys.totalXP) }
         set { defaults.set(newValue, forKey: Keys.totalXP) }
+    }
+
+    static var empTokens: Int {
+        get { defaults.integer(forKey: Keys.empTokens) }
+        set { defaults.set(newValue, forKey: Keys.empTokens) }
     }
 
     // MARK: - Computed Properties
@@ -71,10 +77,41 @@ enum UserProfile {
         hasCompletedOnboarding = false
         firstLaunchDate = nil
         totalXP = 0
+        empTokens = 0
     }
 
     static func addXP(_ amount: Int) {
         totalXP += amount
+    }
+
+    // MARK: - EMP Token Methods
+
+    /// Award EMP tokens (earned at streak milestones)
+    static func awardEMPTokens(_ amount: Int) {
+        empTokens += amount
+    }
+
+    /// Spend EMP tokens for streak recovery
+    /// Returns true if successful, false if insufficient tokens
+    static func spendEMPToken() -> Bool {
+        guard empTokens > 0 else { return false }
+        empTokens -= 1
+        return true
+    }
+
+    /// Check if user has at least one EMP token
+    static var hasEMPTokens: Bool {
+        empTokens > 0
+    }
+
+    /// EMP tokens earned at different milestones
+    static func empTokensForMilestone(_ milestone: Int) -> Int {
+        switch milestone {
+        case 7: return 1    // First week
+        case 21: return 2   // Habit forming
+        case 66: return 5   // Protocol complete
+        default: return 0
+        }
     }
 }
 

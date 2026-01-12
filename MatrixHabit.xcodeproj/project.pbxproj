@@ -83,7 +83,18 @@
 		A10000000000000000000121 /* AchievementsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000121 /* AchievementsTabView.swift */; };
 		A10000000000000000000122 /* CommandCenterOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000122 /* CommandCenterOverlays.swift */; };
 		A10000000000000000000123 /* HabitProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000123 /* HabitProtocol.swift */; };
+		EDFCEE40A028CE2F23357D85 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD956249358B70A8E378656 /* NotificationManager.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C10000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A60000000000000000000001;
+			remoteInfo = MatrixHabit;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		A20000000000000000000001 /* MatrixHabitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHabitApp.swift; sourceTree = "<group>"; };
@@ -168,17 +179,8 @@
 		A20000000000000000000123 /* HabitProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitProtocol.swift; sourceTree = "<group>"; };
 		A30000000000000000000001 /* MatrixHabit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatrixHabit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A30000000000000000000002 /* MatrixHabitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MatrixHabitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BBD956249358B70A8E378656 /* NotificationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationManager.swift; path = Services/NotificationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXContainerItemProxy section */
-		C10000000000000000000001 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A00000000000000000000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A60000000000000000000001;
-			remoteInfo = MatrixHabit;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A40000000000000000000001 /* Frameworks */ = {
@@ -197,35 +199,26 @@
 		};
 /* End PBXFrameworksBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		C20000000000000000000001 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A60000000000000000000001 /* MatrixHabit */;
-			targetProxy = C10000000000000000000001 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXGroup section */
+		1451885AA81D5AF6335251CA /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BBD956249358B70A8E378656 /* NotificationManager.swift */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
 		A50000000000000000000001 = {
 			isa = PBXGroup;
 			children = (
-				A50000000000000000000002 /* MatrixHabit */,
+				A50000000000000000000002 /*  */,
 				A50000000000000000000011 /* MatrixHabitTests */,
 				A50000000000000000000003 /* Products */,
+				1451885AA81D5AF6335251CA /* Services */,
 			);
 			sourceTree = "<group>";
 		};
-		A50000000000000000000011 /* MatrixHabitTests */ = {
-			isa = PBXGroup;
-			children = (
-				A20000000000000000000060 /* TestHelpers.swift */,
-				A20000000000000000000061 /* StreakCalculatorTests.swift */,
-				A20000000000000000000062 /* RankSystemTests.swift */,
-			);
-			path = MatrixHabitTests;
-			sourceTree = "<group>";
-		};
-		A50000000000000000000002 /* MatrixHabit */ = {
+		A50000000000000000000002 /*  */ = {
 			isa = PBXGroup;
 			children = (
 				A20000000000000000000001 /* MatrixHabitApp.swift */,
@@ -345,6 +338,27 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		A50000000000000000000010 /* Sidequests */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000041 /* OracleInsightView.swift */,
+				A20000000000000000000042 /* CodeBreakerView.swift */,
+				A20000000000000000000043 /* CombatTrainingView.swift */,
+				A20000000000000000000044 /* SystemMaintenanceView.swift */,
+			);
+			path = Sidequests;
+			sourceTree = "<group>";
+		};
+		A50000000000000000000011 /* MatrixHabitTests */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000060 /* TestHelpers.swift */,
+				A20000000000000000000061 /* StreakCalculatorTests.swift */,
+				A20000000000000000000062 /* RankSystemTests.swift */,
+			);
+			path = MatrixHabitTests;
+			sourceTree = "<group>";
+		};
 		A50000000000000000000012 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
@@ -369,17 +383,6 @@
 				A20000000000000000000118 /* LoadoutExpectationPhase.swift */,
 			);
 			path = Onboarding;
-			sourceTree = "<group>";
-		};
-		A50000000000000000000010 /* Sidequests */ = {
-			isa = PBXGroup;
-			children = (
-				A20000000000000000000041 /* OracleInsightView.swift */,
-				A20000000000000000000042 /* CodeBreakerView.swift */,
-				A20000000000000000000043 /* CombatTrainingView.swift */,
-				A20000000000000000000044 /* SystemMaintenanceView.swift */,
-			);
-			path = Sidequests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -487,17 +490,13 @@
 				A10000000000000000000005 /* Spacing.swift in Sources */,
 				A10000000000000000000006 /* Theme.swift in Sources */,
 				A10000000000000000000007 /* PrimaryButton.swift in Sources */,
-				A10000000000000000000008 /* SecondaryButton.swift in Sources */,
 				A10000000000000000000009 /* HabitCard.swift in Sources */,
 				A10000000000000000000010 /* ProgressBar.swift in Sources */,
-				A10000000000000000000011 /* EmptyStateView.swift in Sources */,
 				A10000000000000000000012 /* Power.swift in Sources */,
 				A10000000000000000000013 /* Agent.swift in Sources */,
 				A10000000000000000000014 /* CheckIn.swift in Sources */,
 				A10000000000000000000015 /* PresetHabits.swift in Sources */,
-				A10000000000000000000016 /* DataManager.swift in Sources */,
 				A10000000000000000000017 /* StreakCalculator.swift in Sources */,
-				A10000000000000000000018 /* ExportService.swift in Sources */,
 				A10000000000000000000019 /* DateHelpers.swift in Sources */,
 				A10000000000000000000020 /* UserProfile.swift in Sources */,
 				A10000000000000000000021 /* TerminalWakeUpView.swift in Sources */,
@@ -557,6 +556,7 @@
 				A10000000000000000000121 /* AchievementsTabView.swift in Sources */,
 				A10000000000000000000122 /* CommandCenterOverlays.swift in Sources */,
 				A10000000000000000000123 /* HabitProtocol.swift in Sources */,
+				EDFCEE40A028CE2F23357D85 /* NotificationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -571,6 +571,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C20000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A60000000000000000000001 /* MatrixHabit */;
+			targetProxy = C10000000000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		B10000000000000000000001 /* Debug */ = {

@@ -25,6 +25,7 @@ struct AwakeningView: View {
     @State private var motivationType: MotivationType? = nil
     @State private var choseRedPill: Bool = false
     @State private var suggestedLoadout: ProtocolLoadout = ProtocolLoadout()
+    @State private var showSaveError: Bool = false
 
     private let totalPhases = 17
 
@@ -165,6 +166,13 @@ struct AwakeningView: View {
             // CRT Overlays
             ScanlineOverlay()
             VignetteOverlay()
+        }
+        .alert("INITIALIZATION FAILED", isPresented: $showSaveError) {
+            Button("RETRY", role: .cancel) {
+                finalizeAwakening()
+            }
+        } message: {
+            Text("Failed to save your protocol. Please try again.")
         }
     }
 
@@ -541,14 +549,12 @@ struct AwakeningView: View {
 
         do {
             try modelContext.save()
+            UserProfile.completeOnboarding()
+            isPresented = false
         } catch {
-            #if DEBUG
-            print("Failed to save habits: \(error)")
-            #endif
+            ErrorLogger.logSaveFailure(error, context: "AwakeningView.finalizeAwakening")
+            showSaveError = true
         }
-
-        UserProfile.completeOnboarding()
-        isPresented = false
     }
 }
 

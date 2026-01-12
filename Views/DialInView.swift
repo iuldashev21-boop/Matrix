@@ -71,8 +71,7 @@ struct DialInView: View {
     // P1: Check if yesterday was missed (for manual yesterday check-in)
     private var missedYesterday: Bool {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else { return false }
+        let yesterday = DateHelper.yesterday
 
         let checkIns = power?.checkIns ?? agent?.checkIns ?? []
         return !checkIns.contains { calendar.startOfDay(for: $0.date) == yesterday }
@@ -81,7 +80,7 @@ struct DialInView: View {
     // P1: Only show yesterday option if habit existed before today
     private var canCheckInYesterday: Bool {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
+        let today = DateHelper.today
         let createdAt = power?.createdAt ?? agent?.createdAt ?? Date()
         return calendar.startOfDay(for: createdAt) < today && missedYesterday && !needsRecovery
     }
@@ -514,6 +513,16 @@ struct DialInView: View {
         if milestones.contains(newStreak) {
             milestoneReached = newStreak
             pendingMilestone = true  // Set immediately to prevent overlay conflicts
+
+            // Award EMP tokens immediately when milestone is reached
+            let empReward = UserProfile.empTokensForMilestone(newStreak)
+            if empReward > 0 {
+                UserProfile.awardEMPTokens(empReward)
+            }
+
+            // Award bonus XP immediately
+            UserProfile.addXP(newStreak * 5)
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
                     if newStreak == 66 {
@@ -620,11 +629,7 @@ struct DialInView: View {
         isProcessing = true
 
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else {
-            isProcessing = false
-            return
-        }
+        let yesterday = DateHelper.yesterday  // Use cached value for stability
 
         // Verify yesterday doesn't already have a check-in (safety check)
         let checkIns = power?.checkIns ?? agent?.checkIns ?? []
@@ -783,6 +788,10 @@ struct MilestoneCelebrationOverlay: View {
         isPower ? Color.matrixGreen : Color.matrixGold
     }
 
+    private var empTokensAwarded: Int {
+        UserProfile.empTokensForMilestone(milestone)
+    }
+
     private var milestoneTitle: String {
         switch milestone {
         case 7: return "1 WEEK COMPLETE"
@@ -856,10 +865,21 @@ struct MilestoneCelebrationOverlay: View {
                         .foregroundColor(accentColor)
                         .padding(.top, Spacing.md)
 
+                    // EMP Token Reward
+                    if empTokensAwarded > 0 {
+                        HStack(spacing: Spacing.xs) {
+                            Image(systemName: "bolt.shield.fill")
+                                .font(.system(size: 14))
+                            Text("+\(empTokensAwarded) EMP TOKEN\(empTokensAwarded > 1 ? "S" : "")")
+                                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        }
+                        .foregroundColor(.purple)
+                        .padding(.top, Spacing.xs)
+                    }
+
                     // Continue button
                     Button(action: {
-                        // Award bonus XP
-                        UserProfile.addXP(milestone * 5)
+                        // Rewards already awarded in checkMilestone()
                         withAnimation {
                             isPresented = false
                         }

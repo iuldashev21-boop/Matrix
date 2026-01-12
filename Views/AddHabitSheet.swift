@@ -40,7 +40,9 @@ struct AddHabitSheet: View {
     @State private var selectedIcon: String = "bolt"
     @State private var showSaveError: Bool = false
     @State private var selectedDays: Set<Int> = [] // Empty by default - user must choose
+    @State private var isSaving: Bool = false
 
+    private let maxNameLength = 30
     private let weekdays: [(id: Int, short: String)] = [
         (1, "S"), (2, "M"), (3, "T"), (4, "W"), (5, "T"), (6, "F"), (7, "S")
     ]
@@ -49,8 +51,13 @@ struct AddHabitSheet: View {
         isAgent ? agentSuggestions : hackSuggestions
     }
 
+    private var trimmedName: String {
+        habitName.trimmingCharacters(in: .whitespaces)
+    }
+
     private var canUpload: Bool {
-        !habitName.trimmingCharacters(in: .whitespaces).isEmpty && !selectedDays.isEmpty
+        let name = trimmedName
+        return !name.isEmpty && name.count <= maxNameLength && !selectedDays.isEmpty && !isSaving
     }
 
     private var frequencyLabel: String {
@@ -216,16 +223,24 @@ struct AddHabitSheet: View {
 
                     // Upload Button - only enabled when name AND frequency are set
                     VStack(spacing: Spacing.sm) {
-                        if !canUpload && !habitName.trimmingCharacters(in: .whitespaces).isEmpty {
-                            Text("SELECT A FREQUENCY TO CONTINUE")
-                                .font(.system(size: 11, design: .monospaced))
-                                .foregroundColor(Color.agentRed)
+                        if !trimmedName.isEmpty {
+                            if trimmedName.count > maxNameLength {
+                                Text("NAME TOO LONG (\(trimmedName.count)/\(maxNameLength))")
+                                    .font(.system(size: 11, design: .monospaced))
+                                    .foregroundColor(Color.agentRed)
+                            } else if selectedDays.isEmpty {
+                                Text("SELECT A FREQUENCY TO CONTINUE")
+                                    .font(.system(size: 11, design: .monospaced))
+                                    .foregroundColor(Color.agentRed)
+                            }
                         }
 
-                        PrimaryButton(title: "UPLOAD TO CORE") {
+                        PrimaryButton(title: isSaving ? "UPLOADING..." : "UPLOAD TO CORE") {
+                            isSaving = true
                             if createHabit() {
                                 dismiss()
                             } else {
+                                isSaving = false
                                 showSaveError = true
                             }
                         }
@@ -261,7 +276,7 @@ struct AddHabitSheet: View {
     }
 
     private func createHabit() -> Bool {
-        let name = habitName.trimmingCharacters(in: .whitespaces)
+        let name = trimmedName
         let days = Array(selectedDays).sorted()
         if isAgent {
             let agent = Agent(name: name, icon: selectedIcon, scheduledDays: days)

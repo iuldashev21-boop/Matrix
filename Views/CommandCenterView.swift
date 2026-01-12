@@ -17,6 +17,7 @@ struct CommandCenterView: View {
     @State private var deletingPower: Power? = nil
     @State private var deletingAgent: Agent? = nil
     @State private var showDeleteConfirmation: Bool = false
+    @State private var showDeleteError: Bool = false
     @State private var showWhiteRabbit: Bool = false
     @State private var showHabitTip: Bool = false
     @State private var showGhostTutorial: Bool = false
@@ -34,6 +35,7 @@ struct CommandCenterView: View {
     @State private var isAgentsExpanded: Bool = true
     @State private var isSidequestsExpanded: Bool = false
     @State private var sidequestRefreshTrigger: Int = 0 // Forces refresh when sidequests complete
+    @State private var empTokenDisplayCount: Int = UserProfile.empTokens // For UI refresh
 
     // MARK: - Computed Properties
 
@@ -224,6 +226,11 @@ struct CommandCenterView: View {
         } message: {
             Text("This will permanently delete this program and all its check-in history. This cannot be undone.")
         }
+        .alert("DELETE FAILED", isPresented: $showDeleteError) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Failed to delete program. Please try again.")
+        }
     }
 
     // MARK: - Delete Habit
@@ -241,6 +248,7 @@ struct CommandCenterView: View {
             try modelContext.save()
         } catch {
             ErrorLogger.logSaveFailure(error, context: "CommandCenterView.deleteSelectedHabit")
+            showDeleteError = true
         }
     }
 
@@ -528,6 +536,26 @@ struct CommandCenterView: View {
                     .foregroundColor(.white)
 
                 Spacer()
+
+                // EMP Token Display
+                HStack(spacing: 4) {
+                    Image(systemName: "bolt.shield.fill")
+                        .font(.system(size: 10))
+                    Text("\(empTokenDisplayCount)")
+                        .font(.system(size: 11, weight: .bold, design: .monospaced))
+                }
+                .foregroundColor(.purple)
+                .padding(.horizontal, Spacing.sm)
+                .padding(.vertical, Spacing.xs)
+                .background(Color.darkGray)
+                .cornerRadius(8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.purple.opacity(0.5), lineWidth: 1)
+                )
+                .onAppear {
+                    empTokenDisplayCount = UserProfile.empTokens
+                }
 
                 Text("RANK: \(UserProfile.currentRank.rawValue)")
                     .font(.system(size: 11, weight: .medium, design: .monospaced))

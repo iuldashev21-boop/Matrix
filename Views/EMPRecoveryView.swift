@@ -16,6 +16,8 @@ struct EMPRecoveryView: View {
     @State private var showSuccess: Bool = false
     @State private var glitchOffset: CGSize = .zero
     @State private var showSaveError: Bool = false
+    @State private var showNoTokensAlert: Bool = false
+    @State private var empTokenCount: Int = UserProfile.empTokens
 
     private var title: String {
         power?.name ?? agent?.name ?? "Unknown"
@@ -27,6 +29,10 @@ struct EMPRecoveryView: View {
 
     private var currentStreak: Int {
         power?.currentStreak ?? agent?.currentStreak ?? 0
+    }
+
+    private var hasTokens: Bool {
+        empTokenCount > 0
     }
 
     var body: some View {
@@ -73,6 +79,16 @@ struct EMPRecoveryView: View {
         } message: {
             Text("Failed to save recovery. Please try again.")
         }
+        .alert("NO EMP TOKENS", isPresented: $showNoTokensAlert) {
+            Button("UNDERSTOOD", role: .cancel) {
+                dismiss()
+            }
+        } message: {
+            Text("You need EMP tokens to recover your streak. Earn tokens by reaching 7, 21, or 66 day milestones on any habit.")
+        }
+        .onAppear {
+            empTokenCount = UserProfile.empTokens
+        }
     }
 
     // MARK: - Alert View
@@ -115,39 +131,61 @@ struct EMPRecoveryView: View {
             .multilineTextAlignment(.center)
             .padding(.top, Spacing.md)
 
+            // EMP Token Display
+            HStack(spacing: Spacing.xs) {
+                Image(systemName: "bolt.shield.fill")
+                    .font(.system(size: 16))
+                Text("\(empTokenCount) EMP TOKEN\(empTokenCount == 1 ? "" : "S") AVAILABLE")
+                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+            }
+            .foregroundColor(hasTokens ? .purple : Color.mediumGray)
+            .padding(.top, Spacing.sm)
+
             Spacer()
 
             // Action buttons
             VStack(spacing: Spacing.md) {
                 // Double workload button
-                Button(action: handleDoubleWorkload) {
+                Button(action: {
+                    if hasTokens {
+                        handleDoubleWorkload()
+                    } else {
+                        showNoTokensAlert = true
+                    }
+                }) {
                     HStack {
                         Image(systemName: "bolt.fill")
                         Text("RE-INITIALIZE LINK")
                     }
                     .font(.system(size: 16, weight: .bold, design: .monospaced))
-                    .foregroundColor(Color.danger)
+                    .foregroundColor(hasTokens ? Color.danger : Color.mediumGray)
                     .frame(maxWidth: .infinity)
                     .frame(height: 56)
                     .background(Color.clear)
                     .overlay(
                         RoundedRectangle(cornerRadius: Theme.cornerRadius)
-                            .stroke(Color.danger, lineWidth: 2)
+                            .stroke(hasTokens ? Color.danger : Color.mediumGray, lineWidth: 2)
                     )
                 }
 
-                Text("(2X EFFORT TODAY)")
+                Text(hasTokens ? "(COSTS 1 EMP • 2X EFFORT TODAY)" : "(REQUIRES EMP TOKEN)")
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundColor(Color.mediumGray)
 
                 // Debrief button
-                Button(action: { withAnimation { showDebrief = true } }) {
+                Button(action: {
+                    if hasTokens {
+                        withAnimation { showDebrief = true }
+                    } else {
+                        showNoTokensAlert = true
+                    }
+                }) {
                     HStack {
                         Image(systemName: "doc.text")
                         Text("SUBMIT DEBRIEF LOG")
                     }
                     .font(.system(size: 14, weight: .medium, design: .monospaced))
-                    .foregroundColor(Color.lightGray)
+                    .foregroundColor(hasTokens ? Color.lightGray : Color.mediumGray.opacity(0.5))
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
                 }
@@ -330,6 +368,11 @@ struct EMPRecoveryView: View {
     }
 
     private func saveRecoveryCheckIn(note: String) -> Bool {
+        // Spend EMP token first
+        guard UserProfile.spendEMPToken() else {
+            return false
+        }
+
         // Create a recovery check-in for yesterday
         let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date()
         let checkIn = CheckIn(date: yesterday, isSuccess: true, note: note)
@@ -347,8 +390,13 @@ struct EMPRecoveryView: View {
             try modelContext.save()
             // Award reduced XP for recovery
             UserProfile.addXP(5)
+            // Update local token count
+            empTokenCount = UserProfile.empTokens
             return true
         } catch {
+            // Refund the token if save failed
+            UserProfile.awardEMPTokens(1)
+            empTokenCount = UserProfile.empTokens
             return false
         }
     }

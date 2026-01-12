@@ -93,8 +93,8 @@ class AchievementManager: ObservableObject {
             unlock("log_first")
         }
 
-        // Time-based achievements
-        let hour = Calendar.current.component(.hour, from: Date())
+        // Time-based achievements (uses device local time)
+        let hour = DateHelper.currentHour
         if hour < 8 {
             unlock("early_bird")
         }
@@ -103,7 +103,7 @@ class AchievementManager: ObservableObject {
         }
 
         // Weekend warrior
-        let weekday = Calendar.current.component(.weekday, from: Date())
+        let weekday = Calendar.current.component(.weekday, from: DateHelper.today)
         if weekday == 1 || weekday == 7 {
             // Check if logged on both weekend days this week
             checkWeekendWarrior(powers: powers, agents: agents)
@@ -190,10 +190,11 @@ class AchievementManager: ObservableObject {
 
     private func checkWeekendWarrior(powers: [Power], agents: [Agent]) {
         let calendar = Calendar.current
-        let today = Date()
+        let today = DateHelper.today  // Use cached, normalized date
 
         guard let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today)) else { return }
 
+        // Saturday = day 6, Sunday = day 0 (or 7) of the week
         guard let saturday = calendar.date(byAdding: .day, value: 6, to: weekStart),
               let sunday = calendar.date(byAdding: .day, value: 7, to: weekStart) else { return }
 
@@ -231,7 +232,7 @@ class AchievementManager: ObservableObject {
 
     private func checkPerfectWeek(powers: [Power], agents: [Agent]) {
         let calendar = Calendar.current
-        let today = Date()
+        let today = DateHelper.today  // Use cached, normalized date
 
         guard let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today)) else { return }
 

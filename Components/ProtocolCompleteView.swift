@@ -180,6 +180,15 @@ struct ProtocolCompleteView: View {
                         .background(accentColor.opacity(0.15))
                         .cornerRadius(20)
 
+                        // EMP Token Badge
+                        HStack(spacing: Spacing.xs) {
+                            Image(systemName: "bolt.shield.fill")
+                                .font(.system(size: 14))
+                            Text("+5 EMP TOKENS")
+                                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        }
+                        .foregroundColor(.purple)
+
                         // Achievement unlocked hint
                         Text("ACHIEVEMENT UNLOCKED")
                             .font(.system(size: 12, weight: .medium, design: .monospaced))
@@ -325,8 +334,7 @@ struct ProtocolCompleteView: View {
     }
 
     private func handleDismiss() {
-        // Award XP (66 * 5 = 330)
-        UserProfile.addXP(330)
+        // Rewards already awarded in checkMilestone()
 
         // Final haptic
         let generator = UINotificationFeedbackGenerator()

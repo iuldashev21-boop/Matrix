@@ -9,6 +9,7 @@ struct ZionMainframeView: View {
 
     @State private var hapticsEnabled: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.hapticsEnabled)
     @State private var soundEnabled: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.soundEnabled)
+    @State private var notificationsEnabled: Bool = NotificationManager.shared.notificationsEnabled
     @State private var showResetAlert: Bool = false
     @State private var showExportSheet: Bool = false
     @State private var showAchievements: Bool = false
@@ -147,6 +148,30 @@ struct ZionMainframeView: View {
                 isOn: $soundEnabled
             ) {
                 UserDefaults.standard.set(soundEnabled, forKey: UserDefaultsKeys.soundEnabled)
+            }
+
+            // Notifications Toggle
+            SettingsToggleRow(
+                title: "DAILY SIGNAL",
+                description: "Reminder to log your progress at 8 PM.",
+                isOn: $notificationsEnabled
+            ) {
+                Task {
+                    if notificationsEnabled {
+                        // Request permission if enabling
+                        let granted = await NotificationManager.shared.requestAuthorization()
+                        await MainActor.run {
+                            if granted {
+                                NotificationManager.shared.notificationsEnabled = true
+                            } else {
+                                // Permission denied, revert toggle
+                                notificationsEnabled = false
+                            }
+                        }
+                    } else {
+                        NotificationManager.shared.notificationsEnabled = false
+                    }
+                }
             }
         }
         .padding(.horizontal, Spacing.md)
