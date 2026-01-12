@@ -33,6 +33,7 @@ struct CommandCenterView: View {
     @State private var isPowersExpanded: Bool = true
     @State private var isAgentsExpanded: Bool = true
     @State private var isSidequestsExpanded: Bool = false
+    @State private var sidequestRefreshTrigger: Int = 0 // Forces refresh when sidequests complete
 
     // MARK: - Computed Properties
 
@@ -501,10 +502,13 @@ struct CommandCenterView: View {
                 xpEarned: SidequestManager.sidequestXPToday,
                 xpCap: SidequestManager.dailyXPCap
             )
+            .id(sidequestRefreshTrigger) // Force header refresh
 
             if isSidequestsExpanded && allHabitsCompleted {
-                ConstructLoaderView()
-                    .transition(.opacity.combined(with: .move(edge: .top)))
+                ConstructLoaderView(onSidequestComplete: {
+                    sidequestRefreshTrigger += 1
+                })
+                .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
     }

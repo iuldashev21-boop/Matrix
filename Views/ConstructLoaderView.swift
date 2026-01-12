@@ -1,10 +1,18 @@
 import SwiftUI
 
 struct ConstructLoaderView: View {
+    var onSidequestComplete: (() -> Void)? = nil
+
     @State private var showOracle: Bool = false
     @State private var showCodeBreaker: Bool = false
     @State private var showCombatTraining: Bool = false
     @State private var showMaintenance: Bool = false
+    @State private var refreshTrigger: Int = 0 // Forces view refresh when sidequests complete
+
+    private func handleDismiss() {
+        refreshTrigger += 1
+        onSidequestComplete?()
+    }
 
     var body: some View {
         VStack(spacing: Spacing.sm) {
@@ -65,16 +73,17 @@ struct ConstructLoaderView: View {
             }
         }
         .padding(.horizontal, Spacing.md)
-        .sheet(isPresented: $showOracle) {
+        .id(refreshTrigger) // Force view rebuild when sidequests complete
+        .sheet(isPresented: $showOracle, onDismiss: handleDismiss) {
             OracleInsightView()
         }
-        .sheet(isPresented: $showCodeBreaker) {
+        .sheet(isPresented: $showCodeBreaker, onDismiss: handleDismiss) {
             CodeBreakerView()
         }
-        .sheet(isPresented: $showCombatTraining) {
+        .sheet(isPresented: $showCombatTraining, onDismiss: handleDismiss) {
             CombatTrainingView()
         }
-        .sheet(isPresented: $showMaintenance) {
+        .sheet(isPresented: $showMaintenance, onDismiss: handleDismiss) {
             SystemMaintenanceView()
         }
     }
