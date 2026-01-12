@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		492E93962F77CCF4BCCCE054 /* DateHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E87ED45BDE6FDAFBD3ACF7D /* DateHelperTests.swift */; };
 		79D31BDB5636FF1AFEE8C6DE /* PowerModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8FA29CD5AF187514CE7A21 /* PowerModelTests.swift */; };
+		7F4C987D248FD6323CCE4A8A /* CheckInService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F71C59B8CBE916B98CE33FC /* CheckInService.swift */; };
 		9027234DAA2863A5A92D3F39 /* AgentModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A592456D85393BE521FFF5B9 /* AgentModelTests.swift */; };
 		A07F01D86CAE814474D67506 /* FrequencySchedulingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CEB398142C7F3D85608A39 /* FrequencySchedulingTests.swift */; };
 		A10000000000000000000001 /* MatrixHabitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* MatrixHabitApp.swift */; };
@@ -102,6 +103,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3F71C59B8CBE916B98CE33FC /* CheckInService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CheckInService.swift; path = Services/CheckInService.swift; sourceTree = "<group>"; };
 		5E87ED45BDE6FDAFBD3ACF7D /* DateHelperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DateHelperTests.swift; sourceTree = "<group>"; };
 		8EA3C51FF0C57DE112DA7FCA /* UserProfileTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserProfileTests.swift; sourceTree = "<group>"; };
 		A20000000000000000000001 /* MatrixHabitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHabitApp.swift; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				BBD956249358B70A8E378656 /* NotificationManager.swift */,
+				3F71C59B8CBE916B98CE33FC /* CheckInService.swift */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				A50000000000000000000011 /* MatrixHabitTests */,
 				A50000000000000000000003 /* Products */,
 				1451885AA81D5AF6335251CA /* Services */,
+				3F71C59B8CBE916B98CE33FC /* CheckInService.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -572,6 +576,7 @@
 				A10000000000000000000122 /* CommandCenterOverlays.swift in Sources */,
 				A10000000000000000000123 /* HabitProtocol.swift in Sources */,
 				EDFCEE40A028CE2F23357D85 /* NotificationManager.swift in Sources */,
+				7F4C987D248FD6323CCE4A8A /* CheckInService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
