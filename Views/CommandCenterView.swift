@@ -37,6 +37,10 @@ struct CommandCenterView: View {
     @State private var sidequestRefreshTrigger: Int = 0 // Forces refresh when sidequests complete
     @State private var empTokenDisplayCount: Int = UserProfile.empTokens // For UI refresh
 
+    // Submit All
+    @State private var isSubmittingAll: Bool = false
+    @State private var showSubmitAllSuccess: Bool = false
+
     // MARK: - Computed Properties
 
     private var totalSignalStrength: Int {
@@ -114,6 +118,16 @@ struct CommandCenterView: View {
 
     private var operativeName: String {
         UserDefaults.standard.string(forKey: UserDefaultsKeys.operatorName) ?? "OPERATIVE"
+    }
+
+    private var incompleteHabitsCount: Int {
+        let incompletePowers = powersScheduledToday.filter { !$0.completedToday }.count
+        let incompleteAgents = agentsScheduledToday.filter { !$0.resistedToday && !$0.relapsedToday }.count
+        return incompletePowers + incompleteAgents
+    }
+
+    private var hasIncompleteHabits: Bool {
+        incompleteHabitsCount > 0
     }
 
     // MARK: - Body
@@ -252,6 +266,78 @@ struct CommandCenterView: View {
         }
     }
 
+    // MARK: - Submit All Habits
+
+    private func submitAllHabits() {
+        guard !isSubmittingAll else { return }
+        isSubmittingAll = true
+
+        // Haptic feedback
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+
+        // Get incomplete habits
+        let incompletePowers = powersScheduledToday.filter { !$0.completedToday }
+        let incompleteAgents = agentsScheduledToday.filter { !$0.resistedToday && !$0.relapsedToday }
+
+        var totalXPEarned = 0
+
+        // Submit all powers
+        for power in incompletePowers {
+            let checkIn = CheckIn(date: Date(), isSuccess: true)
+            checkIn.power = power
+            power.checkIns.append(checkIn)
+            modelContext.insert(checkIn)
+
+            // Check for milestone
+            let newStreak = power.currentStreak + 1
+            totalXPEarned += 10 // Base XP
+            if newStreak == 7 || newStreak == 21 || newStreak == 66 {
+                totalXPEarned += 50 // Milestone bonus
+            }
+
+            power.checkForUnlock()
+        }
+
+        // Submit all agents (as resisted)
+        for agent in incompleteAgents {
+            let checkIn = CheckIn(date: Date(), isSuccess: true)
+            checkIn.agent = agent
+            agent.checkIns.append(checkIn)
+            modelContext.insert(checkIn)
+
+            // Check for milestone
+            let newStreak = agent.currentStreak + 1
+            totalXPEarned += 10 // Base XP
+            if newStreak == 7 || newStreak == 21 || newStreak == 66 {
+                totalXPEarned += 50 // Milestone bonus
+            }
+
+            agent.checkForDefeat()
+        }
+
+        // Save all
+        do {
+            try modelContext.save()
+
+            // Award XP
+            UserProfile.addXP(totalXPEarned)
+
+            // Success feedback
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+
+            // Brief delay for UI feedback
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                withAnimation {
+                    isSubmittingAll = false
+                }
+            }
+        } catch {
+            ErrorLogger.logSaveFailure(error, context: "CommandCenterView.submitAllHabits")
+            isSubmittingAll = false
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+        }
+    }
+
     // MARK: - Dismiss Actions
 
     private func dismissTip() {
@@ -339,6 +425,12 @@ struct CommandCenterView: View {
                         .transition(.opacity.combined(with: .move(edge: .top)))
                     }
 
+                    // Submit All Button
+                    if hasIncompleteHabits {
+                        submitAllButton
+                            .padding(.horizontal, Spacing.md)
+                    }
+
                     if !powers.isEmpty {
                         let scheduledCount = powersScheduledToday.count
                         let subtitle = allPowersCompleted ? "ALL SYNCED" :
@@ -396,6 +488,39 @@ struct CommandCenterView: View {
                 }
             }
         }
+    }
+
+    // MARK: - Submit All Button
+
+    private var submitAllButton: some View {
+        Button(action: submitAllHabits) {
+            HStack(spacing: Spacing.sm) {
+                if isSubmittingAll {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                        .scaleEffect(0.8)
+                } else {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 18))
+                }
+                Text(isSubmittingAll ? "SYNCING..." : "SUBMIT ALL (\(incompleteHabitsCount))")
+                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+            }
+            .foregroundColor(.black)
+            .frame(maxWidth: .infinity)
+            .frame(height: 50)
+            .background(
+                LinearGradient(
+                    colors: [Color.matrixGreen, Color.matrixGreen.opacity(0.8)],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
+            .cornerRadius(Theme.cornerRadius)
+            .shadow(color: Color.matrixGreen.opacity(0.4), radius: 8, x: 0, y: 4)
+        }
+        .disabled(isSubmittingAll)
+        .opacity(isSubmittingAll ? 0.7 : 1.0)
     }
 
     // MARK: - Powers Content
