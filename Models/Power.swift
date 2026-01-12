@@ -92,12 +92,15 @@ final class Power {
 
     // MARK: - Methods
 
-    func checkForUnlock() {
+    @discardableResult
+    func checkForUnlock() -> Bool {
         if currentStreak >= targetDays && !isUnlocked {
             isUnlocked = true
             unlockedAt = Date()
             touch()
+            return true
         }
+        return false
     }
 }
 

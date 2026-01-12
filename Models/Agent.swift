@@ -107,12 +107,15 @@ final class Agent {
 
     // MARK: - Methods
 
-    func checkForDefeat() {
+    @discardableResult
+    func checkForDefeat() -> Bool {
         if currentStreak >= targetDays && !isDefeated {
             isDefeated = true
             defeatedAt = Date()
             touch()
+            return true
         }
+        return false
     }
 }
 

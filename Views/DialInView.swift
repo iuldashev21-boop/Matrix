@@ -572,6 +572,19 @@ struct DialInView: View {
         modelContext.insert(checkIn)
         do {
             try modelContext.save()
+
+            // Play success sound
+            let streak = power?.currentStreak ?? agent?.currentStreak ?? 0
+            let wasUnlocked = power?.isUnlocked == true && power?.currentStreak == power?.targetDays
+            let wasDefeated = agent?.isDefeated == true && agent?.currentStreak == agent?.targetDays
+
+            if wasUnlocked || wasDefeated {
+                SoundManager.shared.playProtocolComplete()
+            } else if [7, 21, 66].contains(streak) {
+                SoundManager.shared.playMilestone()
+            } else {
+                SoundManager.shared.playCheckIn()
+            }
         } catch {
             showSaveError = true
             #if DEBUG
@@ -595,16 +608,13 @@ struct DialInView: View {
         modelContext.insert(checkIn)
         do {
             try modelContext.save()
+            SoundManager.shared.playRelapse()
         } catch {
             showSaveError = true
         }
 
         // Mark breach complete
         breachComplete = true
-
-        // Haptic feedback
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.warning)
 
         // Glitch effect
         triggerGlitch()

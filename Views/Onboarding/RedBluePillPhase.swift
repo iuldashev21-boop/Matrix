@@ -111,7 +111,7 @@ struct RedBluePillPhase: View {
     }
 
     private func selectRedPill() {
-        UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+        SoundManager.shared.playProtocolComplete()
         selectedPill = "red"
         choseRedPill = true
 
@@ -121,7 +121,7 @@ struct RedBluePillPhase: View {
     }
 
     private func selectBluePill() {
-        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+        SoundManager.shared.playRelapse()
         selectedPill = "blue"
 
         withAnimation(.easeOut(duration: 1.0)) {

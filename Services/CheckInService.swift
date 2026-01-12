@@ -37,7 +37,7 @@ enum CheckInService {
 
         do {
             try context.save()
-            power.checkForUnlock()
+            let wasUnlocked = power.checkForUnlock()
 
             // Award XP
             UserProfile.addXP(xpEarned)
@@ -46,6 +46,23 @@ enum CheckInService {
             let empTokens = UserProfile.empTokensForMilestone(newStreak)
             if empTokens > 0 {
                 UserProfile.awardEMPTokens(empTokens)
+            }
+
+            // Play appropriate sound
+            DispatchQueue.main.async {
+                if wasUnlocked {
+                    SoundManager.shared.playProtocolComplete()
+                } else if [7, 21, 66].contains(newStreak) {
+                    SoundManager.shared.playMilestone()
+                    if empTokens > 0 {
+                        // Slight delay for EMP sound after milestone
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            SoundManager.shared.playEMPToken()
+                        }
+                    }
+                } else {
+                    SoundManager.shared.playCheckIn()
+                }
             }
 
             return .success(xpEarned)
@@ -83,13 +100,29 @@ enum CheckInService {
 
         do {
             try context.save()
-            agent.checkForDefeat()
+            let wasDefeated = agent.checkForDefeat()
 
             UserProfile.addXP(xpEarned)
 
             let empTokens = UserProfile.empTokensForMilestone(newStreak)
             if empTokens > 0 {
                 UserProfile.awardEMPTokens(empTokens)
+            }
+
+            // Play appropriate sound
+            DispatchQueue.main.async {
+                if wasDefeated {
+                    SoundManager.shared.playProtocolComplete()
+                } else if [7, 21, 66].contains(newStreak) {
+                    SoundManager.shared.playMilestone()
+                    if empTokens > 0 {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            SoundManager.shared.playEMPToken()
+                        }
+                    }
+                } else {
+                    SoundManager.shared.playCheckIn()
+                }
             }
 
             return .success(xpEarned)
@@ -114,6 +147,12 @@ enum CheckInService {
 
         do {
             try context.save()
+
+            // Play relapse sound
+            DispatchQueue.main.async {
+                SoundManager.shared.playRelapse()
+            }
+
             return .success(())
         } catch {
             ErrorLogger.logSaveFailure(error, context: "CheckInService.recordAgentRelapse")
@@ -161,18 +200,37 @@ enum CheckInService {
             try context.save()
 
             // Post-save: check unlocks/defeats and award XP
+            var hadProtocolComplete = false
+            var hadMilestone = false
+
             for power in incompletePowers {
-                power.checkForUnlock()
-                let empTokens = UserProfile.empTokensForMilestone(power.currentStreak)
+                if power.checkForUnlock() { hadProtocolComplete = true }
+                let streak = power.currentStreak
+                if [7, 21, 66].contains(streak) { hadMilestone = true }
+                let empTokens = UserProfile.empTokensForMilestone(streak)
                 if empTokens > 0 { UserProfile.awardEMPTokens(empTokens) }
             }
             for agent in incompleteAgents {
-                agent.checkForDefeat()
-                let empTokens = UserProfile.empTokensForMilestone(agent.currentStreak)
+                if agent.checkForDefeat() { hadProtocolComplete = true }
+                let streak = agent.currentStreak
+                if [7, 21, 66].contains(streak) { hadMilestone = true }
+                let empTokens = UserProfile.empTokensForMilestone(streak)
                 if empTokens > 0 { UserProfile.awardEMPTokens(empTokens) }
             }
 
             UserProfile.addXP(totalXP)
+
+            // Play appropriate sound for bulk submission
+            DispatchQueue.main.async {
+                if hadProtocolComplete {
+                    SoundManager.shared.playProtocolComplete()
+                } else if hadMilestone {
+                    SoundManager.shared.playMilestone()
+                } else if !incompletePowers.isEmpty || !incompleteAgents.isEmpty {
+                    SoundManager.shared.playCheckIn()
+                }
+            }
+
             return .success(totalXP)
         } catch {
             ErrorLogger.logSaveFailure(error, context: "CheckInService.submitAllHabits")
@@ -210,6 +268,12 @@ enum CheckInService {
 
         do {
             try context.save()
+
+            // Play EMP sound for recovery
+            DispatchQueue.main.async {
+                SoundManager.shared.playEMPToken()
+            }
+
             return .success(())
         } catch {
             // Refund the token on failure

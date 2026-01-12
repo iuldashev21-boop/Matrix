@@ -91,7 +91,10 @@ struct DiagnosticButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Button(action: {
+            SoundManager.shared.playTap()
+            action()
+        }) {
             Text(title)
                 .font(.system(size: 14, weight: .bold, design: .monospaced))
                 .foregroundColor(isSelected ? Color.deepBlack : .white)
@@ -115,7 +118,10 @@ struct DiagnosticButtonWithFlavor: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Button(action: {
+            SoundManager.shared.playTap()
+            action()
+        }) {
             VStack(spacing: 4) {
                 Text(title)
                     .font(.system(size: 14, weight: .bold, design: .monospaced))

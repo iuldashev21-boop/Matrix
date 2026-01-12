@@ -7,9 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1BC995D9506B243A69710A3D /* terminal_type.wav in Resources */ = {isa = PBXBuildFile; fileRef = E353CAF5616CDFF66A0B72EF /* terminal_type.wav */; };
+		2F3FAAF30719F665A19AA5F3 /* achievement.wav in Resources */ = {isa = PBXBuildFile; fileRef = 169C0881A1A85D114C13DB0F /* achievement.wav */; };
+		3763539E710B3C9071DF0C71 /* streak_milestone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 744D159F24E0F444A9E05151 /* streak_milestone.wav */; };
 		492E93962F77CCF4BCCCE054 /* DateHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E87ED45BDE6FDAFBD3ACF7D /* DateHelperTests.swift */; };
+		68B3B229D7C242CEC08E9C6D /* protocol_complete.wav in Resources */ = {isa = PBXBuildFile; fileRef = FD45AF3888E4A411E42F5919 /* protocol_complete.wav */; };
+		7307B7B77AF069BAE0DD9F15 /* level_up.wav in Resources */ = {isa = PBXBuildFile; fileRef = AE37942D2C58372361438ED6 /* level_up.wav */; };
 		79D31BDB5636FF1AFEE8C6DE /* PowerModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8FA29CD5AF187514CE7A21 /* PowerModelTests.swift */; };
-		7F4C987D248FD6323CCE4A8A /* CheckInService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F71C59B8CBE916B98CE33FC /* CheckInService.swift */; };
+		7E38BF593F19B146347EB034 /* button_tap.wav in Resources */ = {isa = PBXBuildFile; fileRef = 657FC22F1BB665E84708F3D1 /* button_tap.wav */; };
+		852622C14586109AC8BFB97B /* emp_token.wav in Resources */ = {isa = PBXBuildFile; fileRef = A2391B164664DBF38516EAB8 /* emp_token.wav */; };
+		85C01190660CC48F5ABF34E0 /* relapse.wav in Resources */ = {isa = PBXBuildFile; fileRef = AB6854DD93AB6C8D0636DA90 /* relapse.wav */; };
+		8ED4E16FC66D1E4C860BAA1C /* hold_progress.wav in Resources */ = {isa = PBXBuildFile; fileRef = 903B865343E0674F8A0D02CE /* hold_progress.wav */; };
 		9027234DAA2863A5A92D3F39 /* AgentModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A592456D85393BE521FFF5B9 /* AgentModelTests.swift */; };
 		A07F01D86CAE814474D67506 /* FrequencySchedulingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CEB398142C7F3D85608A39 /* FrequencySchedulingTests.swift */; };
 		A10000000000000000000001 /* MatrixHabitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* MatrixHabitApp.swift */; };
@@ -89,7 +97,9 @@
 		A10000000000000000000122 /* CommandCenterOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000122 /* CommandCenterOverlays.swift */; };
 		A10000000000000000000123 /* HabitProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000123 /* HabitProtocol.swift */; };
 		D85C4D072077AFF92F5EC2A8 /* UserProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA3C51FF0C57DE112DA7FCA /* UserProfileTests.swift */; };
+		E8A070F8574889CB556BD7E5 /* checkin_success.wav in Resources */ = {isa = PBXBuildFile; fileRef = A88AFE7440F045B4586986D4 /* checkin_success.wav */; };
 		EDFCEE40A028CE2F23357D85 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD956249358B70A8E378656 /* NotificationManager.swift */; };
+		FD30E3479808CF05FFF2FFB1 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4D78370018637B6B3901F3 /* SoundManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,9 +113,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3F71C59B8CBE916B98CE33FC /* CheckInService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CheckInService.swift; path = Services/CheckInService.swift; sourceTree = "<group>"; };
+		169C0881A1A85D114C13DB0F /* achievement.wav */ = {isa = PBXFileReference; includeInIndex = 1; path = achievement.wav; sourceTree = "<group>"; };
 		5E87ED45BDE6FDAFBD3ACF7D /* DateHelperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DateHelperTests.swift; sourceTree = "<group>"; };
+		657FC22F1BB665E84708F3D1 /* button_tap.wav */ = {isa = PBXFileReference; includeInIndex = 1; path = button_tap.wav; sourceTree = "<group>"; };
+		6F4D78370018637B6B3901F3 /* SoundManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SoundManager.swift; path = Services/SoundManager.swift; sourceTree = "<group>"; };
+		744D159F24E0F444A9E05151 /* streak_milestone.wav */ = {isa = PBXFileReference; includeInIndex = 1; path = streak_milestone.wav; sourceTree = "<group>"; };
 		8EA3C51FF0C57DE112DA7FCA /* UserProfileTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserProfileTests.swift; sourceTree = "<group>"; };
+		903B865343E0674F8A0D02CE /* hold_progress.wav */ = {isa = PBXFileReference; includeInIndex = 1; path = hold_progress.wav; sourceTree = "<group>"; };
 		A20000000000000000000001 /* MatrixHabitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHabitApp.swift; sourceTree = "<group>"; };
 		A20000000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A20000000000000000000003 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
@@ -186,12 +200,18 @@
 		A20000000000000000000121 /* AchievementsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementsTabView.swift; sourceTree = "<group>"; };
 		A20000000000000000000122 /* CommandCenterOverlays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandCenterOverlays.swift; sourceTree = "<group>"; };
 		A20000000000000000000123 /* HabitProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitProtocol.swift; sourceTree = "<group>"; };
+		A2391B164664DBF38516EAB8 /* emp_token.wav */ = {isa = PBXFileReference; includeInIndex = 1; path = emp_token.wav; sourceTree = "<group>"; };
 		A30000000000000000000001 /* MatrixHabit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatrixHabit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A30000000000000000000002 /* MatrixHabitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MatrixHabitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A592456D85393BE521FFF5B9 /* AgentModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgentModelTests.swift; sourceTree = "<group>"; };
+		A88AFE7440F045B4586986D4 /* checkin_success.wav */ = {isa = PBXFileReference; includeInIndex = 1; path = checkin_success.wav; sourceTree = "<group>"; };
+		AB6854DD93AB6C8D0636DA90 /* relapse.wav */ = {isa = PBXFileReference; includeInIndex = 1; path = relapse.wav; sourceTree = "<group>"; };
+		AE37942D2C58372361438ED6 /* level_up.wav */ = {isa = PBXFileReference; includeInIndex = 1; path = level_up.wav; sourceTree = "<group>"; };
 		AE8FA29CD5AF187514CE7A21 /* PowerModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PowerModelTests.swift; sourceTree = "<group>"; };
 		BBD956249358B70A8E378656 /* NotificationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationManager.swift; path = Services/NotificationManager.swift; sourceTree = "<group>"; };
+		E353CAF5616CDFF66A0B72EF /* terminal_type.wav */ = {isa = PBXFileReference; includeInIndex = 1; path = terminal_type.wav; sourceTree = "<group>"; };
 		F6CEB398142C7F3D85608A39 /* FrequencySchedulingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FrequencySchedulingTests.swift; sourceTree = "<group>"; };
+		FD45AF3888E4A411E42F5919 /* protocol_complete.wav */ = {isa = PBXFileReference; includeInIndex = 1; path = protocol_complete.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,11 +232,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		05509B747C6DBDD911B30DC6 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				657FC22F1BB665E84708F3D1 /* button_tap.wav */,
+				903B865343E0674F8A0D02CE /* hold_progress.wav */,
+				AB6854DD93AB6C8D0636DA90 /* relapse.wav */,
+				FD45AF3888E4A411E42F5919 /* protocol_complete.wav */,
+				A88AFE7440F045B4586986D4 /* checkin_success.wav */,
+				169C0881A1A85D114C13DB0F /* achievement.wav */,
+				A2391B164664DBF38516EAB8 /* emp_token.wav */,
+				AE37942D2C58372361438ED6 /* level_up.wav */,
+				E353CAF5616CDFF66A0B72EF /* terminal_type.wav */,
+				744D159F24E0F444A9E05151 /* streak_milestone.wav */,
+			);
+			name = Sounds;
+			path = Sounds;
+			sourceTree = "<group>";
+		};
 		1451885AA81D5AF6335251CA /* Services */ = {
 			isa = PBXGroup;
 			children = (
 				BBD956249358B70A8E378656 /* NotificationManager.swift */,
-				3F71C59B8CBE916B98CE33FC /* CheckInService.swift */,
+				6F4D78370018637B6B3901F3 /* SoundManager.swift */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -228,7 +266,7 @@
 				A50000000000000000000011 /* MatrixHabitTests */,
 				A50000000000000000000003 /* Products */,
 				1451885AA81D5AF6335251CA /* Services */,
-				3F71C59B8CBE916B98CE33FC /* CheckInService.swift */,
+				05509B747C6DBDD911B30DC6 /* Sounds */,
 			);
 			sourceTree = "<group>";
 		};
@@ -485,6 +523,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E38BF593F19B146347EB034 /* button_tap.wav in Resources */,
+				8ED4E16FC66D1E4C860BAA1C /* hold_progress.wav in Resources */,
+				85C01190660CC48F5ABF34E0 /* relapse.wav in Resources */,
+				68B3B229D7C242CEC08E9C6D /* protocol_complete.wav in Resources */,
+				E8A070F8574889CB556BD7E5 /* checkin_success.wav in Resources */,
+				2F3FAAF30719F665A19AA5F3 /* achievement.wav in Resources */,
+				852622C14586109AC8BFB97B /* emp_token.wav in Resources */,
+				7307B7B77AF069BAE0DD9F15 /* level_up.wav in Resources */,
+				1BC995D9506B243A69710A3D /* terminal_type.wav in Resources */,
+				3763539E710B3C9071DF0C71 /* streak_milestone.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,7 +624,7 @@
 				A10000000000000000000122 /* CommandCenterOverlays.swift in Sources */,
 				A10000000000000000000123 /* HabitProtocol.swift in Sources */,
 				EDFCEE40A028CE2F23357D85 /* NotificationManager.swift in Sources */,
-				7F4C987D248FD6323CCE4A8A /* CheckInService.swift in Sources */,
+				FD30E3479808CF05FFF2FFB1 /* SoundManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

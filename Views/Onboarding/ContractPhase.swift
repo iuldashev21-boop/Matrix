@@ -131,7 +131,7 @@ struct ContractPhase: View {
     }
 
     private func completeContract() {
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        SoundManager.shared.playProtocolComplete()
         withAnimation(.easeIn(duration: 0.1)) { showFlash = true; showText = false; showScanner = false }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { withAnimation(.easeOut(duration: 0.3)) { showFlash = false } }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { withAnimation { showFinalText = true } }

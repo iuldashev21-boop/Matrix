@@ -209,6 +209,8 @@ struct AwakeningView: View {
     }
 
     private func advancePhase() {
+        SoundManager.shared.playTap()
+
         withAnimation(.easeOut(duration: 0.2)) {
             transitionOpacity = 0
         }

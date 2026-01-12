@@ -322,8 +322,10 @@ struct CommandCenterView: View {
             // Award XP
             UserProfile.addXP(totalXPEarned)
 
-            // Success feedback
-            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            // Play success sound
+            if !incompletePowers.isEmpty || !incompleteAgents.isEmpty {
+                SoundManager.shared.playCheckIn()
+            }
 
             // Brief delay for UI feedback
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
