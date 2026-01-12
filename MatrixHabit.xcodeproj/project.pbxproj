@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		492E93962F77CCF4BCCCE054 /* DateHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E87ED45BDE6FDAFBD3ACF7D /* DateHelperTests.swift */; };
+		79D31BDB5636FF1AFEE8C6DE /* PowerModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8FA29CD5AF187514CE7A21 /* PowerModelTests.swift */; };
+		9027234DAA2863A5A92D3F39 /* AgentModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A592456D85393BE521FFF5B9 /* AgentModelTests.swift */; };
+		A07F01D86CAE814474D67506 /* FrequencySchedulingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CEB398142C7F3D85608A39 /* FrequencySchedulingTests.swift */; };
 		A10000000000000000000001 /* MatrixHabitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* MatrixHabitApp.swift */; };
 		A10000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* ContentView.swift */; };
 		A10000000000000000000003 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000003 /* Colors.swift */; };
@@ -83,6 +87,7 @@
 		A10000000000000000000121 /* AchievementsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000121 /* AchievementsTabView.swift */; };
 		A10000000000000000000122 /* CommandCenterOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000122 /* CommandCenterOverlays.swift */; };
 		A10000000000000000000123 /* HabitProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000123 /* HabitProtocol.swift */; };
+		D85C4D072077AFF92F5EC2A8 /* UserProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA3C51FF0C57DE112DA7FCA /* UserProfileTests.swift */; };
 		EDFCEE40A028CE2F23357D85 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD956249358B70A8E378656 /* NotificationManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -97,6 +102,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5E87ED45BDE6FDAFBD3ACF7D /* DateHelperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DateHelperTests.swift; sourceTree = "<group>"; };
+		8EA3C51FF0C57DE112DA7FCA /* UserProfileTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserProfileTests.swift; sourceTree = "<group>"; };
 		A20000000000000000000001 /* MatrixHabitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHabitApp.swift; sourceTree = "<group>"; };
 		A20000000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A20000000000000000000003 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
@@ -179,7 +186,10 @@
 		A20000000000000000000123 /* HabitProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitProtocol.swift; sourceTree = "<group>"; };
 		A30000000000000000000001 /* MatrixHabit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatrixHabit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A30000000000000000000002 /* MatrixHabitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MatrixHabitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A592456D85393BE521FFF5B9 /* AgentModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgentModelTests.swift; sourceTree = "<group>"; };
+		AE8FA29CD5AF187514CE7A21 /* PowerModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PowerModelTests.swift; sourceTree = "<group>"; };
 		BBD956249358B70A8E378656 /* NotificationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationManager.swift; path = Services/NotificationManager.swift; sourceTree = "<group>"; };
+		F6CEB398142C7F3D85608A39 /* FrequencySchedulingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FrequencySchedulingTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -355,6 +365,11 @@
 				A20000000000000000000060 /* TestHelpers.swift */,
 				A20000000000000000000061 /* StreakCalculatorTests.swift */,
 				A20000000000000000000062 /* RankSystemTests.swift */,
+				AE8FA29CD5AF187514CE7A21 /* PowerModelTests.swift */,
+				A592456D85393BE521FFF5B9 /* AgentModelTests.swift */,
+				5E87ED45BDE6FDAFBD3ACF7D /* DateHelperTests.swift */,
+				8EA3C51FF0C57DE112DA7FCA /* UserProfileTests.swift */,
+				F6CEB398142C7F3D85608A39 /* FrequencySchedulingTests.swift */,
 			);
 			path = MatrixHabitTests;
 			sourceTree = "<group>";
@@ -567,6 +582,11 @@
 				A10000000000000000000060 /* TestHelpers.swift in Sources */,
 				A10000000000000000000061 /* StreakCalculatorTests.swift in Sources */,
 				A10000000000000000000062 /* RankSystemTests.swift in Sources */,
+				79D31BDB5636FF1AFEE8C6DE /* PowerModelTests.swift in Sources */,
+				9027234DAA2863A5A92D3F39 /* AgentModelTests.swift in Sources */,
+				492E93962F77CCF4BCCCE054 /* DateHelperTests.swift in Sources */,
+				D85C4D072077AFF92F5EC2A8 /* UserProfileTests.swift in Sources */,
+				A07F01D86CAE814474D67506 /* FrequencySchedulingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
