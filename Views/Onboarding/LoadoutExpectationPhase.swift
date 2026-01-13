@@ -8,6 +8,7 @@ struct LoadoutExpectationPhase: View {
 
     @State private var showContent: Bool = false
     @State private var iconPulse: Bool = false
+    @AppStorage("soundEnabled") private var soundEnabled: Bool = true
 
     var body: some View {
         VStack(spacing: Spacing.xl) {
@@ -74,6 +75,39 @@ struct LoadoutExpectationPhase: View {
                         .font(.system(size: 13, design: .monospaced))
                         .matrixGlow()
                         .padding(.top, Spacing.sm)
+
+                        // Sound Toggle
+                        HStack {
+                            Image(systemName: soundEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill")
+                                .font(.system(size: 16))
+                                .foregroundColor(soundEnabled ? Color.matrixGreen : Color.mediumGray)
+
+                            Text("AUDIO CUES")
+                                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                                .foregroundColor(soundEnabled ? Color.matrixGreen : Color.mediumGray)
+
+                            Spacer()
+
+                            Button(action: {
+                                soundEnabled.toggle()
+                                if soundEnabled {
+                                    SoundManager.shared.playTap()
+                                }
+                            }) {
+                                Text(soundEnabled ? "ON" : "OFF")
+                                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                                    .foregroundColor(soundEnabled ? .black : Color.mediumGray)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(soundEnabled ? Color.matrixGreen : Color.charcoal)
+                                    .cornerRadius(4)
+                            }
+                        }
+                        .padding(.horizontal, Spacing.lg)
+                        .padding(.vertical, Spacing.sm)
+                        .background(Color.charcoal.opacity(0.5))
+                        .cornerRadius(8)
+                        .padding(.top, Spacing.lg)
                     }
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, Spacing.lg)

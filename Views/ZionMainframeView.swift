@@ -8,7 +8,7 @@ struct ZionMainframeView: View {
     @Query private var agents: [Agent]
 
     @State private var hapticsEnabled: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.hapticsEnabled)
-    @State private var soundEnabled: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.soundEnabled)
+    @AppStorage("soundEnabled") private var soundEnabled: Bool = true
     @State private var notificationsEnabled: Bool = NotificationManager.shared.notificationsEnabled
     @State private var showResetAlert: Bool = false
     @State private var showExportSheet: Bool = false
@@ -147,7 +147,10 @@ struct ZionMainframeView: View {
                 description: "System interface sounds.",
                 isOn: $soundEnabled
             ) {
-                UserDefaults.standard.set(soundEnabled, forKey: UserDefaultsKeys.soundEnabled)
+                // @AppStorage auto-saves, just play feedback if enabling
+                if soundEnabled {
+                    SoundManager.shared.playTap()
+                }
             }
 
             // Notifications Toggle
