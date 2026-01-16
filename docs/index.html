@@ -10,7 +10,7 @@
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#00ff41">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -25,10 +25,12 @@
         body {
             background-color: #0a0a0a;
             color: #fff;
-            font-family: 'Share Tech Mono', monospace;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
             line-height: 1.6;
+            font-size: 18px;
+            font-weight: 400;
         }
 
         /* Ambient background */
@@ -41,37 +43,38 @@
             pointer-events: none;
             z-index: 0;
             background:
-                radial-gradient(ellipse at 30% 20%, rgba(0,255,65,0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 80%, rgba(0,255,65,0.04) 0%, transparent 40%),
+                radial-gradient(ellipse at 30% 20%, rgba(0,255,65,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(0,255,65,0.05) 0%, transparent 40%),
                 radial-gradient(ellipse at 50% 50%, rgba(0,20,0,0.5) 0%, transparent 70%);
         }
 
         .container {
-            max-width: 700px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 0 24px;
             position: relative;
             z-index: 1;
         }
 
-        /* Hero Section */
+        /* ===== HERO SECTION ===== */
         .hero {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 80px 0 40px;
+            padding: 120px 0 100px;
         }
 
         .logo {
-            font-size: 72px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 80px;
             color: #00ff41;
             text-shadow:
                 0 0 10px #00ff41,
-                0 0 30px rgba(0,255,65,0.5),
-                0 0 50px rgba(0,255,65,0.3);
-            margin-bottom: 16px;
+                0 0 40px rgba(0,255,65,0.5),
+                0 0 80px rgba(0,255,65,0.3);
+            margin-bottom: 24px;
             animation: glow 3s ease-in-out infinite;
         }
 
@@ -81,95 +84,138 @@
         }
 
         h1 {
-            font-size: 28px;
+            font-size: 64px;
+            font-weight: 800;
             color: #00ff41;
             text-transform: uppercase;
-            letter-spacing: 8px;
-            margin-bottom: 12px;
-            font-weight: normal;
+            letter-spacing: 6px;
+            margin-bottom: 20px;
+            line-height: 1.2;
         }
 
         .tagline {
-            font-size: 13px;
+            font-size: 28px;
+            font-weight: 600;
             color: #00ff41;
-            letter-spacing: 3px;
-            opacity: 0.8;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
         }
 
         .wake-up {
-            margin-top: 32px;
-            padding: 16px;
+            margin-top: 20px;
         }
 
         .wake-up p {
-            font-size: 15px;
-            color: #00ff41;
+            font-size: 20px;
+            color: #666;
             line-height: 1.8;
-            text-shadow: 0 0 15px rgba(0,255,65,0.4);
+        }
+
+        .platform-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 32px;
+            padding: 12px 24px;
+            border: 1px solid #333;
+            border-radius: 12px;
+            font-size: 16px;
+            color: #888;
+        }
+
+        .platform-badge svg {
+            width: 20px;
+            height: 20px;
+            fill: #888;
         }
 
         .scroll-indicator {
-            margin-top: 32px;
-            color: #333;
-            font-size: 11px;
+            margin-top: 48px;
+            color: #444;
+            font-size: 16px;
             letter-spacing: 2px;
             animation: bounce 2s infinite;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .scroll-indicator:hover {
+            color: #00ff41;
         }
 
         .scroll-indicator span {
             display: block;
-            margin-top: 8px;
-            font-size: 18px;
+            margin-top: 12px;
+            font-size: 24px;
         }
 
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(6px); }
+            50% { transform: translateY(8px); }
         }
 
-        /* Section Styles */
+        /* ===== SECTION STYLES ===== */
         section {
-            padding: 40px 0;
+            padding: 100px 0;
         }
 
         .section-title {
-            color: #2a2a2a;
-            font-size: 11px;
-            letter-spacing: 3px;
-            margin-bottom: 32px;
+            font-family: 'Share Tech Mono', monospace;
+            color: #00ff41;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 48px;
             text-transform: uppercase;
         }
 
-        /* Features */
+        .section-title-center {
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: #666;
+            text-align: center;
+            margin-top: -32px;
+            margin-bottom: 48px;
+        }
+
+        /* ===== FEATURES ===== */
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+            gap: 40px;
         }
 
         .feature {
             background: rgba(255,255,255,0.02);
-            border: 1px solid #1a1a1a;
-            padding: 24px 20px;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 32px;
             transition: all 0.3s ease;
         }
 
         .feature:hover {
             border-color: #00ff41;
-            background: rgba(0,255,65,0.02);
+            background: rgba(0,255,65,0.03);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,255,65,0.1);
         }
 
         .feature.agent:hover {
             border-color: #ff3b30;
-            background: rgba(255,59,48,0.02);
+            background: rgba(255,59,48,0.03);
+            box-shadow: 0 12px 40px rgba(255,59,48,0.1);
         }
 
         .feature h3 {
+            font-family: 'Share Tech Mono', monospace;
             color: #00ff41;
-            font-size: 13px;
-            margin-bottom: 12px;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
             letter-spacing: 1px;
-            font-weight: normal;
         }
 
         .feature.agent h3 {
@@ -177,19 +223,88 @@
         }
 
         .feature p {
-            color: #555;
-            font-size: 12px;
-            line-height: 1.8;
+            color: #888;
+            font-size: 18px;
+            line-height: 1.6;
         }
 
-        /* Stats */
+        /* ===== SCREENSHOTS SECTION ===== */
+        .screenshots-section {
+            padding: 100px 0;
+            overflow: hidden;
+        }
+
+        .screenshots-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            padding: 40px 0;
+        }
+
+        .phone-mockup {
+            flex-shrink: 0;
+            width: 240px;
+            aspect-ratio: 9 / 19.5;
+            background: linear-gradient(180deg, #1a1a1a 0%, #111 100%);
+            border: 3px solid #333;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.5), 0 0 40px rgba(0,255,65,0.1);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .phone-mockup::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 28px;
+            background: #000;
+            border-radius: 20px;
+            z-index: 10;
+        }
+
+        .phone-mockup:nth-child(1) { transform: rotate(-8deg) translateY(20px); }
+        .phone-mockup:nth-child(2) { transform: rotate(-4deg) translateY(10px); }
+        .phone-mockup:nth-child(3) { transform: rotate(0deg) translateY(0); z-index: 5; }
+        .phone-mockup:nth-child(4) { transform: rotate(4deg) translateY(10px); }
+        .phone-mockup:nth-child(5) { transform: rotate(8deg) translateY(20px); }
+
+        .phone-mockup:hover {
+            transform: rotate(0deg) translateY(-10px) scale(1.05);
+            z-index: 10;
+            box-shadow: 0 35px 100px rgba(0,0,0,0.6), 0 0 60px rgba(0,255,65,0.2);
+        }
+
+        .phone-mockup img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 37px;
+        }
+
+        .phone-mockup .placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-size: 14px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* ===== STATS ===== */
         .stats {
             display: flex;
             justify-content: space-around;
-            padding: 32px 0;
-            border-top: 1px solid #111;
-            border-bottom: 1px solid #111;
-            margin: 16px 0;
+            padding: 120px 0;
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
         }
 
         .stat {
@@ -197,215 +312,237 @@
         }
 
         .stat-value {
-            font-size: 48px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 80px;
+            font-weight: 800;
             color: #00ff41;
             line-height: 1;
-            text-shadow: 0 0 20px rgba(0,255,65,0.3);
+            text-shadow: 0 0 30px rgba(0,255,65,0.4), 0 0 60px rgba(0,255,65,0.2);
         }
 
         .stat-label {
-            font-size: 9px;
-            color: #333;
+            font-size: 14px;
+            color: #555;
             letter-spacing: 2px;
-            margin-top: 12px;
+            margin-top: 16px;
             text-transform: uppercase;
         }
 
-        /* CTA Section */
+        /* ===== CTA SECTION ===== */
         .cta-section {
             text-align: center;
-            padding: 40px 0;
+            padding: 100px 0;
         }
 
         .cta-title {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 24px;
-            letter-spacing: 1px;
+            color: #888;
+            font-size: 24px;
+            margin-bottom: 32px;
         }
 
-        /* Email Signup */
-        .notify-section {
-            text-align: center;
-            padding: 32px 0;
-            border-top: 1px solid #111;
-        }
-
-        .notify-title {
-            color: #00ff41;
-            font-size: 14px;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-
-        .notify-subtitle {
-            color: #444;
-            font-size: 11px;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-
-        .email-form {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .email-input {
-            flex: 1;
-            min-width: 200px;
-            padding: 12px 16px;
-            background: #111;
-            border: 1px solid #222;
-            color: #00ff41;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 12px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        .email-input::placeholder {
-            color: #333;
-        }
-
-        .email-input:focus {
-            border-color: #00ff41;
-        }
-
-        .notify-btn {
-            padding: 12px 24px;
-            background: transparent;
-            border: 1px solid #00ff41;
-            color: #00ff41;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 11px;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .notify-btn:hover {
-            background: #00ff41;
-            color: #0a0a0a;
-        }
-
-        .notify-note {
-            margin-top: 12px;
-            font-size: 9px;
-            color: #333;
-            letter-spacing: 1px;
-        }
-
+        /* ===== BUTTONS ===== */
         .btn {
-            display: inline-block;
-            padding: 16px 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 56px;
+            padding: 16px 32px;
             margin: 8px;
             text-decoration: none;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 12px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
             transition: all 0.3s ease;
             cursor: pointer;
+            border: none;
         }
 
         .btn-primary {
             background: #00ff41;
             color: #0a0a0a;
-            border: 2px solid #00ff41;
         }
 
         .btn-primary:hover {
-            background: transparent;
-            color: #00ff41;
-            box-shadow: 0 0 30px rgba(0,255,65,0.4);
+            background: #00cc33;
+            box-shadow: 0 8px 32px rgba(0,255,65,0.4);
+            transform: translateY(-2px);
         }
 
         .btn-secondary {
             background: transparent;
-            color: #333;
-            border: 1px solid #222;
+            color: #666;
+            border: 2px solid #333;
         }
 
         .btn-secondary:hover {
-            border-color: #333;
-            color: #555;
+            border-color: #555;
+            color: #888;
         }
 
         .cta-note {
-            margin-top: 20px;
-            font-size: 10px;
-            color: #2a2a2a;
-            letter-spacing: 1px;
+            margin-top: 24px;
+            font-size: 14px;
+            color: #444;
         }
 
-        /* Choice Section */
+        /* ===== CHOICE SECTION (Pills) ===== */
         .choice {
             text-align: center;
-            padding: 40px 0;
+            padding: 100px 0;
         }
 
         .choice-text {
-            color: #333;
-            font-size: 12px;
-            margin-bottom: 24px;
+            color: #666;
+            font-size: 24px;
             font-style: italic;
+            margin-bottom: 40px;
+            line-height: 1.4;
         }
 
         .pills {
             display: flex;
             justify-content: center;
-            gap: 16px;
+            gap: 20px;
             flex-wrap: wrap;
         }
 
-        .pill {
-            padding: 12px 24px;
-            font-size: 10px;
-            letter-spacing: 1px;
-            border-radius: 24px;
-            transition: all 0.3s;
-        }
-
-        .pill-blue {
-            color: #4a9eff;
-            border: 1px solid rgba(74,158,255,0.3);
-        }
-
-        .pill-blue:hover {
-            background: rgba(74,158,255,0.1);
-        }
-
-        .pill-red {
-            color: #ff6b6b;
-            border: 1px solid rgba(255,107,107,0.3);
+        .pill-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 56px;
+            padding: 16px 32px;
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
             cursor: pointer;
         }
 
+        .pill-blue {
+            background: #1a1a1a;
+            color: #666;
+            border: 2px solid #333;
+        }
+
+        .pill-blue:hover {
+            background: #222;
+            border-color: #444;
+            color: #888;
+        }
+
+        .pill-red {
+            background: #ff0040;
+            color: #fff;
+            border: 2px solid #ff0040;
+            box-shadow: 0 0 30px rgba(255,0,64,0.3);
+        }
+
         .pill-red:hover {
-            background: rgba(255,107,107,0.1);
+            background: #cc0033;
+            border-color: #cc0033;
+            box-shadow: 0 8px 40px rgba(255,0,64,0.5);
+            transform: translateY(-2px);
         }
 
-        /* Footer */
-        footer {
+        /* ===== EMAIL NOTIFY SECTION ===== */
+        .notify-section {
             text-align: center;
-            padding: 40px 0;
-            border-top: 1px solid #111;
+            padding: 100px 0;
+            border-top: 1px solid #1a1a1a;
         }
 
-        .footer-links {
+        .notify-title {
+            color: #00ff41;
+            font-size: 32px;
+            font-weight: 700;
             margin-bottom: 16px;
         }
 
+        .notify-subtitle {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 32px;
+        }
+
+        .email-form {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .email-input {
+            flex: 1;
+            min-width: 250px;
+            min-height: 56px;
+            padding: 16px 20px;
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 12px;
+            color: #00ff41;
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .email-input::placeholder {
+            color: #444;
+        }
+
+        .email-input:focus {
+            border-color: #00ff41;
+            box-shadow: 0 0 20px rgba(0,255,65,0.2);
+        }
+
+        .notify-btn {
+            min-height: 56px;
+            padding: 16px 32px;
+            background: #00ff41;
+            border: none;
+            border-radius: 12px;
+            color: #0a0a0a;
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notify-btn:hover {
+            background: #00cc33;
+            box-shadow: 0 8px 32px rgba(0,255,65,0.4);
+            transform: translateY(-2px);
+        }
+
+        .notify-note {
+            margin-top: 16px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 48px 0;
+            border-top: 1px solid #1a1a1a;
+        }
+
+        .footer-links {
+            margin-bottom: 20px;
+        }
+
         .footer-links a {
-            color: #2a2a2a;
+            color: #555;
             text-decoration: none;
-            margin: 0 16px;
-            font-size: 10px;
-            letter-spacing: 1px;
+            margin: 0 20px;
+            font-size: 16px;
             transition: color 0.3s;
         }
 
@@ -414,79 +551,121 @@
         }
 
         .copyright {
-            color: #1a1a1a;
-            font-size: 9px;
-            letter-spacing: 1px;
+            color: #333;
+            font-size: 14px;
         }
 
-        /* iOS Badge */
-        .platform-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 24px;
-            padding: 8px 16px;
-            border: 1px solid #1a1a1a;
-            border-radius: 6px;
-            font-size: 10px;
-            color: #444;
-        }
+        /* ===== MOBILE RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px;
+            }
 
-        .platform-badge svg {
-            width: 16px;
-            height: 16px;
-            fill: #444;
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 600px) {
             .container {
                 padding: 0 20px;
             }
 
+            section {
+                padding: 64px 0;
+            }
+
             .hero {
-                padding: 60px 0 32px;
+                padding: 80px 0 64px;
             }
 
             .logo {
-                font-size: 56px;
+                font-size: 60px;
             }
 
             h1 {
-                font-size: 20px;
-                letter-spacing: 5px;
+                font-size: 40px;
+                letter-spacing: 4px;
             }
 
             .tagline {
-                font-size: 11px;
-                letter-spacing: 2px;
+                font-size: 20px;
             }
 
             .wake-up p {
-                font-size: 14px;
+                font-size: 18px;
+            }
+
+            .section-title {
+                font-size: 28px;
             }
 
             .feature-grid {
                 grid-template-columns: 1fr;
-                gap: 12px;
+                gap: 24px;
             }
 
             .feature {
-                padding: 20px 16px;
+                padding: 24px;
             }
 
             .feature h3 {
-                font-size: 12px;
+                font-size: 20px;
             }
 
             .feature p {
-                font-size: 11px;
+                font-size: 16px;
+            }
+
+            /* Screenshots mobile */
+            .screenshots-container {
+                justify-content: flex-start;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                padding: 20px;
+                gap: 16px;
+            }
+
+            .phone-mockup {
+                width: 200px;
+                scroll-snap-align: center;
+                transform: none !important;
+            }
+
+            .phone-mockup:hover {
+                transform: none !important;
             }
 
             .stats {
                 flex-direction: column;
-                gap: 24px;
-                padding: 32px 0;
+                gap: 40px;
+                padding: 80px 0;
+            }
+
+            .stat-value {
+                font-size: 56px;
+            }
+
+            .cta-title {
+                font-size: 20px;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .choice-text {
+                font-size: 20px;
+            }
+
+            .pills {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .pill-btn {
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .notify-title {
+                font-size: 28px;
             }
 
             .email-form {
@@ -498,61 +677,28 @@
                 min-width: auto;
             }
 
-            .stat-value {
-                font-size: 40px;
-            }
-
-            .stat-label {
-                font-size: 8px;
-            }
-
-            .btn {
-                display: block;
-                width: 100%;
-                max-width: 280px;
-                margin: 8px auto;
-                padding: 14px 24px;
-            }
-
-            .pills {
-                flex-direction: column;
-                align-items: center;
-                gap: 12px;
-            }
-
-            .pill {
-                width: 100%;
-                max-width: 260px;
-                text-align: center;
-            }
-
-            section {
-                padding: 40px 0;
-            }
-
-            .cta-section {
-                padding: 40px 0;
-            }
-
             .footer-links a {
                 display: block;
-                margin: 12px 0;
+                margin: 16px 0;
             }
         }
 
-        /* Small phones */
-        @media (max-width: 380px) {
-            .logo {
-                font-size: 48px;
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 32px;
+                letter-spacing: 2px;
             }
 
-            h1 {
+            .tagline {
                 font-size: 18px;
-                letter-spacing: 4px;
             }
 
             .stat-value {
-                font-size: 36px;
+                font-size: 48px;
+            }
+
+            .phone-mockup {
+                width: 180px;
             }
         }
     </style>
@@ -568,7 +714,7 @@
             <p class="tagline">Break Free. Build Discipline.</p>
 
             <div class="wake-up">
-                <p>Wake up.<br>The Matrix has you.</p>
+                <p>Wake up. The Matrix has you.</p>
             </div>
 
             <div class="platform-badge">
@@ -578,21 +724,21 @@
 
             <a href="#features" class="scroll-indicator">
                 Scroll to explore
-                <span>↓</span>
+                <span>&#8595;</span>
             </a>
         </section>
 
         <!-- Features -->
         <section id="features">
-            <div class="section-title">// The System</div>
+            <h2 class="section-title section-title-center">// The System</h2>
             <div class="feature-grid">
                 <div class="feature">
                     <h3>Powers</h3>
-                    <p>Build good habits like meditation, exercise, reading. Each day you show up, you get stronger.</p>
+                    <p>Build good habits like meditation, exercise, and reading. Each day you show up, you get stronger.</p>
                 </div>
                 <div class="feature agent">
                     <h3>Agents</h3>
-                    <p>Defeat bad habits like doom scrolling, junk food, procrastination. Resist for 66 days to neutralize them.</p>
+                    <p>Defeat bad habits like doom scrolling, junk food, and procrastination. Resist for 66 days to neutralize them.</p>
                 </div>
                 <div class="feature">
                     <h3>66-Day Protocol</h3>
@@ -601,6 +747,29 @@
                 <div class="feature">
                     <h3>100% Offline</h3>
                     <p>No accounts. No cloud. No tracking. Your data stays on your device. Always.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screenshots -->
+        <section class="screenshots-section">
+            <h2 class="section-title section-title-center">Inside the Matrix</h2>
+            <p class="section-subtitle">A clean, focused interface designed to keep you on track</p>
+            <div class="screenshots-container">
+                <div class="phone-mockup">
+                    <div class="placeholder">Screenshot 1</div>
+                </div>
+                <div class="phone-mockup">
+                    <div class="placeholder">Screenshot 2</div>
+                </div>
+                <div class="phone-mockup">
+                    <div class="placeholder">Screenshot 3</div>
+                </div>
+                <div class="phone-mockup">
+                    <div class="placeholder">Screenshot 4</div>
+                </div>
+                <div class="phone-mockup">
+                    <div class="placeholder">Screenshot 5</div>
                 </div>
             </div>
         </section>
@@ -616,7 +785,7 @@
                 <div class="stat-label">Data Collected</div>
             </div>
             <div class="stat">
-                <div class="stat-value">∞</div>
+                <div class="stat-value">&infin;</div>
                 <div class="stat-label">Habits to Track</div>
             </div>
         </div>
@@ -625,24 +794,27 @@
         <section class="cta-section">
             <p class="cta-title">Ready to unplug?</p>
             <a href="https://testflight.apple.com/join/Cd9RuVQE" class="btn btn-primary" target="_blank">Join Beta</a>
-            <a href="#" class="btn btn-secondary">App Store — Coming Soon</a>
-            <p class="cta-note">Free • No account required • iOS 17+</p>
+            <a href="#" class="btn btn-secondary">App Store &mdash; Coming Soon</a>
+            <p class="cta-note">Free &bull; No account required &bull; iOS 17+</p>
         </section>
 
         <!-- Choice -->
         <section class="choice">
             <p class="choice-text">"This is your last chance. After this, there is no turning back."</p>
             <div class="pills">
-                <span class="pill pill-blue">Blue pill — close this page</span>
-                <a href="https://testflight.apple.com/join/Cd9RuVQE" class="pill pill-red" target="_blank">Red pill — download the app</a>
+                <span class="pill-btn pill-blue">Blue pill &mdash; close this page</span>
+                <a href="https://testflight.apple.com/join/Cd9RuVQE" class="pill-btn pill-red" target="_blank">Red pill &mdash; download the app</a>
             </div>
         </section>
 
         <!-- Email Notify -->
         <section class="notify-section">
-            <p class="notify-title">Get notified when we launch</p>
+            <h2 class="notify-title">Get notified when we launch</h2>
             <p class="notify-subtitle">Be the first to know when Matrix Habit hits the App Store</p>
-            <a href="mailto:vibefactory22@gmail.com?subject=Notify%20me%20when%20Matrix%20Habit%20launches&body=Hi%2C%20please%20notify%20me%20when%20Matrix%20Habit%20is%20live%20on%20the%20App%20Store!" class="notify-btn" style="display: inline-block; text-decoration: none;">Notify Me</a>
+            <form class="email-form" action="https://formspree.io/f/placeholder" method="POST">
+                <input type="email" name="email" class="email-input" placeholder="your@email.com" required>
+                <button type="submit" class="notify-btn">Notify Me</button>
+            </form>
             <p class="notify-note">No spam. Just one email when we go live.</p>
         </section>
 
@@ -652,7 +824,7 @@
                 <a href="https://gist.github.com/iuldashev21-boop/c6ece85230ff804e3436506e57f98d81" target="_blank">Privacy Policy</a>
                 <a href="mailto:vibefactory22@gmail.com">Contact</a>
             </div>
-            <p class="copyright">© 2025 VibeFact — Free your mind.</p>
+            <p class="copyright">&copy; 2025 VibeFact &mdash; Free your mind.</p>
         </footer>
     </div>
 </body>
