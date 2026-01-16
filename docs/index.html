@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matrix Habit - Break Free. Build Discipline.</title>
     <meta name="description" content="A Matrix-themed habit tracker for iOS. Build powers, defeat agents, complete the 66-day protocol.">
-    <meta property="og:title" content="Matrix Habit">
-    <meta property="og:description" content="Break Free. Build Discipline. A habit tracker inspired by The Matrix.">
+    <meta property="og:title" content="Matrix Habit - Break Free. Build Discipline.">
+    <meta property="og:description" content="A Matrix-themed habit tracker. Build powers, defeat agents, complete the 66-day protocol.">
     <meta property="og:type" content="website">
+    <meta name="theme-color" content="#00ff41">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
@@ -17,181 +18,159 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            background-color: #0d0d0d;
+            background-color: #0a0a0a;
             color: #fff;
             font-family: 'Share Tech Mono', monospace;
             min-height: 100vh;
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        /* Matrix rain background */
-        body::before {
-            content: '';
+        /* Ambient background */
+        .bg-glow {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            pointer-events: none;
+            z-index: 0;
             background:
-                radial-gradient(ellipse at center, rgba(0,20,0,0.3) 0%, transparent 70%),
-                radial-gradient(ellipse at 20% 80%, rgba(0,40,0,0.2) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(0,30,0,0.15) 0%, transparent 40%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* Animated glow lines */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                linear-gradient(0deg, transparent 49.5%, rgba(0,255,65,0.03) 50%, transparent 50.5%),
-                linear-gradient(90deg, transparent 49.5%, rgba(0,255,65,0.02) 50%, transparent 50.5%);
-            background-size: 100px 100px;
-            pointer-events: none;
-            z-index: 0;
-            animation: gridPulse 4s ease-in-out infinite;
-        }
-
-        @keyframes gridPulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-
-        /* Floating particles */
-        .glow-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(60px);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .glow-orb-1 {
-            width: 300px;
-            height: 300px;
-            background: rgba(0,255,65,0.08);
-            top: 10%;
-            left: 10%;
-            animation: float1 8s ease-in-out infinite;
-        }
-
-        .glow-orb-2 {
-            width: 200px;
-            height: 200px;
-            background: rgba(0,255,65,0.06);
-            bottom: 20%;
-            right: 15%;
-            animation: float2 10s ease-in-out infinite;
-        }
-
-        .glow-orb-3 {
-            width: 250px;
-            height: 250px;
-            background: rgba(0,255,65,0.05);
-            top: 50%;
-            right: 30%;
-            animation: float3 12s ease-in-out infinite;
-        }
-
-        @keyframes float1 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(30px, 20px); }
-        }
-
-        @keyframes float2 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-20px, -30px); }
-        }
-
-        @keyframes float3 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(20px, -20px); }
+                radial-gradient(ellipse at 30% 20%, rgba(0,255,65,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(0,255,65,0.04) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 50%, rgba(0,20,0,0.5) 0%, transparent 70%);
         }
 
         .container {
-            max-width: 800px;
+            max-width: 700px;
             margin: 0 auto;
-            padding: 60px 20px;
+            padding: 0 24px;
             position: relative;
             z-index: 1;
         }
 
-        /* Header */
-        .header {
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            margin-bottom: 50px;
+            padding: 40px 0;
         }
 
         .logo {
-            font-size: 64px;
+            font-size: 72px;
             color: #00ff41;
-            text-shadow: 0 0 20px #00ff41;
-            margin-bottom: 10px;
+            text-shadow:
+                0 0 10px #00ff41,
+                0 0 30px rgba(0,255,65,0.5),
+                0 0 50px rgba(0,255,65,0.3);
+            margin-bottom: 16px;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
         }
 
         h1 {
-            font-size: 32px;
+            font-size: 28px;
             color: #00ff41;
             text-transform: uppercase;
-            letter-spacing: 6px;
-            margin-bottom: 10px;
+            letter-spacing: 8px;
+            margin-bottom: 12px;
+            font-weight: normal;
         }
 
         .tagline {
-            font-size: 14px;
+            font-size: 13px;
             color: #00ff41;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
+            opacity: 0.8;
         }
 
-        /* Wake up text */
         .wake-up {
-            text-align: center;
-            margin: 50px auto;
-            padding: 25px 40px;
+            margin-top: 48px;
+            padding: 24px;
         }
 
         .wake-up p {
-            font-size: 18px;
+            font-size: 16px;
             color: #00ff41;
-            line-height: 1.8;
-            text-shadow: 0 0 20px rgba(0,255,65,0.3);
+            line-height: 2;
+            text-shadow: 0 0 15px rgba(0,255,65,0.4);
         }
 
-        /* Section label */
-        .section-label {
-            color: #444;
-            font-size: 12px;
+        .scroll-indicator {
+            margin-top: 48px;
+            color: #333;
+            font-size: 11px;
             letter-spacing: 2px;
-            margin-bottom: 25px;
+            animation: bounce 2s infinite;
         }
 
-        /* Features grid */
-        .features {
-            margin-bottom: 60px;
+        .scroll-indicator span {
+            display: block;
+            margin-top: 8px;
+            font-size: 18px;
         }
 
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
+        /* Section Styles */
+        section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            color: #2a2a2a;
+            font-size: 11px;
+            letter-spacing: 3px;
+            margin-bottom: 32px;
+            text-transform: uppercase;
+        }
+
+        /* Features */
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 16px;
         }
 
         .feature {
+            background: rgba(255,255,255,0.02);
             border: 1px solid #1a1a1a;
-            padding: 20px;
+            padding: 24px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            border-color: #00ff41;
+            background: rgba(0,255,65,0.02);
+        }
+
+        .feature.agent:hover {
+            border-color: #ff3b30;
+            background: rgba(255,59,48,0.02);
         }
 
         .feature h3 {
             color: #00ff41;
-            font-size: 14px;
-            margin-bottom: 10px;
+            font-size: 13px;
+            margin-bottom: 12px;
             letter-spacing: 1px;
+            font-weight: normal;
         }
 
         .feature.agent h3 {
@@ -199,17 +178,19 @@
         }
 
         .feature p {
-            color: #666;
+            color: #555;
             font-size: 12px;
-            line-height: 1.7;
+            line-height: 1.8;
         }
 
         /* Stats */
         .stats {
             display: flex;
-            justify-content: center;
-            gap: 60px;
-            margin: 50px 0;
+            justify-content: space-around;
+            padding: 48px 0;
+            border-top: 1px solid #111;
+            border-bottom: 1px solid #111;
+            margin: 20px 0;
         }
 
         .stat {
@@ -217,117 +198,141 @@
         }
 
         .stat-value {
-            font-size: 42px;
+            font-size: 48px;
             color: #00ff41;
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(0,255,65,0.3);
         }
 
         .stat-label {
-            font-size: 10px;
-            color: #444;
-            letter-spacing: 1px;
-            margin-top: 5px;
+            font-size: 9px;
+            color: #333;
+            letter-spacing: 2px;
+            margin-top: 12px;
+            text-transform: uppercase;
         }
 
-        /* CTA Buttons */
-        .cta {
+        /* CTA Section */
+        .cta-section {
             text-align: center;
-            margin: 40px 0;
+            padding: 60px 0;
+        }
+
+        .cta-title {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 32px;
+            letter-spacing: 1px;
         }
 
         .btn {
             display: inline-block;
-            padding: 14px 35px;
-            margin: 5px;
+            padding: 16px 40px;
+            margin: 8px;
             text-decoration: none;
             font-family: 'Share Tech Mono', monospace;
             font-size: 12px;
             letter-spacing: 2px;
             text-transform: uppercase;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .btn-primary {
             background: #00ff41;
-            color: #0d0d0d;
-            border: none;
+            color: #0a0a0a;
+            border: 2px solid #00ff41;
         }
 
         .btn-primary:hover {
-            box-shadow: 0 0 20px #00ff4166;
+            background: transparent;
+            color: #00ff41;
+            box-shadow: 0 0 30px rgba(0,255,65,0.4);
         }
 
         .btn-secondary {
             background: transparent;
-            color: #444;
-            border: 1px solid #333;
+            color: #333;
+            border: 1px solid #222;
         }
 
         .btn-secondary:hover {
-            border-color: #444;
-            color: #666;
+            border-color: #333;
+            color: #555;
         }
 
-        .coming-soon {
+        .cta-note {
+            margin-top: 20px;
             font-size: 10px;
-            color: #333;
-            margin-top: 15px;
+            color: #2a2a2a;
+            letter-spacing: 1px;
         }
 
-        /* Choice */
+        /* Choice Section */
         .choice {
             text-align: center;
-            margin: 50px 0;
+            padding: 40px 0;
         }
 
-        .choice p {
-            color: #444;
+        .choice-text {
+            color: #333;
             font-size: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            font-style: italic;
         }
 
         .pills {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 16px;
             flex-wrap: wrap;
         }
 
         .pill {
-            padding: 10px 20px;
-            font-size: 11px;
-            border-radius: 20px;
+            padding: 12px 24px;
+            font-size: 10px;
             letter-spacing: 1px;
+            border-radius: 24px;
+            transition: all 0.3s;
         }
 
         .pill-blue {
-            background: transparent;
             color: #4a9eff;
-            border: 1px solid #4a9eff44;
+            border: 1px solid rgba(74,158,255,0.3);
+        }
+
+        .pill-blue:hover {
+            background: rgba(74,158,255,0.1);
         }
 
         .pill-red {
-            background: transparent;
             color: #ff6b6b;
-            border: 1px solid #ff6b6b44;
+            border: 1px solid rgba(255,107,107,0.3);
+            cursor: pointer;
+        }
+
+        .pill-red:hover {
+            background: rgba(255,107,107,0.1);
         }
 
         /* Footer */
-        .footer {
+        footer {
             text-align: center;
-            padding-top: 40px;
-            margin-top: 40px;
+            padding: 40px 0;
+            border-top: 1px solid #111;
         }
 
         .footer-links {
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .footer-links a {
-            color: #333;
+            color: #2a2a2a;
             text-decoration: none;
-            margin: 0 15px;
-            font-size: 11px;
+            margin: 0 16px;
+            font-size: 10px;
             letter-spacing: 1px;
+            transition: color 0.3s;
         }
 
         .footer-links a:hover {
@@ -335,63 +340,169 @@
         }
 
         .copyright {
-            color: #222;
-            font-size: 10px;
+            color: #1a1a1a;
+            font-size: 9px;
+            letter-spacing: 1px;
         }
 
-        /* Responsive */
+        /* iOS Badge */
+        .platform-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 24px;
+            padding: 8px 16px;
+            border: 1px solid #1a1a1a;
+            border-radius: 6px;
+            font-size: 10px;
+            color: #444;
+        }
+
+        .platform-badge svg {
+            width: 16px;
+            height: 16px;
+            fill: #444;
+        }
+
+        /* Mobile Responsive */
         @media (max-width: 600px) {
-            .feature-grid {
-                grid-template-columns: 1fr;
+            .container {
+                padding: 0 20px;
             }
 
-            .stats {
-                gap: 30px;
-            }
-
-            .stat-value {
-                font-size: 32px;
-            }
-
-            h1 {
-                font-size: 24px;
-                letter-spacing: 4px;
+            .hero {
+                min-height: 90vh;
+                padding: 32px 0;
             }
 
             .logo {
-                font-size: 48px;
+                font-size: 56px;
+            }
+
+            h1 {
+                font-size: 20px;
+                letter-spacing: 5px;
+            }
+
+            .tagline {
+                font-size: 11px;
+                letter-spacing: 2px;
+            }
+
+            .wake-up p {
+                font-size: 14px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .feature {
+                padding: 20px 16px;
+            }
+
+            .feature h3 {
+                font-size: 12px;
+            }
+
+            .feature p {
+                font-size: 11px;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 32px;
+                padding: 40px 0;
+            }
+
+            .stat-value {
+                font-size: 40px;
+            }
+
+            .stat-label {
+                font-size: 8px;
             }
 
             .btn {
                 display: block;
-                margin: 10px auto;
-                max-width: 250px;
+                width: 100%;
+                max-width: 280px;
+                margin: 8px auto;
+                padding: 14px 24px;
             }
 
             .pills {
                 flex-direction: column;
                 align-items: center;
+                gap: 12px;
+            }
+
+            .pill {
+                width: 100%;
+                max-width: 260px;
+                text-align: center;
+            }
+
+            section {
+                padding: 40px 0;
+            }
+
+            .cta-section {
+                padding: 40px 0;
+            }
+
+            .footer-links a {
+                display: block;
+                margin: 12px 0;
+            }
+        }
+
+        /* Small phones */
+        @media (max-width: 380px) {
+            .logo {
+                font-size: 48px;
+            }
+
+            h1 {
+                font-size: 18px;
+                letter-spacing: 4px;
+            }
+
+            .stat-value {
+                font-size: 36px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="glow-orb glow-orb-1"></div>
-    <div class="glow-orb glow-orb-2"></div>
-    <div class="glow-orb glow-orb-3"></div>
+    <div class="bg-glow"></div>
+
     <div class="container">
-        <header class="header">
+        <!-- Hero -->
+        <section class="hero">
             <div class="logo">M</div>
             <h1>Matrix Habit</h1>
             <p class="tagline">Break Free. Build Discipline.</p>
-        </header>
 
-        <div class="wake-up">
-            <p>Wake up.<br>The Matrix has you.</p>
-        </div>
+            <div class="wake-up">
+                <p>Wake up.<br>The Matrix has you.</p>
+            </div>
 
-        <section class="features">
-            <div class="section-label">// THE SYSTEM</div>
+            <div class="platform-badge">
+                <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                iOS App
+            </div>
+
+            <a href="#features" class="scroll-indicator">
+                Scroll to explore
+                <span>↓</span>
+            </a>
+        </section>
+
+        <!-- Features -->
+        <section id="features">
+            <div class="section-title">// The System</div>
             <div class="feature-grid">
                 <div class="feature">
                     <h3>Powers</h3>
@@ -412,7 +523,8 @@
             </div>
         </section>
 
-        <section class="stats">
+        <!-- Stats -->
+        <div class="stats">
             <div class="stat">
                 <div class="stat-value">66</div>
                 <div class="stat-label">Days to Freedom</div>
@@ -425,28 +537,32 @@
                 <div class="stat-value">∞</div>
                 <div class="stat-label">Habits to Track</div>
             </div>
+        </div>
+
+        <!-- CTA -->
+        <section class="cta-section">
+            <p class="cta-title">Ready to unplug?</p>
+            <a href="https://testflight.apple.com/join/Cd9RuVQE" class="btn btn-primary" target="_blank">Join Beta</a>
+            <a href="#" class="btn btn-secondary">App Store — Coming Soon</a>
+            <p class="cta-note">Free • No account required • iOS 17+</p>
         </section>
 
-        <section class="cta">
-            <a href="https://testflight.apple.com/join/Cd9RuVQE" class="btn btn-primary">Join Beta</a>
-            <a href="#" class="btn btn-secondary">App Store (Coming Soon)</a>
-            <p class="coming-soon">App Store release pending approval</p>
-        </section>
-
+        <!-- Choice -->
         <section class="choice">
-            <p>This is your last chance. After this, there is no turning back.</p>
+            <p class="choice-text">"This is your last chance. After this, there is no turning back."</p>
             <div class="pills">
                 <span class="pill pill-blue">Blue pill — close this page</span>
-                <span class="pill pill-red">Red pill — download the app</span>
+                <a href="https://testflight.apple.com/join/Cd9RuVQE" class="pill pill-red" target="_blank">Red pill — download the app</a>
             </div>
         </section>
 
-        <footer class="footer">
+        <!-- Footer -->
+        <footer>
             <div class="footer-links">
-                <a href="https://gist.github.com/iuldashev21-boop/c6ece85230ff804e3436506e57f98d81">Privacy Policy</a>
+                <a href="https://gist.github.com/iuldashev21-boop/c6ece85230ff804e3436506e57f98d81" target="_blank">Privacy Policy</a>
                 <a href="mailto:vibefactory22@gmail.com">Contact</a>
             </div>
-            <p class="copyright">© 2025 VibeFact. Free your mind.</p>
+            <p class="copyright">© 2025 VibeFact — Free your mind.</p>
         </footer>
     </div>
 </body>
