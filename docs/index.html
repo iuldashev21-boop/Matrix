@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Habit - Break Free. Build Discipline.</title>
+    <meta name="description" content="A Matrix-themed habit tracker for iOS. Build powers, defeat agents, complete the 66-day protocol.">
+    <meta property="og:title" content="Matrix Habit">
+    <meta property="og:description" content="Break Free. Build Discipline. A habit tracker inspired by The Matrix.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0d0d0d;
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Matrix rain background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at center, rgba(0,20,0,0.3) 0%, transparent 70%),
+                radial-gradient(ellipse at 20% 80%, rgba(0,40,0,0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(0,30,0,0.15) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Animated glow lines */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(0deg, transparent 49.5%, rgba(0,255,65,0.03) 50%, transparent 50.5%),
+                linear-gradient(90deg, transparent 49.5%, rgba(0,255,65,0.02) 50%, transparent 50.5%);
+            background-size: 100px 100px;
+            pointer-events: none;
+            z-index: 0;
+            animation: gridPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes gridPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Floating particles */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-orb-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(0,255,65,0.08);
+            top: 10%;
+            left: 10%;
+            animation: float1 8s ease-in-out infinite;
+        }
+
+        .glow-orb-2 {
+            width: 200px;
+            height: 200px;
+            background: rgba(0,255,65,0.06);
+            bottom: 20%;
+            right: 15%;
+            animation: float2 10s ease-in-out infinite;
+        }
+
+        .glow-orb-3 {
+            width: 250px;
+            height: 250px;
+            background: rgba(0,255,65,0.05);
+            top: 50%;
+            right: 30%;
+            animation: float3 12s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 20px); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, -30px); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, -20px); }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .logo {
+            font-size: 64px;
+            color: #00ff41;
+            text-shadow: 0 0 20px #00ff41;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #00ff41;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: #00ff41;
+            letter-spacing: 2px;
+        }
+
+        /* Wake up text */
+        .wake-up {
+            text-align: center;
+            margin: 50px auto;
+            padding: 25px 40px;
+        }
+
+        .wake-up p {
+            font-size: 18px;
+            color: #00ff41;
+            line-height: 1.8;
+            text-shadow: 0 0 20px rgba(0,255,65,0.3);
+        }
+
+        /* Section label */
+        .section-label {
+            color: #444;
+            font-size: 12px;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+        }
+
+        /* Features grid */
+        .features {
+            margin-bottom: 60px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .feature {
+            border: 1px solid #1a1a1a;
+            padding: 20px;
+        }
+
+        .feature h3 {
+            color: #00ff41;
+            font-size: 14px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .feature.agent h3 {
+            color: #ff3b30;
+        }
+
+        .feature p {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin: 50px 0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 42px;
+            color: #00ff41;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #444;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        /* CTA Buttons */
+        .cta {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 35px;
+            margin: 5px;
+            text-decoration: none;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #00ff41;
+            color: #0d0d0d;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 20px #00ff4166;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #444;
+            border: 1px solid #333;
+        }
+
+        .btn-secondary:hover {
+            border-color: #444;
+            color: #666;
+        }
+
+        .coming-soon {
+            font-size: 10px;
+            color: #333;
+            margin-top: 15px;
+        }
+
+        /* Choice */
+        .choice {
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .choice p {
+            color: #444;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        .pills {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            padding: 10px 20px;
+            font-size: 11px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+        }
+
+        .pill-blue {
+            background: transparent;
+            color: #4a9eff;
+            border: 1px solid #4a9eff44;
+        }
+
+        .pill-red {
+            background: transparent;
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b44;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding-top: 40px;
+            margin-top: 40px;
+        }
+
+        .footer-links {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: #333;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        .footer-links a:hover {
+            color: #00ff41;
+        }
+
+        .copyright {
+            color: #222;
+            font-size: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                gap: 30px;
+            }
+
+            .stat-value {
+                font-size: 32px;
+            }
+
+            h1 {
+                font-size: 24px;
+                letter-spacing: 4px;
+            }
+
+            .logo {
+                font-size: 48px;
+            }
+
+            .btn {
+                display: block;
+                margin: 10px auto;
+                max-width: 250px;
+            }
+
+            .pills {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+    <div class="container">
+        <header class="header">
+            <div class="logo">M</div>
+            <h1>Matrix Habit</h1>
+            <p class="tagline">Break Free. Build Discipline.</p>
+        </header>
+
+        <div class="wake-up">
+            <p>Wake up.<br>The Matrix has you.</p>
+        </div>
+
+        <section class="features">
+            <div class="section-label">// THE SYSTEM</div>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3>Powers</h3>
+                    <p>Build good habits like meditation, exercise, reading. Each day you show up, you get stronger.</p>
+                </div>
+                <div class="feature agent">
+                    <h3>Agents</h3>
+                    <p>Defeat bad habits like doom scrolling, junk food, procrastination. Resist for 66 days to neutralize them.</p>
+                </div>
+                <div class="feature">
+                    <h3>66-Day Protocol</h3>
+                    <p>Science shows it takes 66 days to form a habit. Complete the protocol to rewire your brain.</p>
+                </div>
+                <div class="feature">
+                    <h3>100% Offline</h3>
+                    <p>No accounts. No cloud. No tracking. Your data stays on your device. Always.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="stat">
+                <div class="stat-value">66</div>
+                <div class="stat-label">Days to Freedom</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">0</div>
+                <div class="stat-label">Data Collected</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">∞</div>
+                <div class="stat-label">Habits to Track</div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <a href="https://testflight.apple.com/join/Cd9RuVQE" class="btn btn-primary">Join Beta</a>
+            <a href="#" class="btn btn-secondary">App Store (Coming Soon)</a>
+            <p class="coming-soon">App Store release pending approval</p>
+        </section>
+
+        <section class="choice">
+            <p>This is your last chance. After this, there is no turning back.</p>
+            <div class="pills">
+                <span class="pill pill-blue">Blue pill — close this page</span>
+                <span class="pill pill-red">Red pill — download the app</span>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="https://gist.github.com/iuldashev21-boop/c6ece85230ff804e3436506e57f98d81">Privacy Policy</a>
+                <a href="mailto:vibefactory22@gmail.com">Contact</a>
+            </div>
+            <p class="copyright">© 2025 VibeFact. Free your mind.</p>
+        </footer>
+    </div>
+</body>
+</html>
