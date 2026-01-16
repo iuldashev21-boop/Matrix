@@ -56,13 +56,12 @@
 
         /* Hero Section */
         .hero {
-            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 40px 0;
+            padding: 80px 0 40px;
         }
 
         .logo {
@@ -98,19 +97,19 @@
         }
 
         .wake-up {
-            margin-top: 48px;
-            padding: 24px;
+            margin-top: 32px;
+            padding: 16px;
         }
 
         .wake-up p {
-            font-size: 16px;
+            font-size: 15px;
             color: #00ff41;
-            line-height: 2;
+            line-height: 1.8;
             text-shadow: 0 0 15px rgba(0,255,65,0.4);
         }
 
         .scroll-indicator {
-            margin-top: 48px;
+            margin-top: 32px;
             color: #333;
             font-size: 11px;
             letter-spacing: 2px;
@@ -130,7 +129,7 @@
 
         /* Section Styles */
         section {
-            padding: 60px 0;
+            padding: 40px 0;
         }
 
         .section-title {
@@ -187,10 +186,10 @@
         .stats {
             display: flex;
             justify-content: space-around;
-            padding: 48px 0;
+            padding: 32px 0;
             border-top: 1px solid #111;
             border-bottom: 1px solid #111;
-            margin: 20px 0;
+            margin: 16px 0;
         }
 
         .stat {
@@ -215,13 +214,88 @@
         /* CTA Section */
         .cta-section {
             text-align: center;
-            padding: 60px 0;
+            padding: 40px 0;
         }
 
         .cta-title {
             color: #666;
             font-size: 14px;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
+        }
+
+        /* Email Signup */
+        .notify-section {
+            text-align: center;
+            padding: 32px 0;
+            border-top: 1px solid #111;
+        }
+
+        .notify-title {
+            color: #00ff41;
+            font-size: 14px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .notify-subtitle {
+            color: #444;
+            font-size: 11px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .email-form {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .email-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 16px;
+            background: #111;
+            border: 1px solid #222;
+            color: #00ff41;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .email-input::placeholder {
+            color: #333;
+        }
+
+        .email-input:focus {
+            border-color: #00ff41;
+        }
+
+        .notify-btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .notify-btn:hover {
+            background: #00ff41;
+            color: #0a0a0a;
+        }
+
+        .notify-note {
+            margin-top: 12px;
+            font-size: 9px;
+            color: #333;
             letter-spacing: 1px;
         }
 
@@ -371,8 +445,7 @@
             }
 
             .hero {
-                min-height: 90vh;
-                padding: 32px 0;
+                padding: 60px 0 32px;
             }
 
             .logo {
@@ -412,8 +485,17 @@
 
             .stats {
                 flex-direction: column;
-                gap: 32px;
-                padding: 40px 0;
+                gap: 24px;
+                padding: 32px 0;
+            }
+
+            .email-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .email-input {
+                min-width: auto;
             }
 
             .stat-value {
@@ -554,6 +636,14 @@
                 <span class="pill pill-blue">Blue pill — close this page</span>
                 <a href="https://testflight.apple.com/join/Cd9RuVQE" class="pill pill-red" target="_blank">Red pill — download the app</a>
             </div>
+        </section>
+
+        <!-- Email Notify -->
+        <section class="notify-section">
+            <p class="notify-title">Get notified when we launch</p>
+            <p class="notify-subtitle">Be the first to know when Matrix Habit hits the App Store</p>
+            <a href="mailto:vibefactory22@gmail.com?subject=Notify%20me%20when%20Matrix%20Habit%20launches&body=Hi%2C%20please%20notify%20me%20when%20Matrix%20Habit%20is%20live%20on%20the%20App%20Store!" class="notify-btn" style="display: inline-block; text-decoration: none;">Notify Me</a>
+            <p class="notify-note">No spam. Just one email when we go live.</p>
         </section>
 
         <!-- Footer -->
