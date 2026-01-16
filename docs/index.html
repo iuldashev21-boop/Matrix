@@ -525,6 +525,128 @@
             font-size: 11px;
         }
 
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #111;
+            border: 1px solid #00ff41;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 60px rgba(0,255,65,0.2);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: #444;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #00ff41;
+        }
+
+        .modal-rabbit {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            color: #00ff41;
+            font-size: 20px;
+            margin-bottom: 24px;
+            text-shadow: 0 0 10px rgba(0,255,65,0.5);
+        }
+
+        .modal-link-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .modal-link {
+            flex: 1;
+            color: #00ff41;
+            font-size: 12px;
+            text-decoration: none;
+            word-break: break-all;
+            text-align: left;
+        }
+
+        .modal-link:hover {
+            text-decoration: underline;
+        }
+
+        .copy-btn {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #666;
+            padding: 8px 12px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .copy-btn:hover {
+            border-color: #00ff41;
+            color: #00ff41;
+        }
+
+        .copy-btn.copied {
+            border-color: #00ff41;
+            color: #00ff41;
+        }
+
+        .modal-open-btn {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 12px 24px;
+            background: #00ff41;
+            color: #0a0a0a;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .modal-open-btn:hover {
+            background: #00cc33;
+            box-shadow: 0 4px 20px rgba(0,255,65,0.4);
+        }
+
         /* ===== MOBILE RESPONSIVE ===== */
         @media (max-width: 768px) {
             body {
@@ -689,7 +811,7 @@
 
             <div class="hero-cta">
                 <p class="cta-title">Ready to unplug?</p>
-                <a href="https://testflight.apple.com/join/Cd9RuVQE" class="btn btn-primary" target="_blank">Join Beta</a>
+                <button class="btn btn-primary" onclick="openModal()">Join Beta</button>
                 <a href="#" class="btn btn-secondary">App Store &mdash; Coming Soon</a>
                 <p class="cta-note">Free &bull; No account required &bull; iOS 17+</p>
             </div>
@@ -767,7 +889,7 @@
             <p class="choice-text">"This is your last chance. After this, there is no turning back."</p>
             <div class="pills">
                 <span class="pill-btn pill-blue">Blue pill &mdash; close this page</span>
-                <a href="https://testflight.apple.com/join/Cd9RuVQE" class="pill-btn pill-red" target="_blank">Red pill &mdash; download the app</a>
+                <button class="pill-btn pill-red" onclick="openModal()">Red pill &mdash; download the app</button>
             </div>
         </section>
 
@@ -791,5 +913,50 @@
             <p class="copyright">&copy; 2025 VibeFact &mdash; Free your mind.</p>
         </footer>
     </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-rabbit">&#x1F407;</div>
+            <h3 class="modal-title">Follow the white rabbit.</h3>
+            <div class="modal-link-box">
+                <a href="https://testflight.apple.com/join/Cd9RuVGE" class="modal-link" target="_blank" id="testflight-link">https://testflight.apple.com/join/Cd9RuVGE</a>
+                <button class="copy-btn" onclick="copyLink()">Copy</button>
+            </div>
+            <a href="https://testflight.apple.com/join/Cd9RuVGE" class="modal-open-btn" target="_blank">Open TestFlight</a>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event) {
+            if (!event || event.target === document.getElementById('modal')) {
+                document.getElementById('modal').classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function copyLink() {
+            const link = 'https://testflight.apple.com/join/Cd9RuVGE';
+            navigator.clipboard.writeText(link).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
 </body>
 </html>
