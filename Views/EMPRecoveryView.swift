@@ -374,7 +374,7 @@ struct EMPRecoveryView: View {
         }
 
         // Create a recovery check-in for yesterday
-        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date()
+        let yesterday = DateHelper.yesterday
         let checkIn = CheckIn(date: yesterday, isSuccess: true, note: note)
 
         if let p = power {
