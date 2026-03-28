@@ -463,12 +463,8 @@ struct SignalAnalysisView: View {
     }
 
     private var daysActiveCount: Int {
-        guard let firstCheckIn = checkIns.map({ $0.date }).min() else { return 0 }
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        let firstDay = calendar.startOfDay(for: firstCheckIn)
-        let components = calendar.dateComponents([.day], from: firstDay, to: today)
-        return (components.day ?? 0) + 1
+        let allDates = checkIns.map { Calendar.current.startOfDay(for: $0.date) }
+        return Set(allDates).count
     }
 
     // MARK: - Program Status Section
