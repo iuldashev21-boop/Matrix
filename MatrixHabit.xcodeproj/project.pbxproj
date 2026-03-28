@@ -7,21 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A5E603AEA70D82D982C2472 /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A75546D554C6F98500D00C4A /* StoreManager.swift */; };
 		1BC995D9506B243A69710A3D /* terminal_type.wav in Resources */ = {isa = PBXBuildFile; fileRef = E353CAF5616CDFF66A0B72EF /* terminal_type.wav */; };
 		29F324529CF59935FBFACB11 /* ReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465374ED9F81D2E25CA313BD /* ReviewManager.swift */; };
 		2F3FAAF30719F665A19AA5F3 /* achievement.wav in Resources */ = {isa = PBXBuildFile; fileRef = 169C0881A1A85D114C13DB0F /* achievement.wav */; };
 		3763539E710B3C9071DF0C71 /* streak_milestone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 744D159F24E0F444A9E05151 /* streak_milestone.wav */; };
 		442D73B85923F3788453BEB5 /* LaunchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27346A7F7E6BCFB51663C378 /* LaunchScreen.swift */; };
+		447834A86DB2C23DD4C98060 /* MatrixHabitWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4668DA011E394FD441410964 /* MatrixHabitWidget.swift */; };
 		492E93962F77CCF4BCCCE054 /* DateHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E87ED45BDE6FDAFBD3ACF7D /* DateHelperTests.swift */; };
 		5E56CD481D26C06B084EAF52 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 46EFA478ED02B83874290ECA /* LaunchScreen.storyboard */; };
+		67EFD91C8FCFCD6FA7B5D004 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43C088720660EF148AE5EB81 /* Foundation.framework */; };
 		68B3B229D7C242CEC08E9C6D /* protocol_complete.wav in Resources */ = {isa = PBXBuildFile; fileRef = FD45AF3888E4A411E42F5919 /* protocol_complete.wav */; };
 		7307B7B77AF069BAE0DD9F15 /* level_up.wav in Resources */ = {isa = PBXBuildFile; fileRef = AE37942D2C58372361438ED6 /* level_up.wav */; };
 		79D31BDB5636FF1AFEE8C6DE /* PowerModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8FA29CD5AF187514CE7A21 /* PowerModelTests.swift */; };
 		7E38BF593F19B146347EB034 /* button_tap.wav in Resources */ = {isa = PBXBuildFile; fileRef = 657FC22F1BB665E84708F3D1 /* button_tap.wav */; };
+		84FED044452FD91380D3E9F2 /* WidgetDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A2B614440173E161C8C791 /* WidgetDataManager.swift */; };
 		852622C14586109AC8BFB97B /* emp_token.wav in Resources */ = {isa = PBXBuildFile; fileRef = A2391B164664DBF38516EAB8 /* emp_token.wav */; };
 		85C01190660CC48F5ABF34E0 /* relapse.wav in Resources */ = {isa = PBXBuildFile; fileRef = AB6854DD93AB6C8D0636DA90 /* relapse.wav */; };
 		8ED4E16FC66D1E4C860BAA1C /* hold_progress.wav in Resources */ = {isa = PBXBuildFile; fileRef = 903B865343E0674F8A0D02CE /* hold_progress.wav */; };
 		9027234DAA2863A5A92D3F39 /* AgentModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A592456D85393BE521FFF5B9 /* AgentModelTests.swift */; };
+		9589E8C436701EA2B00813CB /* MatrixHabitWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BACF54F5E4495AAA1E8C958A /* MatrixHabitWidgetExtension.appex */; };
 		A07F01D86CAE814474D67506 /* FrequencySchedulingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CEB398142C7F3D85608A39 /* FrequencySchedulingTests.swift */; };
 		A10000000000000000000001 /* MatrixHabitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* MatrixHabitApp.swift */; };
 		A10000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* ContentView.swift */; };
@@ -99,7 +104,10 @@
 		A10000000000000000000121 /* AchievementsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000121 /* AchievementsTabView.swift */; };
 		A10000000000000000000122 /* CommandCenterOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000122 /* CommandCenterOverlays.swift */; };
 		A10000000000000000000123 /* HabitProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000123 /* HabitProtocol.swift */; };
+		CFB78A40B5406845F49986BF /* CheckInService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41454C1F4BFDEA76C9D73C34 /* CheckInService.swift */; };
+		D0F8926E679B0FEF22FDAC15 /* RedPillPaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C540CCE7ECB02F6DEF67D4 /* RedPillPaywallView.swift */; };
 		D85C4D072077AFF92F5EC2A8 /* UserProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA3C51FF0C57DE112DA7FCA /* UserProfileTests.swift */; };
+		DC441609CCAB3C3636D45834 /* MatrixHabitWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E8F8790CA4A992986788DE /* MatrixHabitWidgetBundle.swift */; };
 		E8A070F8574889CB556BD7E5 /* checkin_success.wav in Resources */ = {isa = PBXBuildFile; fileRef = A88AFE7440F045B4586986D4 /* checkin_success.wav */; };
 		EDFCEE40A028CE2F23357D85 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD956249358B70A8E378656 /* NotificationManager.swift */; };
 		EEAA3862172B2CE85F5BF4AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63A450645B6B5FF0597004A8 /* Assets.xcassets */; };
@@ -107,6 +115,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2852E0E8FA0378A79241390B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4E9FB638A45229088B2F15A0;
+			remoteInfo = MatrixHabitWidgetExtension;
+		};
 		C10000000000000000000001 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A00000000000000000000001 /* Project object */;
@@ -116,16 +131,37 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		01B97229D25F7BBDAA0C9ED5 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				9589E8C436701EA2B00813CB /* MatrixHabitWidgetExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		02E8F8790CA4A992986788DE /* MatrixHabitWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MatrixHabitWidgetBundle.swift; sourceTree = "<group>"; };
 		169C0881A1A85D114C13DB0F /* achievement.wav */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.wav; path = achievement.wav; sourceTree = "<group>"; };
+		18A2B614440173E161C8C791 /* WidgetDataManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetDataManager.swift; sourceTree = "<group>"; };
 		27346A7F7E6BCFB51663C378 /* LaunchScreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LaunchScreen.swift; sourceTree = "<group>"; };
+		41454C1F4BFDEA76C9D73C34 /* CheckInService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CheckInService.swift; sourceTree = "<group>"; };
+		43C088720660EF148AE5EB81 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		465374ED9F81D2E25CA313BD /* ReviewManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReviewManager.swift; path = Services/ReviewManager.swift; sourceTree = "<group>"; };
+		4668DA011E394FD441410964 /* MatrixHabitWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MatrixHabitWidget.swift; sourceTree = "<group>"; };
 		46EFA478ED02B83874290ECA /* LaunchScreen.storyboard */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5E87ED45BDE6FDAFBD3ACF7D /* DateHelperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DateHelperTests.swift; sourceTree = "<group>"; };
 		63A450645B6B5FF0597004A8 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		657FC22F1BB665E84708F3D1 /* button_tap.wav */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.wav; path = button_tap.wav; sourceTree = "<group>"; };
 		6F4D78370018637B6B3901F3 /* SoundManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SoundManager.swift; path = Services/SoundManager.swift; sourceTree = "<group>"; };
 		744D159F24E0F444A9E05151 /* streak_milestone.wav */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.wav; path = streak_milestone.wav; sourceTree = "<group>"; };
+		7534156F000EB69CE39E42FA /* MatrixHabit.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = MatrixHabit.entitlements; sourceTree = "<group>"; };
+		84C540CCE7ECB02F6DEF67D4 /* RedPillPaywallView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RedPillPaywallView.swift; sourceTree = "<group>"; };
 		8EA3C51FF0C57DE112DA7FCA /* UserProfileTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserProfileTests.swift; sourceTree = "<group>"; };
 		903B865343E0674F8A0D02CE /* hold_progress.wav */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.wav; path = hold_progress.wav; sourceTree = "<group>"; };
 		A20000000000000000000001 /* MatrixHabitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHabitApp.swift; sourceTree = "<group>"; };
@@ -212,17 +248,28 @@
 		A30000000000000000000001 /* MatrixHabit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatrixHabit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A30000000000000000000002 /* MatrixHabitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MatrixHabitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A592456D85393BE521FFF5B9 /* AgentModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgentModelTests.swift; sourceTree = "<group>"; };
+		A75546D554C6F98500D00C4A /* StoreManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
 		A88AFE7440F045B4586986D4 /* checkin_success.wav */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.wav; path = checkin_success.wav; sourceTree = "<group>"; };
 		AB6854DD93AB6C8D0636DA90 /* relapse.wav */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.wav; path = relapse.wav; sourceTree = "<group>"; };
 		AE37942D2C58372361438ED6 /* level_up.wav */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.wav; path = level_up.wav; sourceTree = "<group>"; };
 		AE8FA29CD5AF187514CE7A21 /* PowerModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PowerModelTests.swift; sourceTree = "<group>"; };
+		BACF54F5E4495AAA1E8C958A /* MatrixHabitWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MatrixHabitWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBD956249358B70A8E378656 /* NotificationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationManager.swift; path = Services/NotificationManager.swift; sourceTree = "<group>"; };
+		C9B9E58C0D2C85184C07FD0A /* MatrixHabitWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = MatrixHabitWidget.entitlements; sourceTree = "<group>"; };
 		E353CAF5616CDFF66A0B72EF /* terminal_type.wav */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.wav; path = terminal_type.wav; sourceTree = "<group>"; };
 		F6CEB398142C7F3D85608A39 /* FrequencySchedulingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FrequencySchedulingTests.swift; sourceTree = "<group>"; };
 		FD45AF3888E4A411E42F5919 /* protocol_complete.wav */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.wav; path = protocol_complete.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		747978DF02E778E5772100BB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				67EFD91C8FCFCD6FA7B5D004 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A40000000000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -267,6 +314,33 @@
 			name = Services;
 			sourceTree = "<group>";
 		};
+		52B763F79911DABB6CD08DCE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9083CB9BE47A822E41F92550 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9083CB9BE47A822E41F92550 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				43C088720660EF148AE5EB81 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		9D6951C0C0B33A35A50158EF /* MatrixHabitWidget */ = {
+			isa = PBXGroup;
+			children = (
+				4668DA011E394FD441410964 /* MatrixHabitWidget.swift */,
+				02E8F8790CA4A992986788DE /* MatrixHabitWidgetBundle.swift */,
+				C9B9E58C0D2C85184C07FD0A /* MatrixHabitWidget.entitlements */,
+			);
+			name = MatrixHabitWidget;
+			path = MatrixHabitWidget;
+			sourceTree = "<group>";
+		};
 		A50000000000000000000001 = {
 			isa = PBXGroup;
 			children = (
@@ -278,6 +352,9 @@
 				63A450645B6B5FF0597004A8 /* Assets.xcassets */,
 				46EFA478ED02B83874290ECA /* LaunchScreen.storyboard */,
 				27346A7F7E6BCFB51663C378 /* LaunchScreen.swift */,
+				7534156F000EB69CE39E42FA /* MatrixHabit.entitlements */,
+				52B763F79911DABB6CD08DCE /* Frameworks */,
+				9D6951C0C0B33A35A50158EF /* MatrixHabitWidget */,
 			);
 			sourceTree = "<group>";
 		};
@@ -301,6 +378,7 @@
 			children = (
 				A30000000000000000000001 /* MatrixHabit.app */,
 				A30000000000000000000002 /* MatrixHabitTests.xctest */,
+				BACF54F5E4495AAA1E8C958A /* MatrixHabitWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -358,6 +436,9 @@
 				A20000000000000000000047 /* AnomalyManager.swift */,
 				A20000000000000000000052 /* TierPromotionManager.swift */,
 				A20000000000000000000119 /* ErrorLogger.swift */,
+				A75546D554C6F98500D00C4A /* StoreManager.swift */,
+				18A2B614440173E161C8C791 /* WidgetDataManager.swift */,
+				41454C1F4BFDEA76C9D73C34 /* CheckInService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -397,6 +478,7 @@
 				A20000000000000000000040 /* ConstructLoaderView.swift */,
 				A50000000000000000000010 /* Sidequests */,
 				A50000000000000000000012 /* Onboarding */,
+				84C540CCE7ECB02F6DEF67D4 /* RedPillPaywallView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -456,6 +538,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		4E9FB638A45229088B2F15A0 /* MatrixHabitWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0B70F61759AEC5061AD1078 /* Build configuration list for PBXNativeTarget "MatrixHabitWidgetExtension" */;
+			buildPhases = (
+				7D5281E168D4EA3C7B9C54BE /* Sources */,
+				747978DF02E778E5772100BB /* Frameworks */,
+				12617450BD7DEEEFA3BFF4AD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MatrixHabitWidgetExtension;
+			productName = MatrixHabitWidgetExtension;
+			productReference = BACF54F5E4495AAA1E8C958A /* MatrixHabitWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		A60000000000000000000001 /* MatrixHabit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A80000000000000000000001 /* Build configuration list for PBXNativeTarget "MatrixHabit" */;
@@ -463,10 +562,12 @@
 				A70000000000000000000001 /* Sources */,
 				A40000000000000000000001 /* Frameworks */,
 				A90000000000000000000001 /* Resources */,
+				01B97229D25F7BBDAA0C9ED5 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				E9A8A982A6AC1EA07BB67F32 /* PBXTargetDependency */,
 			);
 			name = MatrixHabit;
 			productName = MatrixHabit;
@@ -525,11 +626,19 @@
 			targets = (
 				A60000000000000000000001 /* MatrixHabit */,
 				A60000000000000000000002 /* MatrixHabitTests */,
+				4E9FB638A45229088B2F15A0 /* MatrixHabitWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		12617450BD7DEEEFA3BFF4AD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A90000000000000000000001 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -559,6 +668,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		7D5281E168D4EA3C7B9C54BE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				447834A86DB2C23DD4C98060 /* MatrixHabitWidget.swift in Sources */,
+				DC441609CCAB3C3636D45834 /* MatrixHabitWidgetBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A70000000000000000000001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -640,6 +758,10 @@
 				FD30E3479808CF05FFF2FFB1 /* SoundManager.swift in Sources */,
 				442D73B85923F3788453BEB5 /* LaunchScreen.swift in Sources */,
 				29F324529CF59935FBFACB11 /* ReviewManager.swift in Sources */,
+				0A5E603AEA70D82D982C2472 /* StoreManager.swift in Sources */,
+				84FED044452FD91380D3E9F2 /* WidgetDataManager.swift in Sources */,
+				CFB78A40B5406845F49986BF /* CheckInService.swift in Sources */,
+				D0F8926E679B0FEF22FDAC15 /* RedPillPaywallView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -666,9 +788,76 @@
 			target = A60000000000000000000001 /* MatrixHabit */;
 			targetProxy = C10000000000000000000001 /* PBXContainerItemProxy */;
 		};
+		E9A8A982A6AC1EA07BB67F32 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MatrixHabitWidgetExtension;
+			target = 4E9FB638A45229088B2F15A0 /* MatrixHabitWidgetExtension */;
+			targetProxy = 2852E0E8FA0378A79241390B /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		4E3B65F8D260FBE17DD6CFC8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = MatrixHabitWidget/MatrixHabitWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 26N9LR8N99;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "MatrixHabit Widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.construct.MatrixHabit.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A43D149A658234C2DFDB2B7C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = MatrixHabitWidget/MatrixHabitWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 26N9LR8N99;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "MatrixHabit Widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.construct.MatrixHabit.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		B10000000000000000000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -793,8 +982,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MatrixHabit.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 26N9LR8N99;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -807,7 +997,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.construct.MatrixHabit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -821,8 +1011,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MatrixHabit.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 26N9LR8N99;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -835,7 +1026,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.construct.MatrixHabit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -849,11 +1040,11 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.construct.MatrixHabitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -868,11 +1059,11 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.construct.MatrixHabitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -908,6 +1099,15 @@
 			buildConfigurations = (
 				B30000000000000000000001 /* Debug */,
 				B30000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0B70F61759AEC5061AD1078 /* Build configuration list for PBXNativeTarget "MatrixHabitWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A43D149A658234C2DFDB2B7C /* Release */,
+				4E3B65F8D260FBE17DD6CFC8 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

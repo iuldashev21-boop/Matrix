@@ -37,6 +37,9 @@ struct CommandCenterView: View {
     @State private var sidequestRefreshTrigger: Int = 0 // Forces refresh when sidequests complete
     @State private var empTokenDisplayCount: Int = UserProfile.empTokens // For UI refresh
 
+    // Paywall
+    @State private var showPaywall: Bool = false
+
     // Submit All
     @State private var isSubmittingAll: Bool = false
     @State private var showSubmitAllSuccess: Bool = false
@@ -159,6 +162,7 @@ struct CommandCenterView: View {
             }
         }
         .onAppear {
+            syncWidgetData()
             rabbitManager.checkForRabbit()
 
             if !hasSeenGhostTutorial && (!powers.isEmpty || !agents.isEmpty) {
@@ -181,6 +185,9 @@ struct CommandCenterView: View {
         }
         .sheet(isPresented: $showAddHabit) {
             AddHabitSheet()
+        }
+        .sheet(isPresented: $showPaywall) {
+            RedPillPaywallView()
         }
         .sheet(isPresented: $showSettings) {
             ZionMainframeView()
@@ -228,6 +235,7 @@ struct CommandCenterView: View {
                     withAnimation { showHabitTip = true }
                 }
             }
+            syncWidgetData()
         }
         .alert("DELETE PROGRAM?", isPresented: $showDeleteConfirmation) {
             Button("DELETE", role: .destructive) {
@@ -720,7 +728,13 @@ struct CommandCenterView: View {
                 .font(.system(size: 14, design: .monospaced))
                 .foregroundColor(Color.mediumGray)
 
-            Button(action: { showAddHabit = true }) {
+            Button(action: {
+                if StoreManager.shared.canCreateHabit(currentCount: powers.count + agents.count) {
+                    showAddHabit = true
+                } else {
+                    showPaywall = true
+                }
+            }) {
                 HStack {
                     Image(systemName: "plus")
                     Text("LOAD PROGRAM")
@@ -756,7 +770,13 @@ struct CommandCenterView: View {
 
             Spacer()
 
-            Button(action: { showAddHabit = true }) {
+            Button(action: {
+                if StoreManager.shared.canCreateHabit(currentCount: powers.count + agents.count) {
+                    showAddHabit = true
+                } else {
+                    showPaywall = true
+                }
+            }) {
                 ZStack {
                     Circle()
                         .fill(Color.matrixGreen)
@@ -799,6 +819,15 @@ struct CommandCenterView: View {
         case .cosmeticHack:
             break
         }
+    }
+
+    // MARK: - Widget Data Sync
+
+    private func syncWidgetData() {
+        WidgetDataManager.update(
+            powers: powers.map { ($0.name, $0.icon, $0.currentStreak, $0.completedToday, $0.isScheduledToday) },
+            agents: agents.map { ($0.name, $0.icon, $0.currentStreak, $0.resistedToday, $0.isScheduledToday) }
+        )
     }
 
     // MARK: - Tier Promotion System

@@ -1,0 +1,287 @@
+import WidgetKit
+import SwiftUI
+
+// MARK: - Shared Types (duplicated from main app to avoid framework dependency)
+
+private let appGroupID = "group.com.construct.MatrixHabit"
+private let widgetDataKey = "com.matrixhabit.widget.data"
+
+struct HabitSnapshot: Codable {
+    let name: String
+    let icon: String
+    let streak: Int
+    let completedToday: Bool
+    let isPower: Bool
+}
+
+struct WidgetHabitData: Codable {
+    let habits: [HabitSnapshot]
+    let totalStreak: Int
+    let completedToday: Int
+    let totalScheduledToday: Int
+    let lastUpdated: Date
+}
+
+// MARK: - Timeline Entry
+
+struct MatrixHabitEntry: TimelineEntry {
+    let date: Date
+    let data: WidgetHabitData?
+}
+
+// MARK: - Timeline Provider
+
+struct MatrixHabitTimelineProvider: TimelineProvider {
+    func placeholder(in context: Context) -> MatrixHabitEntry {
+        MatrixHabitEntry(date: Date(), data: sampleData)
+    }
+
+    func getSnapshot(in context: Context, completion: @escaping (MatrixHabitEntry) -> Void) {
+        let entry = MatrixHabitEntry(date: Date(), data: readData() ?? sampleData)
+        completion(entry)
+    }
+
+    func getTimeline(in context: Context, completion: @escaping (Timeline<MatrixHabitEntry>) -> Void) {
+        let entry = MatrixHabitEntry(date: Date(), data: readData())
+        // Refresh every 30 minutes (main app also triggers reloads on check-in)
+        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 30, to: Date())!
+        let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
+        completion(timeline)
+    }
+
+    private func readData() -> WidgetHabitData? {
+        guard let defaults = UserDefaults(suiteName: appGroupID),
+              let data = defaults.data(forKey: widgetDataKey),
+              let decoded = try? JSONDecoder().decode(WidgetHabitData.self, from: data) else {
+            return nil
+        }
+        return decoded
+    }
+
+    private var sampleData: WidgetHabitData {
+        WidgetHabitData(
+            habits: [
+                HabitSnapshot(name: "Meditate", icon: "brain.head.profile", streak: 12, completedToday: true, isPower: true),
+                HabitSnapshot(name: "Exercise", icon: "figure.run", streak: 7, completedToday: false, isPower: true),
+                HabitSnapshot(name: "No Sugar", icon: "xmark.shield", streak: 21, completedToday: true, isPower: false)
+            ],
+            totalStreak: 40,
+            completedToday: 2,
+            totalScheduledToday: 3,
+            lastUpdated: Date()
+        )
+    }
+}
+
+// MARK: - Colors
+
+private let matrixGreen = Color(red: 0, green: 1, blue: 65.0/255.0)
+private let matrixBlack = Color(red: 13.0/255.0, green: 13.0/255.0, blue: 13.0/255.0)
+private let charcoal = Color(red: 45.0/255.0, green: 45.0/255.0, blue: 45.0/255.0)
+private let mediumGray = Color(red: 120.0/255.0, green: 120.0/255.0, blue: 120.0/255.0)
+
+// MARK: - Small Widget View
+
+struct SmallWidgetView: View {
+    let data: WidgetHabitData?
+
+    var body: some View {
+        if let data = data, !data.habits.isEmpty {
+            VStack(alignment: .leading, spacing: 6) {
+                // Header
+                HStack {
+                    Image(systemName: "bolt.fill")
+                        .font(.system(size: 10))
+                        .foregroundColor(matrixGreen)
+                    Text("MATRIX")
+                        .font(.system(size: 10, weight: .bold, design: .monospaced))
+                        .foregroundColor(matrixGreen)
+                    Spacer()
+                }
+
+                // Progress
+                Text("\(data.completedToday)/\(data.totalScheduledToday)")
+                    .font(.system(size: 32, weight: .black, design: .monospaced))
+                    .foregroundColor(.white)
+
+                Text("COMPLETE")
+                    .font(.system(size: 9, weight: .medium, design: .monospaced))
+                    .foregroundColor(mediumGray)
+
+                Spacer()
+
+                // Top streak habit
+                if let topHabit = data.habits.sorted(by: { $0.streak > $1.streak }).first {
+                    HStack(spacing: 4) {
+                        Image(systemName: topHabit.icon)
+                            .font(.system(size: 10))
+                            .foregroundColor(matrixGreen)
+                        Text("\(topHabit.streak)d")
+                            .font(.system(size: 11, weight: .bold, design: .monospaced))
+                            .foregroundColor(.white)
+                    }
+                }
+            }
+            .padding(12)
+        } else {
+            VStack(spacing: 8) {
+                Image(systemName: "bolt.fill")
+                    .font(.system(size: 24))
+                    .foregroundColor(matrixGreen)
+                Text("LOAD\nPROGRAM")
+                    .font(.system(size: 11, weight: .bold, design: .monospaced))
+                    .foregroundColor(mediumGray)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(12)
+        }
+    }
+}
+
+// MARK: - Medium Widget View
+
+struct MediumWidgetView: View {
+    let data: WidgetHabitData?
+
+    var body: some View {
+        if let data = data, !data.habits.isEmpty {
+            HStack(spacing: 12) {
+                // Left side: summary
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Image(systemName: "bolt.fill")
+                            .font(.system(size: 10))
+                            .foregroundColor(matrixGreen)
+                        Text("MATRIX")
+                            .font(.system(size: 10, weight: .bold, design: .monospaced))
+                            .foregroundColor(matrixGreen)
+                    }
+
+                    Text("\(data.completedToday)/\(data.totalScheduledToday)")
+                        .font(.system(size: 36, weight: .black, design: .monospaced))
+                        .foregroundColor(.white)
+
+                    Text("SIGNALS TODAY")
+                        .font(.system(size: 9, weight: .medium, design: .monospaced))
+                        .foregroundColor(mediumGray)
+
+                    Spacer()
+
+                    // Total streak
+                    HStack(spacing: 4) {
+                        Image(systemName: "flame.fill")
+                            .font(.system(size: 10))
+                            .foregroundColor(.orange)
+                        Text("\(data.totalStreak)")
+                            .font(.system(size: 12, weight: .bold, design: .monospaced))
+                            .foregroundColor(.white)
+                        Text("TOTAL")
+                            .font(.system(size: 9, design: .monospaced))
+                            .foregroundColor(mediumGray)
+                    }
+                }
+
+                // Divider
+                Rectangle()
+                    .fill(charcoal)
+                    .frame(width: 1)
+
+                // Right side: habit list (top 4)
+                VStack(alignment: .leading, spacing: 6) {
+                    ForEach(Array(data.habits.sorted(by: { $0.streak > $1.streak }).prefix(4).enumerated()), id: \.offset) { _, habit in
+                        HStack(spacing: 6) {
+                            Image(systemName: habit.completedToday ? "checkmark.circle.fill" : "circle")
+                                .font(.system(size: 11))
+                                .foregroundColor(habit.completedToday ? matrixGreen : mediumGray)
+
+                            Text(habit.name.uppercased())
+                                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                                .foregroundColor(habit.completedToday ? .white : mediumGray)
+                                .lineLimit(1)
+
+                            Spacer()
+
+                            Text("\(habit.streak)d")
+                                .font(.system(size: 10, weight: .bold, design: .monospaced))
+                                .foregroundColor(matrixGreen)
+                        }
+                    }
+                    Spacer()
+                }
+            }
+            .padding(12)
+        } else {
+            HStack {
+                Image(systemName: "bolt.fill")
+                    .font(.system(size: 28))
+                    .foregroundColor(matrixGreen)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("MATRIXHABIT")
+                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                        .foregroundColor(.white)
+                    Text("Open app to load programs")
+                        .font(.system(size: 10, design: .monospaced))
+                        .foregroundColor(mediumGray)
+                }
+                Spacer()
+            }
+            .padding(12)
+        }
+    }
+}
+
+// MARK: - Widget Definition
+
+struct MatrixHabitWidget: Widget {
+    let kind: String = "MatrixHabitWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: MatrixHabitTimelineProvider()) { entry in
+            Group {
+                if #available(iOSApplicationExtension 17.0, *) {
+                    WidgetEntryView(entry: entry)
+                        .containerBackground(matrixBlack, for: .widget)
+                } else {
+                    WidgetEntryView(entry: entry)
+                        .background(matrixBlack)
+                }
+            }
+        }
+        .configurationDisplayName("MatrixHabit")
+        .description("Track your habit streaks from the home screen.")
+        .supportedFamilies([.systemSmall, .systemMedium])
+    }
+}
+
+struct WidgetEntryView: View {
+    @Environment(\.widgetFamily) var family
+    let entry: MatrixHabitEntry
+
+    var body: some View {
+        switch family {
+        case .systemSmall:
+            SmallWidgetView(data: entry.data)
+        case .systemMedium:
+            MediumWidgetView(data: entry.data)
+        default:
+            SmallWidgetView(data: entry.data)
+        }
+    }
+}
+
+// MARK: - Preview
+
+#Preview(as: .systemSmall) {
+    MatrixHabitWidget()
+} timeline: {
+    MatrixHabitEntry(date: Date(), data: WidgetHabitData(
+        habits: [
+            HabitSnapshot(name: "Meditate", icon: "brain.head.profile", streak: 12, completedToday: true, isPower: true),
+            HabitSnapshot(name: "Exercise", icon: "figure.run", streak: 7, completedToday: false, isPower: true)
+        ],
+        totalStreak: 19,
+        completedToday: 1,
+        totalScheduledToday: 2,
+        lastUpdated: Date()
+    ))
+}

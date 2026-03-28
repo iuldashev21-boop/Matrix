@@ -215,6 +215,27 @@ struct ZionMainframeView: View {
                 )
             }
 
+            // Restore Purchase Button
+            Button(action: {
+                Task { await StoreManager.shared.restorePurchases() }
+            }) {
+                HStack {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 16))
+                    Text("RESTORE PURCHASE")
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                    Spacer()
+                }
+                .foregroundColor(Color.lightGray)
+                .padding(Spacing.md)
+                .background(Color.charcoal)
+                .cornerRadius(Theme.cornerRadius)
+                .overlay(
+                    RoundedRectangle(cornerRadius: Theme.cornerRadius)
+                        .stroke(Color.lightGray.opacity(0.3), lineWidth: 1)
+                )
+            }
+
             // Reset Button
             Button(action: {
                 let generator = UINotificationFeedbackGenerator()

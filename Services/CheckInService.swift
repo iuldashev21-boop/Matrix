@@ -1,6 +1,7 @@
 import Foundation
 import SwiftData
 import SwiftUI
+import WidgetKit
 
 /// Centralized service for creating and managing check-ins
 /// Consolidates check-in logic, XP rewards, and error handling
@@ -65,6 +66,7 @@ enum CheckInService {
                 }
             }
 
+            WidgetCenter.shared.reloadAllTimelines()
             return .success(xpEarned)
         } catch {
             ErrorLogger.logSaveFailure(error, context: "CheckInService.recordPowerCheckIn")
@@ -125,6 +127,7 @@ enum CheckInService {
                 }
             }
 
+            WidgetCenter.shared.reloadAllTimelines()
             return .success(xpEarned)
         } catch {
             ErrorLogger.logSaveFailure(error, context: "CheckInService.recordAgentResistance")
@@ -231,6 +234,7 @@ enum CheckInService {
                 }
             }
 
+            WidgetCenter.shared.reloadAllTimelines()
             return .success(totalXP)
         } catch {
             ErrorLogger.logSaveFailure(error, context: "CheckInService.submitAllHabits")
@@ -274,6 +278,7 @@ enum CheckInService {
                 SoundManager.shared.playEMPToken()
             }
 
+            WidgetCenter.shared.reloadAllTimelines()
             return .success(())
         } catch {
             // Refund the token on failure
