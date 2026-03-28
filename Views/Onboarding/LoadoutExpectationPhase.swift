@@ -100,13 +100,13 @@ struct LoadoutExpectationPhase: View {
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 6)
                                     .background(soundEnabled ? Color.matrixGreen : Color.charcoal)
-                                    .cornerRadius(4)
+                                    .cornerRadius(Theme.cornerRadiusSm)
                             }
                         }
                         .padding(.horizontal, Spacing.lg)
                         .padding(.vertical, Spacing.sm)
                         .background(Color.charcoal.opacity(0.5))
-                        .cornerRadius(8)
+                        .cornerRadius(Theme.cornerRadiusCompact)
                         .padding(.top, Spacing.lg)
                     }
                     .multilineTextAlignment(.center)

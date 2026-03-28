@@ -9,6 +9,8 @@ enum Theme {
     static let secondaryText = Color.lightGray
 
     // Component values
+    static let cornerRadiusSm: CGFloat = 4
+    static let cornerRadiusCompact: CGFloat = 8
     static let cornerRadius: CGFloat = 12
     static let cardCornerRadius: CGFloat = 16
     static let buttonHeight: CGFloat = 50

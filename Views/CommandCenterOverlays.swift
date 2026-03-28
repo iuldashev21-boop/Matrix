@@ -38,7 +38,7 @@ struct HabitTipOverlay: View {
                         .padding(.horizontal, Spacing.xl)
                         .padding(.vertical, Spacing.sm)
                         .background(Color.matrixGreen)
-                        .cornerRadius(8)
+                        .cornerRadius(Theme.cornerRadiusCompact)
                 }
                 .padding(.top, Spacing.sm)
             }

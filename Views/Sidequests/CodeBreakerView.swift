@@ -64,6 +64,7 @@ struct CodeBreakerView: View {
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(Color.mediumGray)
             }
+            .accessibilityLabel("Close")
 
             Spacer()
 
@@ -98,11 +99,11 @@ struct CodeBreakerView: View {
         let digit = getDigit(row: row, col: col)
 
         return ZStack {
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                 .fill(cellState.backgroundColor)
                 .frame(width: 50, height: 60)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                         .stroke(cellState.borderColor, lineWidth: 2)
                 )
 
@@ -176,7 +177,7 @@ struct CodeBreakerView: View {
         HStack(spacing: Spacing.sm) {
             ForEach(0..<codeLength, id: \.self) { index in
                 ZStack {
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                         .stroke(Color.matrixGreen, lineWidth: 2)
                         .frame(width: 50, height: 60)
 
@@ -217,7 +218,7 @@ struct CodeBreakerView: View {
                         .foregroundColor(Color.agentRed)
                         .frame(width: 70, height: 50)
                         .background(Color.charcoal)
-                        .cornerRadius(8)
+                        .cornerRadius(Theme.cornerRadiusCompact)
                 }
 
                 // 0
@@ -230,7 +231,7 @@ struct CodeBreakerView: View {
                         .foregroundColor(currentGuess.count == codeLength ? Color.matrixGreen : Color.mediumGray)
                         .frame(width: 70, height: 50)
                         .background(currentGuess.count == codeLength ? Color.matrixGreen.opacity(0.2) : Color.charcoal)
-                        .cornerRadius(8)
+                        .cornerRadius(Theme.cornerRadiusCompact)
                 }
                 .disabled(currentGuess.count != codeLength)
             }
@@ -244,7 +245,7 @@ struct CodeBreakerView: View {
                 .foregroundColor(.white)
                 .frame(width: 70, height: 50)
                 .background(Color.charcoal)
-                .cornerRadius(8)
+                .cornerRadius(Theme.cornerRadiusCompact)
         }
         .disabled(currentGuess.count >= codeLength)
     }
@@ -278,7 +279,7 @@ struct CodeBreakerView: View {
                     .padding(.horizontal, Spacing.xl)
                     .padding(.vertical, Spacing.md)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                             .stroke(Color.matrixGreen, lineWidth: 2)
                     )
             }

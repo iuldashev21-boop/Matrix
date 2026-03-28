@@ -48,6 +48,7 @@ struct SystemMaintenanceView: View {
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(Color.mediumGray)
             }
+            .accessibilityLabel("Close")
 
             Spacer()
 
@@ -131,7 +132,7 @@ struct SystemMaintenanceView: View {
                     .padding(.horizontal, Spacing.xl)
                     .padding(.vertical, Spacing.md)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                             .stroke(Color.matrixGreen, lineWidth: 2)
                     )
             }

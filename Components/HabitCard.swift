@@ -68,7 +68,7 @@ struct HabitCard: View {
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(Color.red.opacity(0.2))
-                            .cornerRadius(4)
+                            .cornerRadius(Theme.cornerRadiusSm)
                     } else if isCompletedToday {
                         Text("UPLOADED")
                             .font(.system(size: 8, weight: .bold, design: .monospaced))
@@ -76,7 +76,7 @@ struct HabitCard: View {
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(accentColor.opacity(0.2))
-                            .cornerRadius(4)
+                            .cornerRadius(Theme.cornerRadiusSm)
                     }
                 }
 
@@ -129,6 +129,7 @@ struct HabitCard: View {
                         .frame(width: 32, height: 32)
                         .contentShape(Rectangle())
                 }
+                .accessibilityLabel("More options")
             } else {
                 if isRestDay {
                     Image(systemName: "zzz")

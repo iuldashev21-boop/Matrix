@@ -44,9 +44,9 @@ struct AchievementsTabView: View {
                         .padding(.horizontal, Spacing.sm)
                         .padding(.vertical, Spacing.xs)
                         .background(Color.darkGray)
-                        .cornerRadius(8)
+                        .cornerRadius(Theme.cornerRadiusCompact)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 8)
+                            RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                                 .stroke(Color.matrixGold.opacity(0.5), lineWidth: 1)
                         )
                 }

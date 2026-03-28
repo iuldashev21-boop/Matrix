@@ -90,6 +90,7 @@ struct RedPillPaywallView: View {
                         }
                         .font(.system(size: 12, design: .monospaced))
                         .foregroundColor(Color.lightGray)
+                        .disabled(storeManager.purchaseInProgress)
 
                         if let error = storeManager.errorMessage {
                             Text(error)

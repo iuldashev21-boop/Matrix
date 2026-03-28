@@ -312,7 +312,7 @@ struct ZionMainframeView: View {
                     .foregroundColor(.white)
                     .padding(Spacing.md)
                     .background(Color.orange.opacity(0.2))
-                    .cornerRadius(8)
+                    .cornerRadius(Theme.cornerRadiusCompact)
                 }
 
                 // Simulate 28-day streak
@@ -327,7 +327,7 @@ struct ZionMainframeView: View {
                     .foregroundColor(.white)
                     .padding(Spacing.md)
                     .background(Color.red.opacity(0.2))
-                    .cornerRadius(8)
+                    .cornerRadius(Theme.cornerRadiusCompact)
                 }
 
                 // Simulate 65-day streak (for testing 66-day celebration)
@@ -342,7 +342,7 @@ struct ZionMainframeView: View {
                     .foregroundColor(.white)
                     .padding(Spacing.md)
                     .background(Color.matrixGold.opacity(0.2))
-                    .cornerRadius(8)
+                    .cornerRadius(Theme.cornerRadiusCompact)
                 }
 
                 // Clear simulated streaks
@@ -357,7 +357,7 @@ struct ZionMainframeView: View {
                     .foregroundColor(.white)
                     .padding(Spacing.md)
                     .background(Color.gray.opacity(0.2))
-                    .cornerRadius(8)
+                    .cornerRadius(Theme.cornerRadiusCompact)
                 }
 
                 Divider()
@@ -376,7 +376,7 @@ struct ZionMainframeView: View {
                     .foregroundColor(.white)
                     .padding(Spacing.md)
                     .background(Color.matrixGreen.opacity(0.2))
-                    .cornerRadius(8)
+                    .cornerRadius(Theme.cornerRadiusCompact)
                 }
 
                 // Clear today's check-ins
@@ -391,7 +391,7 @@ struct ZionMainframeView: View {
                     .foregroundColor(.white)
                     .padding(Spacing.md)
                     .background(Color.yellow.opacity(0.2))
-                    .cornerRadius(8)
+                    .cornerRadius(Theme.cornerRadiusCompact)
                 }
             }
 

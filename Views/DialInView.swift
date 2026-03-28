@@ -124,6 +124,7 @@ struct DialInView: View {
                             .font(.system(size: 20, weight: .medium))
                             .foregroundColor(accentColor)
                     }
+                    .accessibilityLabel("Close")
                     Spacer()
 
                     // Day counter
@@ -133,7 +134,7 @@ struct DialInView: View {
                         .padding(.horizontal, Spacing.sm)
                         .padding(.vertical, Spacing.xs)
                         .background(Color.darkGray)
-                        .cornerRadius(8)
+                        .cornerRadius(Theme.cornerRadiusCompact)
                 }
                 .padding(.horizontal, Spacing.md)
                 .padding(.top, Spacing.lg)
@@ -243,9 +244,9 @@ struct DialInView: View {
                         .padding(.horizontal, Spacing.lg)
                         .padding(.vertical, Spacing.sm)
                         .background(Color.charcoal)
-                        .cornerRadius(8)
+                        .cornerRadius(Theme.cornerRadiusCompact)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 8)
+                            RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                                 .stroke(Color.danger.opacity(0.5), lineWidth: 1)
                         )
                     }
@@ -265,9 +266,9 @@ struct DialInView: View {
                         .padding(.horizontal, Spacing.lg)
                         .padding(.vertical, Spacing.sm)
                         .background(Color.charcoal)
-                        .cornerRadius(8)
+                        .cornerRadius(Theme.cornerRadiusCompact)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 8)
+                            RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                                 .stroke(Color.warning.opacity(0.5), lineWidth: 1)
                         )
                     }
@@ -718,7 +719,7 @@ struct BreachMessageOverlay: View {
                             .padding(.horizontal, Spacing.xl)
                             .padding(.vertical, Spacing.sm)
                             .background(Color.agentRed)
-                            .cornerRadius(8)
+                            .cornerRadius(Theme.cornerRadiusCompact)
                     }
                     .padding(.top, Spacing.md)
                 }
@@ -730,21 +731,11 @@ struct BreachMessageOverlay: View {
     }
 
     private func glitchIn() {
-        // Initial glitch effect
-        for i in 0..<8 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.03) {
-                glitchOffset = CGSize(
-                    width: CGFloat.random(in: -8...8),
-                    height: CGFloat.random(in: -8...8)
-                )
-            }
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            withAnimation(.easeOut(duration: 0.1)) {
-                glitchOffset = .zero
-                showContent = true
-            }
+        GlitchEffect.trigger(
+            offset: $glitchOffset,
+            iterations: 8, range: -8...8, interval: 0.03, resetDelay: 0.25
+        ) {
+            showContent = true
         }
     }
 }
@@ -979,21 +970,11 @@ struct OracleRewardView: View {
     }
 
     private func glitchIn() {
-        // Initial glitch
-        for i in 0..<8 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.03) {
-                glitchOffset = CGSize(
-                    width: CGFloat.random(in: -8...8),
-                    height: CGFloat.random(in: -8...8)
-                )
-            }
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            withAnimation(.easeOut(duration: 0.1)) {
-                glitchOffset = .zero
-                showContent = true
-            }
+        GlitchEffect.trigger(
+            offset: $glitchOffset,
+            iterations: 8, range: -8...8, interval: 0.03, resetDelay: 0.25
+        ) {
+            showContent = true
         }
     }
 }

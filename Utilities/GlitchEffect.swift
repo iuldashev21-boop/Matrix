@@ -13,7 +13,8 @@ enum GlitchEffect {
         iterations: Int = 6,
         range: ClosedRange<CGFloat> = -6...6,
         interval: Double = 0.05,
-        resetDelay: Double = 0.3
+        resetDelay: Double = 0.3,
+        onComplete: (() -> Void)? = nil
     ) {
         for i in 0..<iterations {
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * interval) {
@@ -28,6 +29,7 @@ enum GlitchEffect {
             withAnimation(.easeOut(duration: 0.1)) {
                 offset.wrappedValue = .zero
             }
+            onComplete?()
         }
     }
 

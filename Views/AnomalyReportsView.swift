@@ -112,7 +112,7 @@ struct AnomalyRow: View {
         }
         .padding(Spacing.md)
         .background(Color.charcoal)
-        .cornerRadius(8)
+        .cornerRadius(Theme.cornerRadiusCompact)
         .opacity(isLocked(state) ? 0.6 : 1.0)
     }
 
@@ -240,6 +240,7 @@ struct AnomalyDetailView: View {
                     .font(.system(size: 16, weight: .medium))
                     .foregroundColor(Color.matrixGreen)
             }
+            .accessibilityLabel("Close")
             .padding(.leading, Spacing.md)
         }
         .padding(.horizontal, Spacing.md)

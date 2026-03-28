@@ -77,7 +77,7 @@ struct OnboardingProgressBar: View {
         .padding(.horizontal, Spacing.sm)
         .padding(.vertical, Spacing.sm)
         .background(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                 .fill(Color.black.opacity(0.7))
         )
     }
@@ -98,9 +98,9 @@ struct DiagnosticButton: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 48)
                 .background(isSelected ? Color.matrixGreen : Color.charcoal)
-                .cornerRadius(8)
+                .cornerRadius(Theme.cornerRadiusCompact)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                         .stroke(isSelected ? Color.matrixGreen : Color.mediumGray.opacity(0.5), lineWidth: 1)
                         .shadow(color: isSelected ? Color.matrixGreen.opacity(0.4) : .clear, radius: 4)
                 )
@@ -127,9 +127,9 @@ struct DiagnosticButtonWithFlavor: View {
             .frame(maxWidth: .infinity)
             .frame(height: 60)
             .background(isSelected ? Color.matrixGreen : Color.charcoal)
-            .cornerRadius(8)
+            .cornerRadius(Theme.cornerRadiusCompact)
             .overlay(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                     .stroke(isSelected ? Color.matrixGreen : Color.mediumGray.opacity(0.5), lineWidth: 1)
                     .shadow(color: isSelected ? Color.matrixGreen.opacity(0.4) : .clear, radius: 4)
             )
@@ -184,9 +184,9 @@ struct ManualConceptRow: View {
         }
         .padding(Spacing.sm)
         .background(Color.charcoal)
-        .cornerRadius(8)
+        .cornerRadius(Theme.cornerRadiusCompact)
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                 .stroke(color.opacity(0.3), lineWidth: 1)
         )
     }

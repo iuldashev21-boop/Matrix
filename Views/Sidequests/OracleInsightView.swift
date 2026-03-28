@@ -119,7 +119,7 @@ struct OracleInsightView: View {
             .padding(.horizontal, Spacing.lg)
             .padding(.vertical, Spacing.sm)
             .background(Color.matrixGreen.opacity(0.15))
-            .cornerRadius(8)
+            .cornerRadius(Theme.cornerRadiusCompact)
             .padding(.top, 60)
             .transition(.move(edge: .top).combined(with: .opacity))
     }
