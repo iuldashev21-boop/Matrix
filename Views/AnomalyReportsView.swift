@@ -240,6 +240,7 @@ struct AnomalyDetailView: View {
                     .font(.system(size: 16, weight: .medium))
                     .foregroundColor(Color.matrixGreen)
             }
+            .accessibilityLabel("Close")
             .padding(.leading, Spacing.md)
         }
         .padding(.horizontal, Spacing.md)

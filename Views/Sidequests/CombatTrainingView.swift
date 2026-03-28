@@ -63,6 +63,7 @@ struct CombatTrainingView: View {
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(Color.mediumGray)
             }
+            .accessibilityLabel("Close")
 
             Spacer()
 

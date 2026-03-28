@@ -129,6 +129,7 @@ struct HabitCard: View {
                         .frame(width: 32, height: 32)
                         .contentShape(Rectangle())
                 }
+                .accessibilityLabel("More options")
             } else {
                 if isRestDay {
                     Image(systemName: "zzz")

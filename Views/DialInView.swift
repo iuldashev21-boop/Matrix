@@ -124,6 +124,7 @@ struct DialInView: View {
                             .font(.system(size: 20, weight: .medium))
                             .foregroundColor(accentColor)
                     }
+                    .accessibilityLabel("Close")
                     Spacer()
 
                     // Day counter
