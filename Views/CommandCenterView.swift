@@ -120,7 +120,7 @@ struct CommandCenterView: View {
     }
 
     private var operativeName: String {
-        UserDefaults.standard.string(forKey: UserDefaultsKeys.operatorName) ?? "OPERATIVE"
+        UserProfile.displayName
     }
 
     private var incompleteHabitsCount: Int {

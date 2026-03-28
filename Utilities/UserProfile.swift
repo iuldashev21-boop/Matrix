@@ -6,7 +6,7 @@ enum UserProfile {
     // MARK: - Keys
 
     private enum Keys {
-        static let operativeName = "operativeName"
+        static let operativeName = "operatorName"
         static let hasCompletedOnboarding = "hasCompletedOnboarding"
         static let firstLaunchDate = "firstLaunchDate"
         static let totalXP = "totalXP"

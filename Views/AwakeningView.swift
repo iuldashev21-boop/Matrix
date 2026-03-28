@@ -527,7 +527,7 @@ struct AwakeningView: View {
     }
 
     private func finalizeAwakening() {
-        UserDefaults.standard.set(operatorName, forKey: UserDefaultsKeys.operatorName)
+        UserProfile.operativeName = operatorName
         UserDefaults.standard.set(Int(operatorAge) ?? 25, forKey: UserDefaultsKeys.operatorAge)
 
         if suggestedLoadout.hacks.isEmpty {
