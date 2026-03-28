@@ -60,13 +60,15 @@ struct CommandCenterView: View {
         min(3.0, 0.5 + Double(totalSignalStrength) * 0.1)
     }
 
-    // Filter habits scheduled for today
+    // Filter habits scheduled for today (exclude premium-locked for free users)
     private var powersScheduledToday: [Power] {
-        powers.filter { $0.isScheduledToday }
+        let isRedPill = StoreManager.shared.isRedPillOwned
+        return powers.filter { $0.isScheduledToday && (isRedPill || !$0.isPremiumLocked) }
     }
 
     private var agentsScheduledToday: [Agent] {
-        agents.filter { $0.isScheduledToday }
+        let isRedPill = StoreManager.shared.isRedPillOwned
+        return agents.filter { $0.isScheduledToday && (isRedPill || !$0.isPremiumLocked) }
     }
 
     private var allPowersCompleted: Bool {

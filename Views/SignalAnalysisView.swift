@@ -453,7 +453,10 @@ struct SignalAnalysisView: View {
     }
 
     private var totalHabitsCount: Int {
-        powers.count + agents.count
+        let isRedPill = StoreManager.shared.isRedPillOwned
+        let activePowers = powers.filter { isRedPill || !$0.isPremiumLocked }.count
+        let activeAgents = agents.filter { isRedPill || !$0.isPremiumLocked }.count
+        return activePowers + activeAgents
     }
 
     private var bestCurrentStreak: Int {
