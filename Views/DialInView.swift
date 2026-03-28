@@ -580,8 +580,10 @@ struct DialInView: View {
 
             if wasUnlocked || wasDefeated {
                 SoundManager.shared.playProtocolComplete()
+                ReviewManager.shared.checkForReviewPrompt(streak: streak)
             } else if [7, 21, 66].contains(streak) {
                 SoundManager.shared.playMilestone()
+                ReviewManager.shared.checkForReviewPrompt(streak: streak)
             } else {
                 SoundManager.shared.playCheckIn()
             }
