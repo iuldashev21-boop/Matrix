@@ -113,8 +113,8 @@ struct SidequestSectionHeader: View {
                     Text("\(xpEarned)/\(xpCap) XP")
                         .font(.system(size: 10, weight: .medium, design: .monospaced))
                         .foregroundColor(Color.matrixGreen)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
+                        .padding(.horizontal, Spacing.sm)
+                        .padding(.vertical, Spacing.xs)
                         .background(Color.matrixGreen.opacity(0.15))
                         .cornerRadius(Theme.cornerRadiusSm)
                 }
