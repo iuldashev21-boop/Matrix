@@ -656,6 +656,13 @@ struct ZionMainframeView: View {
         UserProfile.reset()
         SidequestManager.reset()
 
+        // Clear AppStorage keys not covered by UserProfile.reset()
+        UserDefaults.standard.removeObject(forKey: "hasSeenPostOnboardingPaywall")
+        UserDefaults.standard.removeObject(forKey: "hasSeenHabitTip")
+        UserDefaults.standard.removeObject(forKey: "hasSeenGhostTutorial")
+        UserDefaults.standard.removeObject(forKey: "lastAffirmationDate")
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.operatorAge)
+
         // Feedback
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)

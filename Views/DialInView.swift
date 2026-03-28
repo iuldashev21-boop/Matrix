@@ -35,6 +35,7 @@ struct DialInView: View {
     @State private var pendingMilestone: Bool = false  // Prevents overlay conflicts
     @State private var showProtocolComplete: Bool = false  // 66-day epic celebration
     @State private var showSaveError: Bool = false  // Error handling for save failures
+    @State private var lastXPEarned: Int = 10  // Actual XP from CheckInService
 
     // MARK: - Constants
     private let holdDuration: Double = 1.5
@@ -223,7 +224,7 @@ struct DialInView: View {
 
                 // XP earned indicator
                 if isCompleted {
-                    Text("+10 XP")
+                    Text("+\(lastXPEarned) XP")
                         .font(.system(size: 18, weight: .bold, design: .monospaced))
                         .foregroundColor(accentColor)
                         .transition(.scale.combined(with: .opacity))
@@ -450,11 +451,8 @@ struct DialInView: View {
         // Glitch effect
         triggerGlitch()
 
-        // Save check-in
+        // Save check-in via centralized service
         saveCheckIn()
-
-        // Add XP
-        UserProfile.addXP(10)
 
         // Check achievements
         checkAchievements()
@@ -505,31 +503,19 @@ struct DialInView: View {
     // MARK: - P2: Milestone Celebration
 
     private func checkMilestone() {
-        // Get the updated streak after check-in
         let newStreak = power?.currentStreak ?? agent?.currentStreak ?? 0
 
-        // Check for milestones: 7, 21, 66 days
+        // CheckInService already awarded XP and EMP tokens — just handle the UI celebration
         let milestones = [7, 21, 66]
         if milestones.contains(newStreak) {
             milestoneReached = newStreak
-            pendingMilestone = true  // Set immediately to prevent overlay conflicts
-
-            // Award EMP tokens immediately when milestone is reached
-            let empReward = UserProfile.empTokensForMilestone(newStreak)
-            if empReward > 0 {
-                UserProfile.awardEMPTokens(empReward)
-            }
-
-            // Award bonus XP immediately
-            UserProfile.addXP(newStreak * 5)
+            pendingMilestone = true
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
                     if newStreak == 66 {
-                        // Epic 66-day celebration
                         showProtocolComplete = true
                     } else {
-                        // Standard milestone celebration (7, 21 days)
                         showMilestoneCelebration = true
                     }
                 }
@@ -557,41 +543,22 @@ struct DialInView: View {
     }
 
     private func saveCheckIn() {
-        let checkIn = CheckIn(date: Date(), isSuccess: true)
-
         if let p = power {
-            checkIn.power = p
-            p.checkIns.append(checkIn)
-            p.checkForUnlock()
-        } else if let a = agent {
-            checkIn.agent = a
-            a.checkIns.append(checkIn)
-            a.checkForDefeat()
-        }
-
-        modelContext.insert(checkIn)
-        do {
-            try modelContext.save()
-
-            // Play success sound
-            let streak = power?.currentStreak ?? agent?.currentStreak ?? 0
-            let wasUnlocked = power?.isUnlocked == true && power?.currentStreak == power?.targetDays
-            let wasDefeated = agent?.isDefeated == true && agent?.currentStreak == agent?.targetDays
-
-            if wasUnlocked || wasDefeated {
-                SoundManager.shared.playProtocolComplete()
-                ReviewManager.shared.checkForReviewPrompt(streak: streak)
-            } else if [7, 21, 66].contains(streak) {
-                SoundManager.shared.playMilestone()
-                ReviewManager.shared.checkForReviewPrompt(streak: streak)
-            } else {
-                SoundManager.shared.playCheckIn()
+            let result = CheckInService.recordPowerCheckIn(power: p, context: modelContext)
+            if case .success(let xp) = result {
+                lastXPEarned = xp
+                ReviewManager.shared.checkForReviewPrompt(streak: p.currentStreak)
+            } else if case .failure = result {
+                showSaveError = true
             }
-        } catch {
-            showSaveError = true
-            #if DEBUG
-            print("Failed to save check-in: \(error)")
-            #endif
+        } else if let a = agent {
+            let result = CheckInService.recordAgentResistance(agent: a, context: modelContext)
+            if case .success(let xp) = result {
+                lastXPEarned = xp
+                ReviewManager.shared.checkForReviewPrompt(streak: a.currentStreak)
+            } else if case .failure = result {
+                showSaveError = true
+            }
         }
     }
 

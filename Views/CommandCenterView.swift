@@ -95,7 +95,7 @@ struct CommandCenterView: View {
     }
 
     private var todayCompletedCount: Int {
-        powersCompletedCount + agentsScheduledToday.filter { $0.resistedToday }.count
+        powersCompletedCount + agentsCompletedCount
     }
 
     private var totalHabitsCount: Int {
@@ -120,7 +120,7 @@ struct CommandCenterView: View {
     }
 
     private var operativeName: String {
-        UserDefaults.standard.string(forKey: UserDefaultsKeys.operatorName) ?? "OPERATIVE"
+        UserProfile.displayName
     }
 
     private var incompleteHabitsCount: Int {
@@ -280,69 +280,22 @@ struct CommandCenterView: View {
         guard !isSubmittingAll else { return }
         isSubmittingAll = true
 
-        // Haptic feedback
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
 
-        // Get incomplete habits
-        let incompletePowers = powersScheduledToday.filter { !$0.completedToday }
-        let incompleteAgents = agentsScheduledToday.filter { !$0.resistedToday && !$0.relapsedToday }
+        let result = CheckInService.submitAllHabits(
+            powers: Array(powersScheduledToday),
+            agents: Array(agentsScheduledToday),
+            context: modelContext
+        )
 
-        var totalXPEarned = 0
-
-        // Submit all powers
-        for power in incompletePowers {
-            let checkIn = CheckIn(date: Date(), isSuccess: true)
-            checkIn.power = power
-            power.checkIns.append(checkIn)
-            modelContext.insert(checkIn)
-
-            // Check for milestone
-            let newStreak = power.currentStreak + 1
-            totalXPEarned += 10 // Base XP
-            if newStreak == 7 || newStreak == 21 || newStreak == 66 {
-                totalXPEarned += 50 // Milestone bonus
-            }
-
-            power.checkForUnlock()
-        }
-
-        // Submit all agents (as resisted)
-        for agent in incompleteAgents {
-            let checkIn = CheckIn(date: Date(), isSuccess: true)
-            checkIn.agent = agent
-            agent.checkIns.append(checkIn)
-            modelContext.insert(checkIn)
-
-            // Check for milestone
-            let newStreak = agent.currentStreak + 1
-            totalXPEarned += 10 // Base XP
-            if newStreak == 7 || newStreak == 21 || newStreak == 66 {
-                totalXPEarned += 50 // Milestone bonus
-            }
-
-            agent.checkForDefeat()
-        }
-
-        // Save all
-        do {
-            try modelContext.save()
-
-            // Award XP
-            UserProfile.addXP(totalXPEarned)
-
-            // Play success sound
-            if !incompletePowers.isEmpty || !incompleteAgents.isEmpty {
-                SoundManager.shared.playCheckIn()
-            }
-
-            // Brief delay for UI feedback
+        switch result {
+        case .success:
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 withAnimation {
                     isSubmittingAll = false
                 }
             }
-        } catch {
-            ErrorLogger.logSaveFailure(error, context: "CommandCenterView.submitAllHabits")
+        case .failure:
             isSubmittingAll = false
             UINotificationFeedbackGenerator().notificationOccurred(.error)
         }
@@ -675,15 +628,37 @@ struct CommandCenterView: View {
 
     private var sidequestsSection: some View {
         VStack(spacing: Spacing.sm) {
-            SidequestSectionHeader(
-                isAvailable: allHabitsCompleted,
-                isExpanded: $isSidequestsExpanded,
-                xpEarned: SidequestManager.sidequestXPToday,
-                xpCap: SidequestManager.dailyXPCap
-            )
-            .id(sidequestRefreshTrigger) // Force header refresh
+            if StoreManager.shared.isRedPillOwned {
+                SidequestSectionHeader(
+                    isAvailable: allHabitsCompleted,
+                    isExpanded: $isSidequestsExpanded,
+                    xpEarned: SidequestManager.sidequestXPToday,
+                    xpCap: SidequestManager.dailyXPCap
+                )
+                .id(sidequestRefreshTrigger)
+            } else {
+                SidequestSectionHeader(
+                    isAvailable: allHabitsCompleted,
+                    isExpanded: .constant(false),
+                    xpEarned: 0,
+                    xpCap: SidequestManager.dailyXPCap
+                )
+                .overlay(
+                    Color.clear
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            showPaywall = true
+                        }
+                )
+                .overlay(alignment: .trailing) {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 10))
+                        .foregroundColor(.orange)
+                        .padding(.trailing, Spacing.md)
+                }
+            }
 
-            if isSidequestsExpanded && allHabitsCompleted {
+            if isSidequestsExpanded && allHabitsCompleted && StoreManager.shared.isRedPillOwned {
                 ConstructLoaderView(onSidequestComplete: {
                     sidequestRefreshTrigger += 1
                 })

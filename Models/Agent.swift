@@ -85,26 +85,27 @@ final class Agent {
     }
 
     var needsRecovery: Bool {
-        // Check if missed yesterday but had a streak before
         let calendar = Calendar.current
-        let yesterday = DateHelper.yesterday
 
-        // Single pass through checkIns
-        var hasYesterdayCheckIn = false
-        var hasPreviousStreak = false
-
-        for checkIn in checkIns {
-            let checkInDay = calendar.startOfDay(for: checkIn.date)
-            if checkInDay == yesterday {
-                hasYesterdayCheckIn = true
-            } else if checkInDay < yesterday && checkIn.isSuccess {
-                hasPreviousStreak = true
-            }
-            // Early exit if both conditions found
-            if hasYesterdayCheckIn && hasPreviousStreak { break }
+        // Find the last scheduled day before today
+        var lastScheduled = DateHelper.yesterday
+        for _ in 0..<7 {
+            if isScheduled(on: lastScheduled) { break }
+            guard let prev = calendar.date(byAdding: .day, value: -1, to: lastScheduled) else { return false }
+            lastScheduled = prev
         }
 
-        return !hasYesterdayCheckIn && hasPreviousStreak && !resistedToday
+        guard isScheduled(on: lastScheduled) else { return false }
+
+        let hasLastScheduledCheckIn = checkIns.contains {
+            calendar.startOfDay(for: $0.date) == lastScheduled
+        }
+
+        let hasPreviousStreak = checkIns.contains {
+            calendar.startOfDay(for: $0.date) < lastScheduled && $0.isSuccess
+        }
+
+        return !hasLastScheduledCheckIn && hasPreviousStreak && !resistedToday
     }
 
     // MARK: - Methods
