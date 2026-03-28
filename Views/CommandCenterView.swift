@@ -95,7 +95,7 @@ struct CommandCenterView: View {
     }
 
     private var todayCompletedCount: Int {
-        powersCompletedCount + agentsScheduledToday.filter { $0.resistedToday }.count
+        powersCompletedCount + agentsCompletedCount
     }
 
     private var totalHabitsCount: Int {
