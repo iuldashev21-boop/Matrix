@@ -628,15 +628,37 @@ struct CommandCenterView: View {
 
     private var sidequestsSection: some View {
         VStack(spacing: Spacing.sm) {
-            SidequestSectionHeader(
-                isAvailable: allHabitsCompleted,
-                isExpanded: $isSidequestsExpanded,
-                xpEarned: SidequestManager.sidequestXPToday,
-                xpCap: SidequestManager.dailyXPCap
-            )
-            .id(sidequestRefreshTrigger) // Force header refresh
+            if StoreManager.shared.isRedPillOwned {
+                SidequestSectionHeader(
+                    isAvailable: allHabitsCompleted,
+                    isExpanded: $isSidequestsExpanded,
+                    xpEarned: SidequestManager.sidequestXPToday,
+                    xpCap: SidequestManager.dailyXPCap
+                )
+                .id(sidequestRefreshTrigger)
+            } else {
+                SidequestSectionHeader(
+                    isAvailable: allHabitsCompleted,
+                    isExpanded: .constant(false),
+                    xpEarned: 0,
+                    xpCap: SidequestManager.dailyXPCap
+                )
+                .overlay(
+                    Color.clear
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            showPaywall = true
+                        }
+                )
+                .overlay(alignment: .trailing) {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 10))
+                        .foregroundColor(.orange)
+                        .padding(.trailing, Spacing.md)
+                }
+            }
 
-            if isSidequestsExpanded && allHabitsCompleted {
+            if isSidequestsExpanded && allHabitsCompleted && StoreManager.shared.isRedPillOwned {
                 ConstructLoaderView(onSidequestComplete: {
                     sidequestRefreshTrigger += 1
                 })
