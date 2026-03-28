@@ -4,6 +4,8 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @AppStorage("hasSeenPostOnboardingPaywall") private var hasSeenPostOnboardingPaywall = false
+    @State private var showPostOnboardingPaywall = false
 
     var body: some View {
         Group {
@@ -15,6 +17,17 @@ struct ContentView: View {
         }
         .onAppear {
             UserProfile.recordFirstLaunchIfNeeded()
+        }
+        .onChange(of: hasCompletedOnboarding) { _, completed in
+            if completed && !hasSeenPostOnboardingPaywall {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    showPostOnboardingPaywall = true
+                    hasSeenPostOnboardingPaywall = true
+                }
+            }
+        }
+        .sheet(isPresented: $showPostOnboardingPaywall) {
+            RedPillPaywallView()
         }
     }
 }

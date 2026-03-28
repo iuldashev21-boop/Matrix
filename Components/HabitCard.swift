@@ -9,6 +9,7 @@ struct HabitCard: View {
     let isPower: Bool // true = Power (green), false = Agent (red)
     var subtitle: String? = nil // Optional short explanation
     var isRestDay: Bool = false // Not scheduled for today
+    var isLocked: Bool = false
     var onEdit: (() -> Void)? = nil
     var onDelete: (() -> Void)? = nil
 
@@ -23,15 +24,20 @@ struct HabitCard: View {
 
     var body: some View {
         HStack(spacing: Spacing.md) {
-            // Icon with checkmark overlay when completed
+            // Icon with overlay
             ZStack {
                 Image(systemName: icon)
                     .font(.title)
                     .foregroundColor(accentColor)
-                    .opacity(isCompletedToday || isRestDay ? 0.5 : 1.0)
+                    .opacity(isLocked ? 0.3 : (isCompletedToday || isRestDay ? 0.5 : 1.0))
                     .frame(width: 44, height: 44)
 
-                if isCompletedToday {
+                if isLocked {
+                    Image(systemName: "pill.fill")
+                        .font(.system(size: 16))
+                        .foregroundColor(.red.opacity(0.8))
+                        .offset(x: 14, y: 14)
+                } else if isCompletedToday {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.system(size: 18))
                         .foregroundColor(accentColor)
@@ -53,9 +59,17 @@ struct HabitCard: View {
                 HStack {
                     Text(title)
                         .font(.title)
-                        .foregroundColor(isCompletedToday ? Theme.secondaryText : Theme.primaryText)
+                        .foregroundColor(isLocked ? Theme.primaryText.opacity(0.4) : (isCompletedToday ? Theme.secondaryText : Theme.primaryText))
 
-                    if isCompletedToday {
+                    if isLocked {
+                        Text("LOCKED")
+                            .font(.system(size: 8, weight: .bold, design: .monospaced))
+                            .foregroundColor(.red)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.red.opacity(0.2))
+                            .cornerRadius(4)
+                    } else if isCompletedToday {
                         Text("UPLOADED")
                             .font(.system(size: 8, weight: .bold, design: .monospaced))
                             .foregroundColor(accentColor)
@@ -66,11 +80,14 @@ struct HabitCard: View {
                     }
                 }
 
-                if isCompletedToday {
-                    // Show countdown timer
+                if isLocked {
+                    Text("TAKE THE RED PILL TO UNLOCK")
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundColor(.red.opacity(0.5))
+                        .lineLimit(1)
+                } else if isCompletedToday {
                     UnlockCountdownView()
                 } else {
-                    // Show subtitle/description if provided
                     if let subtitle = subtitle, !subtitle.isEmpty {
                         Text(subtitle)
                             .font(.system(size: 11, design: .monospaced))
@@ -88,8 +105,12 @@ struct HabitCard: View {
 
             Spacer()
 
-            // Three-dot menu for edit/delete
-            if onEdit != nil || onDelete != nil {
+            // Right side
+            if isLocked {
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 14))
+                    .foregroundColor(.red.opacity(0.5))
+            } else if onEdit != nil || onDelete != nil {
                 Menu {
                     if let onEdit = onEdit {
                         Button(action: onEdit) {
@@ -109,7 +130,6 @@ struct HabitCard: View {
                         .contentShape(Rectangle())
                 }
             } else {
-                // Fallback icons when no menu actions
                 if isRestDay {
                     Image(systemName: "zzz")
                         .font(.system(size: 14))
@@ -126,11 +146,11 @@ struct HabitCard: View {
             }
         }
         .padding(Spacing.md)
-        .background(isCompletedToday ? Theme.cardBackground.opacity(0.6) : Theme.cardBackground)
+        .background(isLocked ? Theme.cardBackground.opacity(0.4) : (isCompletedToday ? Theme.cardBackground.opacity(0.6) : Theme.cardBackground))
         .cornerRadius(Theme.cardCornerRadius)
         .overlay(
             RoundedRectangle(cornerRadius: Theme.cardCornerRadius)
-                .stroke(isCompletedToday ? accentColor.opacity(0.5) : Color.clear, lineWidth: 1)
+                .stroke(isLocked ? Color.red.opacity(0.2) : (isCompletedToday ? accentColor.opacity(0.5) : Color.clear), lineWidth: 1)
         )
     }
 }

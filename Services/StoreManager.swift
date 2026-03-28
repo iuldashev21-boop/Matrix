@@ -14,7 +14,7 @@ final class StoreManager {
     var purchaseInProgress: Bool = false
     var errorMessage: String? = nil
 
-    static let freeHabitLimit = 3
+    static let freeHabitLimit = 2
 
     private var transactionListener: Task<Void, Never>?
 
@@ -105,5 +105,16 @@ final class StoreManager {
 
     func canCreateHabit(currentCount: Int) -> Bool {
         isRedPillOwned || currentCount < StoreManager.freeHabitLimit
+    }
+
+    func unlockAllHabits(powers: [Power], agents: [Agent]) {
+        for power in powers where power.isPremiumLocked {
+            power.isPremiumLocked = false
+            power.touch()
+        }
+        for agent in agents where agent.isPremiumLocked {
+            agent.isPremiumLocked = false
+            agent.touch()
+        }
     }
 }

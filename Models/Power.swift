@@ -11,6 +11,7 @@ final class Power {
     var targetDays: Int
     var isUnlocked: Bool
     var unlockedAt: Date?
+    var isPremiumLocked: Bool
 
     /// Days of week habit is scheduled (1=Sun, 2=Mon, 3=Tue, 4=Wed, 5=Thu, 6=Fri, 7=Sat)
     /// Empty array or all days = daily habit
@@ -19,7 +20,7 @@ final class Power {
     @Relationship(deleteRule: .cascade, inverse: \CheckIn.power)
     var checkIns: [CheckIn]
 
-    init(name: String, icon: String = "bolt", scheduledDays: [Int] = [1, 2, 3, 4, 5, 6, 7]) {
+    init(name: String, icon: String = "bolt", scheduledDays: [Int] = [1, 2, 3, 4, 5, 6, 7], isPremiumLocked: Bool = false) {
         self.id = UUID()
         self.name = name
         self.icon = icon
@@ -28,6 +29,7 @@ final class Power {
         self.targetDays = Theme.habitFormationDays
         self.isUnlocked = false
         self.unlockedAt = nil
+        self.isPremiumLocked = isPremiumLocked
         self.scheduledDays = scheduledDays
         self.checkIns = []
     }

@@ -537,13 +537,13 @@ struct AwakeningView: View {
             suggestedLoadout.agents = [.noBrainRot, .noJunkMeals, .noBedScrolling]
         }
 
-        for hack in suggestedLoadout.hacks {
-            let power = Power(name: hack.habitName, icon: hack.icon)
+        for (index, hack) in suggestedLoadout.hacks.enumerated() {
+            let power = Power(name: hack.habitName, icon: hack.icon, isPremiumLocked: index > 0)
             modelContext.insert(power)
         }
 
-        for agent in suggestedLoadout.agents {
-            let agentModel = Agent(name: agent.habitName, icon: agent.icon)
+        for (index, agent) in suggestedLoadout.agents.enumerated() {
+            let agentModel = Agent(name: agent.habitName, icon: agent.icon, isPremiumLocked: index > 0)
             modelContext.insert(agentModel)
         }
 

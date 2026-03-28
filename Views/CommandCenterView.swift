@@ -537,8 +537,8 @@ struct CommandCenterView: View {
 
     private var powersContent: some View {
         VStack(spacing: Spacing.sm) {
-            // Scheduled habits first
-            ForEach(powers.filter { $0.isScheduledToday }) { power in
+            // Active scheduled habits
+            ForEach(powers.filter { $0.isScheduledToday && !$0.isPremiumLocked }) { power in
                 let isCompleted = power.completedToday
                 let hackHabit = HackHabit.allCases.first { $0.rawValue == power.name }
                 HabitCard(
@@ -561,8 +561,8 @@ struct CommandCenterView: View {
                     selectedPower = power
                 }
             }
-            // Non-scheduled habits (rest day)
-            ForEach(powers.filter { !$0.isScheduledToday }) { power in
+            // Active non-scheduled habits (rest day)
+            ForEach(powers.filter { !$0.isScheduledToday && !$0.isPremiumLocked }) { power in
                 HabitCard(
                     title: power.name,
                     icon: power.icon,
@@ -581,6 +581,24 @@ struct CommandCenterView: View {
                 .padding(.horizontal, Spacing.md)
                 .opacity(0.5)
             }
+            // Locked habits
+            ForEach(powers.filter { $0.isPremiumLocked }) { power in
+                let hackHabit = HackHabit.allCases.first { $0.rawValue == power.name }
+                HabitCard(
+                    title: power.name,
+                    icon: power.icon,
+                    currentDay: 0,
+                    targetDays: power.targetDays,
+                    isCompletedToday: false,
+                    isPower: true,
+                    subtitle: hackHabit?.shortDescription,
+                    isLocked: true
+                )
+                .padding(.horizontal, Spacing.md)
+                .onTapGesture {
+                    showPaywall = true
+                }
+            }
         }
     }
 
@@ -588,8 +606,8 @@ struct CommandCenterView: View {
 
     private var agentsContent: some View {
         VStack(spacing: Spacing.sm) {
-            // Scheduled habits first
-            ForEach(agents.filter { $0.isScheduledToday }) { agent in
+            // Active scheduled habits
+            ForEach(agents.filter { $0.isScheduledToday && !$0.isPremiumLocked }) { agent in
                 let isCompleted = agent.resistedToday || agent.relapsedToday
                 let agentHabit = AgentHabit.allCases.first { $0.rawValue == agent.name }
                 HabitCard(
@@ -612,8 +630,8 @@ struct CommandCenterView: View {
                     selectedAgent = agent
                 }
             }
-            // Non-scheduled habits (rest day)
-            ForEach(agents.filter { !$0.isScheduledToday }) { agent in
+            // Active non-scheduled habits (rest day)
+            ForEach(agents.filter { !$0.isScheduledToday && !$0.isPremiumLocked }) { agent in
                 HabitCard(
                     title: agent.name,
                     icon: agent.icon,
@@ -631,6 +649,24 @@ struct CommandCenterView: View {
                 )
                 .padding(.horizontal, Spacing.md)
                 .opacity(0.5)
+            }
+            // Locked habits
+            ForEach(agents.filter { $0.isPremiumLocked }) { agent in
+                let agentHabit = AgentHabit.allCases.first { $0.rawValue == agent.name }
+                HabitCard(
+                    title: agent.name,
+                    icon: agent.icon,
+                    currentDay: 0,
+                    targetDays: agent.targetDays,
+                    isCompletedToday: false,
+                    isPower: false,
+                    subtitle: agentHabit?.shortDescription,
+                    isLocked: true
+                )
+                .padding(.horizontal, Spacing.md)
+                .onTapGesture {
+                    showPaywall = true
+                }
             }
         }
     }
@@ -729,7 +765,7 @@ struct CommandCenterView: View {
                 .foregroundColor(Color.mediumGray)
 
             Button(action: {
-                if StoreManager.shared.canCreateHabit(currentCount: powers.count + agents.count) {
+                if StoreManager.shared.canCreateHabit(currentCount: powers.filter { !$0.isPremiumLocked }.count + agents.filter { !$0.isPremiumLocked }.count) {
                     showAddHabit = true
                 } else {
                     showPaywall = true
@@ -771,7 +807,7 @@ struct CommandCenterView: View {
             Spacer()
 
             Button(action: {
-                if StoreManager.shared.canCreateHabit(currentCount: powers.count + agents.count) {
+                if StoreManager.shared.canCreateHabit(currentCount: powers.filter { !$0.isPremiumLocked }.count + agents.filter { !$0.isPremiumLocked }.count) {
                     showAddHabit = true
                 } else {
                     showPaywall = true

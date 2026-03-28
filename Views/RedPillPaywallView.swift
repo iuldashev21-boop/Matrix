@@ -1,7 +1,11 @@
 import SwiftUI
+import SwiftData
 
 struct RedPillPaywallView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    @Query private var powers: [Power]
+    @Query private var agents: [Agent]
     private let storeManager = StoreManager.shared
 
     var body: some View {
@@ -24,14 +28,15 @@ struct RedPillPaywallView: View {
                             .font(.system(size: 28, weight: .black, design: .monospaced))
                             .foregroundColor(.white)
 
-                        Text("ACCESS LEVEL: RESTRICTED")
+                        Text("YOUR AWAKENING IS INCOMPLETE")
                             .font(.system(size: 12, weight: .medium, design: .monospaced))
-                            .foregroundColor(Color.mediumGray)
+                            .foregroundColor(.red.opacity(0.8))
                     }
 
                     // Features list
                     VStack(alignment: .leading, spacing: Spacing.md) {
-                        featureRow(icon: "infinity", text: "UNLIMITED PROGRAMS")
+                        featureRow(icon: "lock.open.fill", text: "UNLOCK ALL YOUR HABITS")
+                        featureRow(icon: "plus.circle.fill", text: "CREATE CUSTOM PROGRAMS")
                         featureRow(icon: "widget.small", text: "HOME SCREEN WIDGETS")
                         featureRow(icon: "chart.xyaxis.line", text: "ADVANCED SIGNAL ANALYSIS")
                         featureRow(icon: "shield.checkered", text: "STREAK SHIELD PROTOCOL")
@@ -44,10 +49,18 @@ struct RedPillPaywallView: View {
                         .frame(height: 1)
                         .padding(.horizontal, Spacing.xl)
 
-                    // Free tier info
-                    Text("FREE TIER: \(StoreManager.freeHabitLimit) PROGRAMS MAX")
-                        .font(.system(size: 12, design: .monospaced))
-                        .foregroundColor(Color.mediumGray)
+                    // Privacy & value block
+                    VStack(spacing: Spacing.sm) {
+                        Text("ONE-TIME PURCHASE. NO SUBSCRIPTION.\nYOURS FOREVER.")
+                            .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                            .foregroundColor(.white.opacity(0.7))
+                            .multilineTextAlignment(.center)
+
+                        Text("YOUR DATA NEVER LEAVES YOUR DEVICE.\nNO ACCOUNTS. NO TRACKING. 100% PRIVATE.")
+                            .font(.system(size: 10, weight: .medium, design: .monospaced))
+                            .foregroundColor(Color.mediumGray)
+                            .multilineTextAlignment(.center)
+                    }
 
                     // Purchase area
                     VStack(spacing: Spacing.md) {
@@ -68,10 +81,9 @@ struct RedPillPaywallView: View {
                                 .task { await storeManager.loadProduct() }
                         }
 
-                        Text("ONE-TIME PURCHASE. NO SUBSCRIPTION.\nYOURS FOREVER.")
-                            .font(.system(size: 10, weight: .medium, design: .monospaced))
+                        Text("Pay once. Own it for life.")
+                            .font(.system(size: 11, design: .monospaced))
                             .foregroundColor(Color.mediumGray)
-                            .multilineTextAlignment(.center)
 
                         Button("RESTORE PURCHASE") {
                             Task { await storeManager.restorePurchases() }
@@ -96,12 +108,13 @@ struct RedPillPaywallView: View {
                 HStack {
                     Spacer()
                     Button(action: { dismiss() }) {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundColor(Color.lightGray)
-                            .frame(width: 32, height: 32)
-                            .background(Color.charcoal)
-                            .clipShape(Circle())
+                        Text("NOT NOW")
+                            .font(.system(size: 11, weight: .medium, design: .monospaced))
+                            .foregroundColor(Color.mediumGray)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Color.charcoal.opacity(0.6))
+                            .cornerRadius(12)
                     }
                     .padding(Spacing.md)
                 }
@@ -109,7 +122,11 @@ struct RedPillPaywallView: View {
             }
         }
         .onChange(of: storeManager.isRedPillOwned) { _, owned in
-            if owned { dismiss() }
+            if owned {
+                storeManager.unlockAllHabits(powers: powers, agents: agents)
+                try? modelContext.save()
+                dismiss()
+            }
         }
     }
 
