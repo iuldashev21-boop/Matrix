@@ -116,7 +116,7 @@ struct SidequestSectionHeader: View {
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(Color.matrixGreen.opacity(0.15))
-                        .cornerRadius(4)
+                        .cornerRadius(Theme.cornerRadiusSm)
                 }
 
                 Image(systemName: "chevron.right")
@@ -127,7 +127,7 @@ struct SidequestSectionHeader: View {
             .padding(.horizontal, Spacing.md)
             .padding(.vertical, Spacing.sm)
             .background(isAvailable && !isExpanded ? Color.matrixGreen.opacity(0.05) : Color.clear)
-            .cornerRadius(8)
+            .cornerRadius(Theme.cornerRadiusCompact)
         }
         .buttonStyle(.plain)
         .disabled(!isAvailable)

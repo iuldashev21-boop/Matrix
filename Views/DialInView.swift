@@ -133,7 +133,7 @@ struct DialInView: View {
                         .padding(.horizontal, Spacing.sm)
                         .padding(.vertical, Spacing.xs)
                         .background(Color.darkGray)
-                        .cornerRadius(8)
+                        .cornerRadius(Theme.cornerRadiusCompact)
                 }
                 .padding(.horizontal, Spacing.md)
                 .padding(.top, Spacing.lg)
@@ -243,9 +243,9 @@ struct DialInView: View {
                         .padding(.horizontal, Spacing.lg)
                         .padding(.vertical, Spacing.sm)
                         .background(Color.charcoal)
-                        .cornerRadius(8)
+                        .cornerRadius(Theme.cornerRadiusCompact)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 8)
+                            RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                                 .stroke(Color.danger.opacity(0.5), lineWidth: 1)
                         )
                     }
@@ -265,9 +265,9 @@ struct DialInView: View {
                         .padding(.horizontal, Spacing.lg)
                         .padding(.vertical, Spacing.sm)
                         .background(Color.charcoal)
-                        .cornerRadius(8)
+                        .cornerRadius(Theme.cornerRadiusCompact)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 8)
+                            RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                                 .stroke(Color.warning.opacity(0.5), lineWidth: 1)
                         )
                     }
@@ -718,7 +718,7 @@ struct BreachMessageOverlay: View {
                             .padding(.horizontal, Spacing.xl)
                             .padding(.vertical, Spacing.sm)
                             .background(Color.agentRed)
-                            .cornerRadius(8)
+                            .cornerRadius(Theme.cornerRadiusCompact)
                     }
                     .padding(.top, Spacing.md)
                 }

@@ -308,13 +308,13 @@ struct HackCard: View {
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
                 .background(Color.matrixGreen)
-                .cornerRadius(4)
+                .cornerRadius(Theme.cornerRadiusSm)
         }
         .padding(Spacing.md)
         .background(Color.charcoal)
-        .cornerRadius(8)
+        .cornerRadius(Theme.cornerRadiusCompact)
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                 .stroke(Color.matrixGreen.opacity(0.5), lineWidth: 1)
         )
     }
@@ -351,13 +351,13 @@ struct AgentCard: View {
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
                 .background(Color.agentRed)
-                .cornerRadius(4)
+                .cornerRadius(Theme.cornerRadiusSm)
         }
         .padding(Spacing.md)
         .background(Color.charcoal)
-        .cornerRadius(8)
+        .cornerRadius(Theme.cornerRadiusCompact)
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                 .stroke(Color.agentRed.opacity(0.5), lineWidth: 1)
         )
     }
@@ -397,9 +397,9 @@ struct EditableHackCard: View {
         }
         .padding(Spacing.sm)
         .background(Color.charcoal)
-        .cornerRadius(8)
+        .cornerRadius(Theme.cornerRadiusCompact)
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                 .stroke(Color.matrixGreen.opacity(0.3), lineWidth: 1)
         )
     }
@@ -439,9 +439,9 @@ struct EditableAgentCard: View {
         }
         .padding(Spacing.sm)
         .background(Color.charcoal)
-        .cornerRadius(8)
+        .cornerRadius(Theme.cornerRadiusCompact)
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                 .stroke(Color.agentRed.opacity(0.3), lineWidth: 1)
         )
     }
@@ -465,9 +465,9 @@ struct HackChip: View {
             .padding(.horizontal, Spacing.sm)
             .padding(.vertical, Spacing.xs)
             .background(Color.matrixGreen.opacity(0.15))
-            .cornerRadius(8)
+            .cornerRadius(Theme.cornerRadiusCompact)
             .overlay(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                     .stroke(Color.matrixGreen.opacity(0.3), lineWidth: 1)
             )
         }
@@ -492,9 +492,9 @@ struct AgentChip: View {
             .padding(.horizontal, Spacing.sm)
             .padding(.vertical, Spacing.xs)
             .background(Color.agentRed.opacity(0.15))
-            .cornerRadius(8)
+            .cornerRadius(Theme.cornerRadiusCompact)
             .overlay(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                     .stroke(Color.agentRed.opacity(0.3), lineWidth: 1)
             )
         }

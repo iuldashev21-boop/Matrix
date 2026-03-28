@@ -120,7 +120,7 @@ struct ProgramCard: View {
             HStack(spacing: Spacing.md) {
                 // Program Icon
                 ZStack {
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                         .fill(isAvailable ? Color.matrixGreen.opacity(0.15) : Color.charcoal)
                         .frame(width: 44, height: 44)
 

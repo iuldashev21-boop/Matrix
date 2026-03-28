@@ -90,7 +90,7 @@ struct EditHabitSheet: View {
                                             .foregroundColor(selectedIcon == icon ? (isAgent ? Color.agentRed : Color.matrixGreen) : Color.mediumGray)
                                             .frame(width: 44, height: 44)
                                             .background(selectedIcon == icon ? Color.charcoal : Color.clear)
-                                            .cornerRadius(8)
+                                            .cornerRadius(Theme.cornerRadiusCompact)
                                     }
                                 }
                             }
@@ -138,7 +138,7 @@ struct EditHabitSheet: View {
                                             .foregroundColor(selectedDays.contains(day.id) ? Color.deepBlack : Color.mediumGray)
                                             .frame(width: 36, height: 36)
                                             .background(selectedDays.contains(day.id) ? (isAgent ? Color.agentRed : Color.matrixGreen) : Color.charcoal)
-                                            .cornerRadius(8)
+                                            .cornerRadius(Theme.cornerRadiusCompact)
                                     }
                                 }
                             }
@@ -321,6 +321,6 @@ private struct StatBox: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, Spacing.sm)
         .background(Color.charcoal)
-        .cornerRadius(8)
+        .cornerRadius(Theme.cornerRadiusCompact)
     }
 }

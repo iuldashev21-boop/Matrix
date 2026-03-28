@@ -137,9 +137,9 @@ struct ProblemCard: View {
             }
             .padding(Spacing.md)
             .background(Color.charcoal)
-            .cornerRadius(8)
+            .cornerRadius(Theme.cornerRadiusCompact)
             .overlay(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                     .stroke(isSelected ? Color.agentRed : Color.mediumGray.opacity(0.5), lineWidth: isSelected ? 2 : 1)
                     .shadow(color: isSelected ? Color.agentRed.opacity(0.4) : .clear, radius: 4)
             )

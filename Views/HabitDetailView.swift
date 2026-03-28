@@ -154,7 +154,7 @@ struct HabitDetailView: View {
                 .padding(.horizontal, Spacing.md)
                 .padding(.vertical, Spacing.xs)
                 .background(accentColor.opacity(0.2))
-                .cornerRadius(8)
+                .cornerRadius(Theme.cornerRadiusCompact)
             }
         }
         .padding(.vertical, Spacing.lg)
@@ -356,9 +356,9 @@ struct EditHabitSheet: View {
                                         .foregroundColor(selectedIcon == icon ? accentColor : Color.mediumGray)
                                         .frame(width: 50, height: 50)
                                         .background(selectedIcon == icon ? Color.charcoal : Color.clear)
-                                        .cornerRadius(8)
+                                        .cornerRadius(Theme.cornerRadiusCompact)
                                         .overlay(
-                                            RoundedRectangle(cornerRadius: 8)
+                                            RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                                                 .stroke(selectedIcon == icon ? accentColor : Color.clear, lineWidth: 1)
                                         )
                                 }

@@ -166,7 +166,7 @@ struct CombatTrainingView: View {
                     .padding(.horizontal, Spacing.xl)
                     .padding(.vertical, Spacing.md)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                             .stroke(Color.matrixGreen, lineWidth: 2)
                     )
             }

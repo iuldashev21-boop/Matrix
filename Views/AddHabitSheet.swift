@@ -159,7 +159,7 @@ struct AddHabitSheet: View {
                                         .foregroundColor(selectedIcon == icon ? (isAgent ? Color.agentRed : Color.matrixGreen) : Color.mediumGray)
                                         .frame(width: 44, height: 44)
                                         .background(selectedIcon == icon ? Color.charcoal : Color.clear)
-                                        .cornerRadius(8)
+                                        .cornerRadius(Theme.cornerRadiusCompact)
                                 }
                             }
                         }
@@ -208,7 +208,7 @@ struct AddHabitSheet: View {
                                         .foregroundColor(selectedDays.contains(day.id) ? Color.deepBlack : Color.mediumGray)
                                         .frame(width: 36, height: 36)
                                         .background(selectedDays.contains(day.id) ? (isAgent ? Color.agentRed : Color.matrixGreen) : Color.charcoal)
-                                        .cornerRadius(8)
+                                        .cornerRadius(Theme.cornerRadiusCompact)
                                 }
                             }
                         }
@@ -319,9 +319,9 @@ struct SuggestionChip: View {
             .padding(.horizontal, Spacing.sm)
             .padding(.vertical, Spacing.xs)
             .background(accentColor.opacity(0.15))
-            .cornerRadius(8)
+            .cornerRadius(Theme.cornerRadiusCompact)
             .overlay(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                     .stroke(accentColor.opacity(0.3), lineWidth: 1)
             )
         }

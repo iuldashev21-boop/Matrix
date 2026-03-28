@@ -105,7 +105,7 @@ struct TierPromotionSheet: View {
                 .padding(.vertical, Spacing.sm)
                 .padding(.horizontal, Spacing.lg)
                 .background(Color.orange.opacity(0.15))
-                .cornerRadius(8)
+                .cornerRadius(Theme.cornerRadiusCompact)
 
                 Spacer()
 
