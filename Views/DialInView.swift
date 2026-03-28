@@ -731,21 +731,11 @@ struct BreachMessageOverlay: View {
     }
 
     private func glitchIn() {
-        // Initial glitch effect
-        for i in 0..<8 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.03) {
-                glitchOffset = CGSize(
-                    width: CGFloat.random(in: -8...8),
-                    height: CGFloat.random(in: -8...8)
-                )
-            }
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            withAnimation(.easeOut(duration: 0.1)) {
-                glitchOffset = .zero
-                showContent = true
-            }
+        GlitchEffect.trigger(
+            offset: $glitchOffset,
+            iterations: 8, range: -8...8, interval: 0.03, resetDelay: 0.25
+        ) {
+            showContent = true
         }
     }
 }
@@ -980,21 +970,11 @@ struct OracleRewardView: View {
     }
 
     private func glitchIn() {
-        // Initial glitch
-        for i in 0..<8 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.03) {
-                glitchOffset = CGSize(
-                    width: CGFloat.random(in: -8...8),
-                    height: CGFloat.random(in: -8...8)
-                )
-            }
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            withAnimation(.easeOut(duration: 0.1)) {
-                glitchOffset = .zero
-                showContent = true
-            }
+        GlitchEffect.trigger(
+            offset: $glitchOffset,
+            iterations: 8, range: -8...8, interval: 0.03, resetDelay: 0.25
+        ) {
+            showContent = true
         }
     }
 }
