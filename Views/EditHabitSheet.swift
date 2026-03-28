@@ -195,6 +195,7 @@ struct EditHabitSheet: View {
                                 .font(.system(size: 14, weight: .bold, design: .monospaced))
                                 .foregroundColor(Color.agentRed)
                             }
+                            .disabled(isSaving)
                             .padding(.top, Spacing.sm)
                         }
                         .padding(.horizontal, Spacing.xl)
