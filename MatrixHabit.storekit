@@ -1,0 +1,35 @@
+{
+  "identifier" : "MatrixHabit",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "1",
+      "localizations" : [
+        {
+          "description" : "Unlock unlimited habits, widgets, and all premium features. One-time purchase.",
+          "displayName" : "Red Pill - Unlock Everything",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.construct.matrixhabit.redpill",
+      "referenceName" : "Red Pill",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6757750786",
+    "_developerTeamID" : "26N9LR8N99",
+    "_lastSynchronizedDate" : 1743120000
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

@@ -155,6 +155,7 @@
 		465374ED9F81D2E25CA313BD /* ReviewManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReviewManager.swift; path = Services/ReviewManager.swift; sourceTree = "<group>"; };
 		4668DA011E394FD441410964 /* MatrixHabitWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MatrixHabitWidget.swift; sourceTree = "<group>"; };
 		46EFA478ED02B83874290ECA /* LaunchScreen.storyboard */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		5520FF3B8395AB415C4076B9 /* MatrixHabit.storekit */ = {isa = PBXFileReference; includeInIndex = 1; path = MatrixHabit.storekit; sourceTree = "<group>"; };
 		5E87ED45BDE6FDAFBD3ACF7D /* DateHelperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DateHelperTests.swift; sourceTree = "<group>"; };
 		63A450645B6B5FF0597004A8 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		657FC22F1BB665E84708F3D1 /* button_tap.wav */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.wav; path = button_tap.wav; sourceTree = "<group>"; };
@@ -355,6 +356,7 @@
 				7534156F000EB69CE39E42FA /* MatrixHabit.entitlements */,
 				52B763F79911DABB6CD08DCE /* Frameworks */,
 				9D6951C0C0B33A35A50158EF /* MatrixHabitWidget */,
+				5520FF3B8395AB415C4076B9 /* MatrixHabit.storekit */,
 			);
 			sourceTree = "<group>";
 		};
@@ -808,6 +810,7 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 26N9LR8N99;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MatrixHabitWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "MatrixHabit Widget";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -838,6 +841,7 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 26N9LR8N99;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MatrixHabitWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "MatrixHabit Widget";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
