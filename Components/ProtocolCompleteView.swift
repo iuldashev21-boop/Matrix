@@ -317,19 +317,11 @@ struct ProtocolCompleteView: View {
 
     private func triggerGlitch() {
         showGlitch = true
-        for i in 0..<10 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.025) {
-                glitchOffset = CGSize(
-                    width: CGFloat.random(in: -10...10),
-                    height: CGFloat.random(in: -10...10)
-                )
-            }
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            withAnimation(.easeOut(duration: 0.1)) {
-                glitchOffset = .zero
-                showGlitch = false
-            }
+        GlitchEffect.trigger(
+            offset: $glitchOffset,
+            iterations: 10, range: -10...10, interval: 0.025, resetDelay: 0.25
+        ) {
+            showGlitch = false
         }
     }
 
