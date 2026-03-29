@@ -294,7 +294,7 @@ struct WidgetEntryView: View {
     }
 }
 
-// MARK: - Preview
+// MARK: - Previews
 
 #Preview(as: .systemSmall) {
     MatrixHabitWidget()
@@ -307,6 +307,54 @@ struct WidgetEntryView: View {
         totalStreak: 19,
         completedToday: 1,
         totalScheduledToday: 2,
+        lastUpdated: Date()
+    ))
+}
+
+#Preview(as: .systemMedium) {
+    MatrixHabitWidget()
+} timeline: {
+    MatrixHabitEntry(date: Date(), data: WidgetHabitData(
+        habits: [
+            HabitSnapshot(name: "Lock In", icon: "brain", streak: 32, completedToday: true, isPower: true),
+            HabitSnapshot(name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true),
+            HabitSnapshot(name: "Doomscrolling", icon: "iphone.slash", streak: 14, completedToday: false, isPower: false),
+            HabitSnapshot(name: "Deep Sleep", icon: "moon.zzz.fill", streak: 7, completedToday: true, isPower: true)
+        ],
+        totalStreak: 74,
+        completedToday: 2,
+        totalScheduledToday: 4,
+        lastUpdated: Date()
+    ))
+}
+
+#Preview(as: .accessoryCircular) {
+    MatrixHabitWidget()
+} timeline: {
+    MatrixHabitEntry(date: Date(), data: WidgetHabitData(
+        habits: [
+            HabitSnapshot(name: "Lock In", icon: "brain", streak: 32, completedToday: true, isPower: true),
+            HabitSnapshot(name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true)
+        ],
+        totalStreak: 53,
+        completedToday: 1,
+        totalScheduledToday: 3,
+        lastUpdated: Date()
+    ))
+}
+
+#Preview(as: .accessoryRectangular) {
+    MatrixHabitWidget()
+} timeline: {
+    MatrixHabitEntry(date: Date(), data: WidgetHabitData(
+        habits: [
+            HabitSnapshot(name: "Lock In", icon: "brain", streak: 32, completedToday: false, isPower: true),
+            HabitSnapshot(name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true),
+            HabitSnapshot(name: "Doomscrolling", icon: "iphone.slash", streak: 14, completedToday: true, isPower: false)
+        ],
+        totalStreak: 67,
+        completedToday: 1,
+        totalScheduledToday: 3,
         lastUpdated: Date()
     ))
 }
