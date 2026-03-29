@@ -44,7 +44,7 @@ struct MatrixHabitTimelineProvider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<MatrixHabitEntry>) -> Void) {
         let entry = MatrixHabitEntry(date: Date(), data: readData())
-        // Refresh every 30 minutes (main app also triggers reloads on check-in)
+        // Refresh at midnight (main app also triggers reloads on check-in)
         let tomorrow = Calendar.current.startOfDay(
             for: Calendar.current.date(byAdding: .day, value: 1, to: Date())!
         )
