@@ -73,4 +73,83 @@ enum WidgetDataManager {
         }
         return widgetData
     }
+
+    // MARK: - Pending Check-Ins
+
+    struct PendingCheckIn: Codable {
+        let habitName: String
+        let isPower: Bool
+        let date: Date
+    }
+
+    private static let pendingCheckInsKey = "com.matrixhabit.widget.pendingCheckins"
+
+    static func addPendingCheckIn(_ checkIn: PendingCheckIn) {
+        guard let sharedDefaults = UserDefaults(suiteName: appGroupID) else { return }
+
+        var pending = readPendingCheckIns()
+
+        let calendar = Calendar.current
+        let isDuplicate = pending.contains { existing in
+            existing.habitName == checkIn.habitName
+                && calendar.isDate(existing.date, inSameDayAs: checkIn.date)
+        }
+
+        guard !isDuplicate else { return }
+
+        pending.append(checkIn)
+        if let encoded = try? JSONEncoder().encode(pending) {
+            sharedDefaults.set(encoded, forKey: pendingCheckInsKey)
+        }
+    }
+
+    static func readPendingCheckIns() -> [PendingCheckIn] {
+        guard let sharedDefaults = UserDefaults(suiteName: appGroupID),
+              let data = sharedDefaults.data(forKey: pendingCheckInsKey),
+              let pending = try? JSONDecoder().decode([PendingCheckIn].self, from: data) else {
+            return []
+        }
+        return pending
+    }
+
+    static func clearPendingCheckIns() {
+        guard let sharedDefaults = UserDefaults(suiteName: appGroupID) else { return }
+        sharedDefaults.removeObject(forKey: pendingCheckInsKey)
+    }
+
+    static func markHabitCompleted(habitName: String) {
+        guard let sharedDefaults = UserDefaults(suiteName: appGroupID),
+              let data = sharedDefaults.data(forKey: widgetDataKey),
+              var widgetData = try? JSONDecoder().decode(WidgetData.self, from: data) else {
+            return
+        }
+
+        var updatedHabits = widgetData.habits
+        var additionalCompleted = 0
+
+        for i in updatedHabits.indices {
+            if updatedHabits[i].name == habitName && !updatedHabits[i].completedToday {
+                updatedHabits[i] = HabitSnapshot(
+                    name: updatedHabits[i].name,
+                    icon: updatedHabits[i].icon,
+                    streak: updatedHabits[i].streak,
+                    completedToday: true,
+                    isPower: updatedHabits[i].isPower
+                )
+                additionalCompleted += 1
+            }
+        }
+
+        widgetData = WidgetData(
+            habits: updatedHabits,
+            totalStreak: widgetData.totalStreak,
+            completedToday: widgetData.completedToday + additionalCompleted,
+            totalScheduledToday: widgetData.totalScheduledToday,
+            lastUpdated: widgetData.lastUpdated
+        )
+
+        if let encoded = try? JSONEncoder().encode(widgetData) {
+            sharedDefaults.set(encoded, forKey: widgetDataKey)
+        }
+    }
 }
