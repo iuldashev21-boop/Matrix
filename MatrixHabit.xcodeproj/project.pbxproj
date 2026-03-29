@@ -23,6 +23,7 @@
 		79D31BDB5636FF1AFEE8C6DE /* PowerModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8FA29CD5AF187514CE7A21 /* PowerModelTests.swift */; };
 		7E38BF593F19B146347EB034 /* button_tap.wav in Resources */ = {isa = PBXBuildFile; fileRef = 657FC22F1BB665E84708F3D1 /* button_tap.wav */; };
 		84FED044452FD91380D3E9F2 /* WidgetDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A2B614440173E161C8C791 /* WidgetDataManager.swift */; };
+		4C9E1AF8B72D3C0694E5DA17 /* WidgetSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A7D92F1E8C4A5D60F1B8E2 /* WidgetSyncService.swift */; };
 		852622C14586109AC8BFB97B /* emp_token.wav in Resources */ = {isa = PBXBuildFile; fileRef = A2391B164664DBF38516EAB8 /* emp_token.wav */; };
 		85C01190660CC48F5ABF34E0 /* relapse.wav in Resources */ = {isa = PBXBuildFile; fileRef = AB6854DD93AB6C8D0636DA90 /* relapse.wav */; };
 		8ED4E16FC66D1E4C860BAA1C /* hold_progress.wav in Resources */ = {isa = PBXBuildFile; fileRef = 903B865343E0674F8A0D02CE /* hold_progress.wav */; };
@@ -152,6 +153,7 @@
 		02E8F8790CA4A992986788DE /* MatrixHabitWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MatrixHabitWidgetBundle.swift; sourceTree = "<group>"; };
 		169C0881A1A85D114C13DB0F /* achievement.wav */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.wav; path = achievement.wav; sourceTree = "<group>"; };
 		18A2B614440173E161C8C791 /* WidgetDataManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetDataManager.swift; sourceTree = "<group>"; };
+		B3A7D92F1E8C4A5D60F1B8E2 /* WidgetSyncService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSyncService.swift; sourceTree = "<group>"; };
 		27346A7F7E6BCFB51663C378 /* LaunchScreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LaunchScreen.swift; sourceTree = "<group>"; };
 		41454C1F4BFDEA76C9D73C34 /* CheckInService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CheckInService.swift; sourceTree = "<group>"; };
 		43C088720660EF148AE5EB81 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -448,6 +450,7 @@
 				A75546D554C6F98500D00C4A /* StoreManager.swift */,
 				18A2B614440173E161C8C791 /* WidgetDataManager.swift */,
 				41454C1F4BFDEA76C9D73C34 /* CheckInService.swift */,
+				B3A7D92F1E8C4A5D60F1B8E2 /* WidgetSyncService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -772,6 +775,7 @@
 				0A5E603AEA70D82D982C2472 /* StoreManager.swift in Sources */,
 				84FED044452FD91380D3E9F2 /* WidgetDataManager.swift in Sources */,
 				CFB78A40B5406845F49986BF /* CheckInService.swift in Sources */,
+				4C9E1AF8B72D3C0694E5DA17 /* WidgetSyncService.swift in Sources */,
 				D0F8926E679B0FEF22FDAC15 /* RedPillPaywallView.swift in Sources */,
 				E5F3C9B1A0D4672C5B8DBE03 /* CheckInHabitIntent.swift in Sources */,
 			);
