@@ -1,5 +1,6 @@
 import WidgetKit
 import SwiftUI
+import AppIntents
 
 // MARK: - Shared Types (duplicated from main app to avoid framework dependency)
 
@@ -44,7 +45,10 @@ struct MatrixHabitTimelineProvider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<MatrixHabitEntry>) -> Void) {
         let entry = MatrixHabitEntry(date: Date(), data: readData())
         // Refresh every 30 minutes (main app also triggers reloads on check-in)
-        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 30, to: Date())!
+        let tomorrow = Calendar.current.startOfDay(
+            for: Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+        )
+        let nextUpdate = tomorrow
         let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
         completion(timeline)
     }
@@ -190,9 +194,18 @@ struct MediumWidgetView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     ForEach(Array(data.habits.sorted(by: { $0.streak > $1.streak }).prefix(4).enumerated()), id: \.offset) { _, habit in
                         HStack(spacing: 6) {
-                            Image(systemName: habit.completedToday ? "checkmark.circle.fill" : "circle")
-                                .font(.system(size: 11))
-                                .foregroundColor(habit.completedToday ? matrixGreen : mediumGray)
+                            if habit.completedToday {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .font(.system(size: 11))
+                                    .foregroundColor(matrixGreen)
+                            } else {
+                                Button(intent: CheckInHabitIntent(habitName: habit.name, isPower: habit.isPower)) {
+                                    Image(systemName: "circle")
+                                        .font(.system(size: 11))
+                                        .foregroundColor(mediumGray)
+                                }
+                                .buttonStyle(.plain)
+                            }
 
                             Text(habit.name.uppercased())
                                 .font(.system(size: 10, weight: .medium, design: .monospaced))
@@ -249,7 +262,13 @@ struct MatrixHabitWidget: Widget {
         }
         .configurationDisplayName("MatrixHabit")
         .description("Track your habit streaks from the home screen.")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([
+            .systemSmall,
+            .systemMedium,
+            .accessoryCircular,
+            .accessoryRectangular,
+            .accessoryInline
+        ])
     }
 }
 
@@ -263,6 +282,12 @@ struct WidgetEntryView: View {
             SmallWidgetView(data: entry.data)
         case .systemMedium:
             MediumWidgetView(data: entry.data)
+        case .accessoryCircular:
+            CircularWidgetView(data: entry.data)
+        case .accessoryRectangular:
+            RectangularWidgetView(data: entry.data)
+        case .accessoryInline:
+            InlineWidgetView(data: entry.data)
         default:
             SmallWidgetView(data: entry.data)
         }
