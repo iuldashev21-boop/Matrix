@@ -14,6 +14,7 @@
 		3763539E710B3C9071DF0C71 /* streak_milestone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 744D159F24E0F444A9E05151 /* streak_milestone.wav */; };
 		442D73B85923F3788453BEB5 /* LaunchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27346A7F7E6BCFB51663C378 /* LaunchScreen.swift */; };
 		447834A86DB2C23DD4C98060 /* MatrixHabitWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4668DA011E394FD441410964 /* MatrixHabitWidget.swift */; };
+		E7A3B91C2D4F8A0B1C3E5D07 /* LockScreenWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D4C62A3B5E7F9081A2D6E3 /* LockScreenWidgets.swift */; };
 		492E93962F77CCF4BCCCE054 /* DateHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E87ED45BDE6FDAFBD3ACF7D /* DateHelperTests.swift */; };
 		5E56CD481D26C06B084EAF52 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 46EFA478ED02B83874290ECA /* LaunchScreen.storyboard */; };
 		67EFD91C8FCFCD6FA7B5D004 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43C088720660EF148AE5EB81 /* Foundation.framework */; };
@@ -156,6 +157,7 @@
 		43C088720660EF148AE5EB81 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		465374ED9F81D2E25CA313BD /* ReviewManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReviewManager.swift; path = Services/ReviewManager.swift; sourceTree = "<group>"; };
 		4668DA011E394FD441410964 /* MatrixHabitWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MatrixHabitWidget.swift; sourceTree = "<group>"; };
+		F1D4C62A3B5E7F9081A2D6E3 /* LockScreenWidgets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LockScreenWidgets.swift; sourceTree = "<group>"; };
 		46EFA478ED02B83874290ECA /* LaunchScreen.storyboard */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5520FF3B8395AB415C4076B9 /* MatrixHabit.storekit */ = {isa = PBXFileReference; includeInIndex = 1; path = MatrixHabit.storekit; sourceTree = "<group>"; };
 		5E87ED45BDE6FDAFBD3ACF7D /* DateHelperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DateHelperTests.swift; sourceTree = "<group>"; };
@@ -338,6 +340,7 @@
 			isa = PBXGroup;
 			children = (
 				4668DA011E394FD441410964 /* MatrixHabitWidget.swift */,
+				F1D4C62A3B5E7F9081A2D6E3 /* LockScreenWidgets.swift */,
 				02E8F8790CA4A992986788DE /* MatrixHabitWidgetBundle.swift */,
 				B3C1A7F9E8D2450A3F6B9C01 /* CheckInHabitIntent.swift */,
 				C9B9E58C0D2C85184C07FD0A /* MatrixHabitWidget.entitlements */,
@@ -679,6 +682,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				447834A86DB2C23DD4C98060 /* MatrixHabitWidget.swift in Sources */,
+				E7A3B91C2D4F8A0B1C3E5D07 /* LockScreenWidgets.swift in Sources */,
 				DC441609CCAB3C3636D45834 /* MatrixHabitWidgetBundle.swift in Sources */,
 				D4E2B8A0F9C3561B4A7CAD02 /* CheckInHabitIntent.swift in Sources */,
 			);
