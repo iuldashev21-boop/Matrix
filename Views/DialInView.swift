@@ -36,6 +36,7 @@ struct DialInView: View {
     @State private var showProtocolComplete: Bool = false  // 66-day epic celebration
     @State private var showSaveError: Bool = false  // Error handling for save failures
     @State private var lastXPEarned: Int = 10  // Actual XP from CheckInService
+    @State private var showReviewPreScreen: Bool = false  // Review sentiment pre-screen
 
     // MARK: - Constants
     private let holdDuration: Double = 1.5
@@ -334,6 +335,19 @@ struct DialInView: View {
         } message: {
             Text("Failed to save check-in. Please try again or restart the app.")
         }
+        .alert("SIGNAL DETECTED", isPresented: $showReviewPreScreen) {
+            Button("YES, I'M IN") {
+                ReviewManager.shared.executeReview()
+            }
+            Button("NOT YET", role: .cancel) { }
+            Button("SEND FEEDBACK") {
+                if let url = URL(string: "mailto:matrixhabit@proton.me?subject=MatrixHabit%20Feedback") {
+                    UIApplication.shared.open(url)
+                }
+            }
+        } message: {
+            Text("You've hit a milestone! Enjoying MatrixHabit? A quick rating helps other operatives find us.")
+        }
         .onChange(of: isHolding) { _, holding in
             if holding {
                 animateHold()
@@ -493,6 +507,19 @@ struct DialInView: View {
             achievementManager.checkComebackAchievement(hadBrokenStreak: true)
         }
 
+        // Check if achievement count triggers review prompt
+        let achievementCount = achievementManager.getUnlockedCount()
+        let totalHabitCount = allPowers.count + allAgents.count
+        if !showReviewPreScreen {
+            let decision = ReviewManager.shared.checkForReviewAfterAchievement(
+                achievementCount: achievementCount,
+                totalHabitCount: totalHabitCount
+            )
+            if decision == .showPreScreen {
+                showReviewPreScreen = true
+            }
+        }
+
         // Show toast if achievement unlocked
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             if achievementManager.showUnlockAnimation {
@@ -544,11 +571,17 @@ struct DialInView: View {
     }
 
     private func saveCheckIn() {
+        let totalHabitCount = allPowers.count + allAgents.count
+
         if let p = power {
             let result = CheckInService.recordPowerCheckIn(power: p, context: modelContext)
             if case .success(let xp) = result {
                 lastXPEarned = xp
-                ReviewManager.shared.checkForReviewPrompt(streak: p.currentStreak)
+                ReviewManager.shared.trackCheckIn()
+                let decision = ReviewManager.shared.checkForReviewPrompt(streak: p.currentStreak, totalHabitCount: totalHabitCount)
+                if decision == .showPreScreen {
+                    showReviewPreScreen = true
+                }
             } else if case .failure = result {
                 showSaveError = true
             }
@@ -556,7 +589,11 @@ struct DialInView: View {
             let result = CheckInService.recordAgentResistance(agent: a, context: modelContext)
             if case .success(let xp) = result {
                 lastXPEarned = xp
-                ReviewManager.shared.checkForReviewPrompt(streak: a.currentStreak)
+                ReviewManager.shared.trackCheckIn()
+                let decision = ReviewManager.shared.checkForReviewPrompt(streak: a.currentStreak, totalHabitCount: totalHabitCount)
+                if decision == .showPreScreen {
+                    showReviewPreScreen = true
+                }
             } else if case .failure = result {
                 showSaveError = true
             }
@@ -579,6 +616,7 @@ struct DialInView: View {
         do {
             try modelContext.save()
             SoundManager.shared.playRelapse()
+            ReviewManager.shared.trackStreakBreak()
         } catch {
             showSaveError = true
         }

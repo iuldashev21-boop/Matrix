@@ -1,81 +1,187 @@
 import StoreKit
 import SwiftUI
 
-/// Manages App Store review prompts at appropriate moments
+/// Manages App Store review prompts with engagement gating and sentiment pre-screening
 final class ReviewManager {
     static let shared = ReviewManager()
 
     private init() {}
 
+    // MARK: - Review Decision
+
+    enum Decision {
+        case showPreScreen
+        case skip
+    }
+
     // MARK: - UserDefaults Keys
+
     private let lastReviewRequestDateKey = "lastReviewRequestDate"
     private let reviewRequestCountKey = "reviewRequestCount"
-    private let hasRequestedReviewKey = "hasRequestedReview"
+    private let firstPromptDateKey = "review_firstPromptDate"
+    private let totalCheckInCountKey = "review_totalCheckInCount"
+    private let distinctDayCountKey = "review_distinctDayCount"
+    private let lastCheckInDateKey = "review_lastCheckInDate"
+    private let lastStreakBreakKey = "review_lastStreakBreakDate"
 
     // MARK: - Configuration
-    /// Minimum days between review prompts
-    private let minimumDaysBetweenPrompts = 90
-    /// Maximum number of review requests (Apple limits to 3 per year)
+
+    private let minimumDaysBetweenPrompts = 45
     private let maxRequestsPerYear = 3
+    private let reviewTriggerStreaks = [7, 14, 21, 66]
+    private let reviewTriggerAchievements = [3, 7]
+    private let minimumHabits = 2
+    private let minimumCheckIns = 10
+    private let minimumDistinctDays = 5
+    private let streakBreakCooldownHours = 48
 
-    // MARK: - Milestone Triggers
-    /// Streaks that should trigger a review prompt consideration
-    private let reviewTriggerStreaks = [7, 21, 66]
+    // MARK: - Engagement Tracking
 
-    /// Check if we should request a review after reaching a streak milestone
-    func checkForReviewPrompt(streak: Int) {
-        guard reviewTriggerStreaks.contains(streak) else { return }
-        requestReviewIfAppropriate()
-    }
+    /// Call on every successful check-in to track engagement metrics
+    func trackCheckIn() {
+        let defaults = UserDefaults.standard
 
-    /// Check if we should request a review after unlocking an achievement
-    func checkForReviewAfterAchievement() {
-        // Only prompt on first few achievements, not every one
-        let achievementCount = UserDefaults.standard.integer(forKey: "unlockedAchievementCount")
-        if achievementCount == 1 || achievementCount == 5 {
-            requestReviewIfAppropriate()
+        // Increment total check-in count
+        let count = defaults.integer(forKey: totalCheckInCountKey)
+        defaults.set(count + 1, forKey: totalCheckInCountKey)
+
+        // Track distinct calendar days
+        let today = Calendar.current.startOfDay(for: Date())
+        if let lastDate = defaults.object(forKey: lastCheckInDateKey) as? Date {
+            if !Calendar.current.isDate(lastDate, inSameDayAs: today) {
+                let days = defaults.integer(forKey: distinctDayCountKey)
+                defaults.set(days + 1, forKey: distinctDayCountKey)
+            }
+        } else {
+            defaults.set(1, forKey: distinctDayCountKey)
         }
+        defaults.set(today, forKey: lastCheckInDateKey)
     }
 
-    /// Request review if conditions are met
-    func requestReviewIfAppropriate() {
-        // Check if enough time has passed since last request
-        if let lastRequest = UserDefaults.standard.object(forKey: lastReviewRequestDateKey) as? Date {
-            let daysSinceLastRequest = Calendar.current.dateComponents([.day], from: lastRequest, to: Date()).day ?? 0
-            guard daysSinceLastRequest >= minimumDaysBetweenPrompts else {
+    /// Call when a streak breaks (agent relapse)
+    func trackStreakBreak() {
+        UserDefaults.standard.set(Date(), forKey: lastStreakBreakKey)
+    }
+
+    // MARK: - Evaluation
+
+    /// Check if we should show a review pre-screen after a streak milestone
+    func checkForReviewPrompt(streak: Int, totalHabitCount: Int) -> Decision {
+        guard reviewTriggerStreaks.contains(streak) else { return .skip }
+        return evaluateGates(totalHabitCount: totalHabitCount)
+    }
+
+    /// Check if we should show a review pre-screen after an achievement unlock
+    func checkForReviewAfterAchievement(achievementCount: Int, totalHabitCount: Int) -> Decision {
+        guard reviewTriggerAchievements.contains(achievementCount) else { return .skip }
+        return evaluateGates(totalHabitCount: totalHabitCount)
+    }
+
+    private func evaluateGates(totalHabitCount: Int) -> Decision {
+        let defaults = UserDefaults.standard
+
+        // Gate 1: Minimum habits created
+        guard totalHabitCount >= minimumHabits else {
+            #if DEBUG
+            print("ReviewManager: Skip — only \(totalHabitCount) habits (need \(minimumHabits))")
+            #endif
+            return .skip
+        }
+
+        // Gate 2: Minimum total check-ins
+        let checkIns = defaults.integer(forKey: totalCheckInCountKey)
+        guard checkIns >= minimumCheckIns else {
+            #if DEBUG
+            print("ReviewManager: Skip — only \(checkIns) check-ins (need \(minimumCheckIns))")
+            #endif
+            return .skip
+        }
+
+        // Gate 3: Minimum distinct calendar days
+        let days = defaults.integer(forKey: distinctDayCountKey)
+        guard days >= minimumDistinctDays else {
+            #if DEBUG
+            print("ReviewManager: Skip — only \(days) distinct days (need \(minimumDistinctDays))")
+            #endif
+            return .skip
+        }
+
+        // Gate 4: No streak break in last 48 hours
+        if let lastBreak = defaults.object(forKey: lastStreakBreakKey) as? Date {
+            let hoursSinceBreak = Calendar.current.dateComponents([.hour], from: lastBreak, to: Date()).hour ?? 0
+            guard hoursSinceBreak >= streakBreakCooldownHours else {
                 #if DEBUG
-                print("ReviewManager: Too soon since last request (\(daysSinceLastRequest) days)")
+                print("ReviewManager: Skip — streak broke \(hoursSinceBreak)h ago (need \(streakBreakCooldownHours)h)")
                 #endif
-                return
+                return .skip
             }
         }
 
-        // Check if we've hit the yearly limit
-        let requestCount = UserDefaults.standard.integer(forKey: reviewRequestCountKey)
-        guard requestCount < maxRequestsPerYear else {
-            #if DEBUG
-            print("ReviewManager: Hit yearly limit (\(requestCount) requests)")
-            #endif
-            return
+        // Gate 5: Minimum days since last prompt
+        if let lastRequest = defaults.object(forKey: lastReviewRequestDateKey) as? Date {
+            let daysSince = Calendar.current.dateComponents([.day], from: lastRequest, to: Date()).day ?? 0
+            guard daysSince >= minimumDaysBetweenPrompts else {
+                #if DEBUG
+                print("ReviewManager: Skip — last prompt \(daysSince) days ago (need \(minimumDaysBetweenPrompts))")
+                #endif
+                return .skip
+            }
         }
 
-        // Request the review
-        requestReview()
+        // Gate 6: Rolling 365-day annual limit
+        guard !hasExceededAnnualLimit() else {
+            #if DEBUG
+            print("ReviewManager: Skip — annual limit reached")
+            #endif
+            return .skip
+        }
+
+        #if DEBUG
+        print("ReviewManager: All gates passed — showing pre-screen")
+        #endif
+        return .showPreScreen
     }
 
-    /// Actually request the review from Apple
-    private func requestReview() {
+    // MARK: - Annual Limit (365-day rolling window)
+
+    private func hasExceededAnnualLimit() -> Bool {
+        let defaults = UserDefaults.standard
+
+        if let firstPrompt = defaults.object(forKey: firstPromptDateKey) as? Date {
+            let daysSinceFirst = Calendar.current.dateComponents([.day], from: firstPrompt, to: Date()).day ?? 0
+            if daysSinceFirst >= 365 {
+                // Reset the annual window
+                defaults.set(0, forKey: reviewRequestCountKey)
+                defaults.removeObject(forKey: firstPromptDateKey)
+                return false
+            }
+        }
+
+        let count = defaults.integer(forKey: reviewRequestCountKey)
+        return count >= maxRequestsPerYear
+    }
+
+    // MARK: - Execute Review
+
+    /// Call when user taps "Yes!" in the pre-screen dialog
+    func executeReview() {
+        let defaults = UserDefaults.standard
+
+        // Track first prompt date for annual window
+        if defaults.object(forKey: firstPromptDateKey) == nil {
+            defaults.set(Date(), forKey: firstPromptDateKey)
+        }
+
+        // Update tracking
+        defaults.set(Date(), forKey: lastReviewRequestDateKey)
+        defaults.set(
+            defaults.integer(forKey: reviewRequestCountKey) + 1,
+            forKey: reviewRequestCountKey
+        )
+
         #if DEBUG
         print("ReviewManager: Requesting App Store review")
         #endif
-
-        // Update tracking
-        UserDefaults.standard.set(Date(), forKey: lastReviewRequestDateKey)
-        UserDefaults.standard.set(
-            UserDefaults.standard.integer(forKey: reviewRequestCountKey) + 1,
-            forKey: reviewRequestCountKey
-        )
-        UserDefaults.standard.set(true, forKey: hasRequestedReviewKey)
 
         // Request review on main thread
         DispatchQueue.main.async {
@@ -87,10 +193,22 @@ final class ReviewManager {
         }
     }
 
-    /// Reset review tracking (for testing)
+    /// Open App Store review page directly (for Settings button)
+    func openAppStoreReview() {
+        guard let url = URL(string: "https://apps.apple.com/app/id6757750786?action=write-review") else { return }
+        UIApplication.shared.open(url)
+    }
+
+    // MARK: - Reset (for testing)
+
     func reset() {
-        UserDefaults.standard.removeObject(forKey: lastReviewRequestDateKey)
-        UserDefaults.standard.removeObject(forKey: reviewRequestCountKey)
-        UserDefaults.standard.removeObject(forKey: hasRequestedReviewKey)
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: lastReviewRequestDateKey)
+        defaults.removeObject(forKey: reviewRequestCountKey)
+        defaults.removeObject(forKey: firstPromptDateKey)
+        defaults.removeObject(forKey: totalCheckInCountKey)
+        defaults.removeObject(forKey: distinctDayCountKey)
+        defaults.removeObject(forKey: lastCheckInDateKey)
+        defaults.removeObject(forKey: lastStreakBreakKey)
     }
 }

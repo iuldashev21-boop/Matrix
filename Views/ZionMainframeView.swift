@@ -128,6 +128,33 @@ struct ZionMainframeView: View {
                 )
             }
 
+            // Rate App Button
+            Button(action: {
+                ReviewManager.shared.openAppStoreReview()
+            }) {
+                HStack {
+                    Image(systemName: "star.fill")
+                        .font(.system(size: 16))
+                    Text("TRANSMIT SIGNAL")
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                    Spacer()
+                    Text("RATE")
+                        .font(.system(size: 12, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+                    Image(systemName: "arrow.up.right")
+                        .font(.system(size: 12))
+                        .foregroundColor(Color.mediumGray)
+                }
+                .foregroundColor(Color.matrixGreen)
+                .padding(Spacing.md)
+                .background(Color.charcoal)
+                .cornerRadius(Theme.cornerRadius)
+                .overlay(
+                    RoundedRectangle(cornerRadius: Theme.cornerRadius)
+                        .stroke(Color.matrixGreen.opacity(0.5), lineWidth: 1)
+                )
+            }
+
             // Haptics Toggle
             SettingsToggleRow(
                 title: "TACTILE RESPONSE",
