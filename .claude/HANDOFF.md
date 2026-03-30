@@ -1,50 +1,43 @@
-# SESSION HANDOFF — March 28, 2026
+# SESSION HANDOFF — March 28, 2026 (Session 3)
 
-> **COMPACTION RECOVERY: Read this file + docs/plans/2026-03-28-paywall-redesign-plan.md**
+> **COMPACTION RECOVERY: Read this file + CLAUDE.md**
 
-## CURRENT WORK: Paywall Redesign — Show-But-Lock Strategy
+## CURRENT STATE: v1.1 Submitted — Waiting for Apple Review
 
-### Status: EXECUTING PLAN (Subagent-Driven)
+### What Was Completed This Session:
+1. **ASO metadata finalized** — App Name, Subtitle, Keywords (100 chars), Description, Promotional Text all entered in ASC
+2. **6 App Store screenshots created** — Captioned, resized to 1284x2778 (6.5" Display), uploaded to ASC
+3. **Tax & Banking setup** — Paid Apps Agreement signed, Georgian bank account added (TBC Bank), W-8BEN submitted (US-Georgia treaty, 0% withholding)
+4. **v1.1 submitted for Apple review** — Build 3 with Red Pill IAP attached
+5. **SSH key configured** — `~/.ssh/id_ed25519` for GitHub (`iuldashev21-boop`), code pushed to remote
+6. **Global CLAUDE.md updated** — SSH/GitHub config added for all projects
 
-**Plan file:** `docs/plans/2026-03-28-paywall-redesign-plan.md`
-**Execution mode:** Subagent-driven development, one task at a time
+### App Store Connect Status:
+- **Version 1.1**: Submitted for review (Waiting for Review)
+- **IAP Product**: "Red Pill (Unlock All)" — `com.construct.matrixhabit.redpill` — Non-Consumable
+- **Paid Apps Agreement**: Processing (bank + tax info submitted)
+- **ASO**: App Name (`MatrixHabit - Habit Tracker`), Subtitle (`66-Day Streaks & XP Quests`), Keywords optimized
+- **Screenshots**: 6 captioned screenshots uploaded (Command Center, Signal Analysis, Achievements, Dial-In, Agents, Paywall)
 
-### Tasks (10 total):
-- [ ] Task 1: Add `isPremiumLocked` to Power model
-- [ ] Task 2: Add `isPremiumLocked` to Agent model
-- [ ] Task 3: Update StoreManager — free limit 2, add `unlockAllHabits()`
-- [ ] Task 4: Update onboarding — lock 4 of 6 habits
-- [ ] Task 5: Add locked state to HabitCard component
-- [ ] Task 6: Update CommandCenterView — locked rendering + paywall triggers
-- [ ] Task 7: Redesign RedPillPaywallView — new copy + unlock logic
-- [ ] Task 8: Auto-show paywall after onboarding in ContentView
-- [ ] Task 9: Update StoreKit config description
-- [ ] Task 10: Build, install, verify on simulator
+### Key Technical Details:
+- **Product ID**: `com.construct.matrixhabit.redpill`
+- **Purchase key**: `com.matrixhabit.redpill.purchased` (UserDefaults)
+- **Free habit limit**: 2 (`freeHabitLimit = 2`)
+- **StoreKit 2**: Full implementation in `Services/StoreManager.swift`
+- **Paywall UI**: `Views/RedPillPaywallView.swift`
+- **Gating**: CommandCenterView (habits + Construct), ContentView (post-onboarding), habit creation limits
+- **XcodeBuildMCP defaults**: project=MatrixHabit.xcodeproj, scheme=MatrixHabit, simulator=iPhone 17 Pro Max
+- **Git remote**: SSH — `git@github.com:iuldashev21-boop/Matrix.git`
 
-### Design Summary:
-- Onboarding creates 6 habits: 2 active (1 Power + 1 Agent), 4 locked
-- `freeHabitLimit = 2` (was 3) — zero free adds
-- Locked habits show dimmed at 40% with red pill overlay + "LOCKED" badge
-- 4 paywall entry points: post-onboarding auto-show, tap locked habit, both LOAD PROGRAM buttons
-- Paywall copy: "YOUR AWAKENING IS INCOMPLETE", privacy messaging, lifetime value
-- On purchase: bulk unlock all habits via `unlockAllHabits(powers:agents:)`
-- Existing App Store users unaffected (`isPremiumLocked` defaults to `false`)
+### NEXT STEPS:
+1. **Wait for Apple review** — typically 24-48 hours
+2. **Verify IAP works** on real device once Paid Apps Agreement is Active
+3. **Consider v2 features** — Widgets, push notifications, custom themes, iCloud sync
 
-### Key Files:
-- `Models/Power.swift` — add `isPremiumLocked: Bool`
-- `Models/Agent.swift` — add `isPremiumLocked: Bool`
-- `Services/StoreManager.swift` — `freeHabitLimit = 2`, `unlockAllHabits()`
-- `Views/AwakeningView.swift:529-558` — `finalizeAwakening()` lock logic
-- `Components/HabitCard.swift` — locked state rendering
-- `Views/CommandCenterView.swift` — locked habits in lists, paywall triggers
-- `Views/RedPillPaywallView.swift` — redesigned copy + unlock on purchase
-- `ContentView.swift` — post-onboarding paywall auto-show
+### Recent Commits (latest first):
+- `912ade0` — Bump build number to 3 for IAP submission
+- `8172a09` — Fix TODAY counter counting premium-locked habits for free users
+- (earlier) — Contract execution + autoresearch commits on main
 
-### Previous v1.1 Work (COMPLETED):
-- Red Pill IAP ($4.99 one-time) — committed `a105e95`
-- Widget extension — committed with Info.plist fix `1221d48`
-- StoreKit test config — committed `1221d48`
-- Simulator: iPhone 17 Pro Max (C6A79573) is booted with app installed
-
-### Git Remote Issue:
-- HTTPS auth is broken — needs SSH: `git remote set-url origin git@github.com:iuldashev21-boop/Matrix.git`
+### Known Issues:
+- **Paywall price not showing in simulator** — Expected behavior when Paid Apps Agreement is "Processing". Will resolve once agreement is Active. Not a code bug.

@@ -167,6 +167,8 @@ struct CommandCenterView: View {
             syncWidgetData()
             rabbitManager.checkForRabbit()
 
+
+
             if !hasSeenGhostTutorial && (!powers.isEmpty || !agents.isEmpty) {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                     withAnimation { showGhostTutorial = true }
