@@ -278,10 +278,14 @@ struct HabitDetailView: View {
 
     // MARK: - Helpers
 
-    private func formatDate(_ date: Date) -> String {
+    private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d"
-        return formatter.string(from: date)
+        return formatter
+    }()
+
+    private func formatDate(_ date: Date) -> String {
+        Self.dateFormatter.string(from: date)
     }
 
     private func deleteHabit() {
