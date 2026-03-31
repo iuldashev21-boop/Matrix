@@ -8,6 +8,7 @@ class AnomalyManager: ObservableObject {
 
     private let unlockedKey = "unlockedAnomalyReports"
     private let progressKey = "anomalyDecryptionProgress"
+    private let lastCheckInDateKey = "anomalyLastCheckInDate"
 
     init() {
         loadProgress()
@@ -119,8 +120,15 @@ class AnomalyManager: ObservableObject {
         saveProgress()
     }
 
-    // Call this on each check-in to progress all active decryptions
+    // Call this on each check-in to progress all active decryptions (once per day)
     func onDailyCheckIn() {
+        let today = Calendar.current.startOfDay(for: Date())
+        if let last = UserDefaults.standard.object(forKey: lastCheckInDateKey) as? Date,
+           Calendar.current.isDate(last, inSameDayAs: today) {
+            return // Already progressed today
+        }
+        UserDefaults.standard.set(today, forKey: lastCheckInDateKey)
+
         for reportId in Array(decryptionProgress.keys) {
             incrementDecryption(reportId)
         }
