@@ -11,27 +11,27 @@
 
 ## CRITICAL (Data Correctness / Crash Risk)
 
-- [ ] #C1 — `submitAllHabits` XP over-awarded: streak read after in-memory append, `currentStreak + 1` is one too high at milestone boundaries (7/21/66) `CheckInService.swift:185`
-- [ ] #C2 — `AnomalyManager.onDailyCheckIn` mutates dictionary during key iteration — undefined behavior, crash risk `AnomalyManager.swift:123`
-- [ ] #C3 — `DateHelper` static cache (`_cachedToday`, `_cachedYesterday`) is a data race — no thread safety `DateHelper.swift:21`
+- [x] #C1 — `submitAllHabits` XP over-awarded: streak read after in-memory append, `currentStreak + 1` is one too high at milestone boundaries (7/21/66) `CheckInService.swift:185` ✅ `f7dd8a1`
+- [x] #C2 — `AnomalyManager.onDailyCheckIn` mutates dictionary during key iteration — undefined behavior, crash risk `AnomalyManager.swift:123` ✅ `67d13ff`
+- [x] #C3 — `DateHelper` static cache (`_cachedToday`, `_cachedYesterday`) is a data race — no thread safety `DateHelper.swift:21` ✅ `d19cc2c`
 - [ ] #C4 — Widget interactive check-in gives no visual feedback — `reloadAllTimelines()` missing from `CheckInHabitIntent.perform()` `CheckInHabitIntent.swift:83`
 - [ ] #C5 — App foreground sync doesn't refresh widget — `WidgetSyncService` clears pending but never reloads timelines `WidgetSyncService.swift:38`
 - [ ] #C6 — `showSubmitAllSuccess` declared but never set or rendered — no batch check-in confirmation `CommandCenterView.swift:45`
-- [ ] #C7 — `handleBreach()` doesn't update `agent.currentStreak` or `longestStreak` — breach path bypasses model update `DialInView.swift:606`
-- [ ] #C8 — `checkMilestone()` reads stale streak — `power?.currentStreak` may be pre-save value `DialInView.swift:534`
-- [ ] #C9 — IAP bypass: `isRedPillOwned` seeded from UserDefaults on cold launch before `checkEntitlements()` — any user can write `true` to the key with free tools, no jailbreak needed `StoreManager.swift:22`
-- [ ] #C10 — ContractPhase `startHold()` double-fire: re-press before first timer resolves → `completeContract()` called twice → duplicate Power/Agent records in SwiftData `ContractPhase.swift:113`
-- [ ] #C11 — Blue pill back-then-dismiss race: user taps BACK during 3s blue pill timer → phase decrements but timer still fires `onBluePill()` → user ejected despite pressing back `RedBluePillPhase.swift:131`
+- [x] #C7 — `handleBreach()` doesn't update `agent.currentStreak` or `longestStreak` — breach path bypasses model update `DialInView.swift:606` ✅ `30ec78b`
+- [x] #C8 — `checkMilestone()` reads stale streak — `power?.currentStreak` may be pre-save value `DialInView.swift:534` ⏭️ False positive: `saveCheckIn()` runs synchronously before `checkMilestone()`, and `currentStreak` is a computed property that reads the already-appended check-in
+- [x] #C9 — IAP bypass: `isRedPillOwned` seeded from UserDefaults on cold launch before `checkEntitlements()` — any user can write `true` to the key with free tools, no jailbreak needed `StoreManager.swift:22` ✅ `274a572`
+- [x] #C10 — ContractPhase `startHold()` double-fire: re-press before first timer resolves → `completeContract()` called twice → duplicate Power/Agent records in SwiftData `ContractPhase.swift:113` ✅ `16e64c8`
+- [x] #C11 — Blue pill back-then-dismiss race: user taps BACK during 3s blue pill timer → phase decrements but timer still fires `onBluePill()` → user ejected despite pressing back `RedBluePillPhase.swift:131` ✅ `1bd2194`
 
 ## HIGH (Silent Data Loss / IAP / UX Breakage)
 
-- [ ] #H1 — `unlockAllHabits` never calls `context.save()` — paid IAP unlock can be lost on background `StoreManager.swift:110`
-- [ ] #H2 — `recoverWithEMP` spends token before validating habit target — token lost if both power/agent are nil `CheckInService.swift:253`
+- [x] #H1 — `unlockAllHabits` never calls `context.save()` — paid IAP unlock can be lost on background `StoreManager.swift:110` ✅ `274a572`
+- [x] #H2 — `recoverWithEMP` spends token before validating habit target — token lost if both power/agent are nil `CheckInService.swift:253` ✅ `f98962f`
 - [ ] #H3 — `checkWeekendWarrior` uses locale-dependent week offsets — broken for non-US locales (most of Europe) `AchievementManager.swift:196`
 - [ ] #H4 — `checkPerfectWeek` ignores per-habit `scheduledDays` — partial-schedule habits can never achieve it `AchievementManager.swift:233`
 - [ ] #H5 — Widget habit lookup by `name` not `id` — renamed habit = silently dropped check-in `WidgetSyncService.swift:20`
-- [ ] #H6 — `WidgetSyncService` fetch errors silently clear all pending check-ins — permanent data loss `WidgetSyncService.swift:15`
-- [ ] #H7 — In-memory model diverges from store on `context.save()` failure — stale session data `CheckInService.swift:36`
+- [x] #H6 — `WidgetSyncService` fetch errors silently clear all pending check-ins — permanent data loss `WidgetSyncService.swift:15` ✅ `3f1fcc1`
+- [x] #H7 — In-memory model diverges from store on `context.save()` failure — stale session data `CheckInService.swift:36` ✅ `a4ea92b`
 - [ ] #H8 — Random quotes re-roll on every SwiftUI body recompute (DailyAffirmation, OracleReward, BreachMessage) `CommandCenterView.swift:356`, `DialInView.swift:711,960`
 - [ ] #H9 — `empTokenDisplayCount` is stale manual mirror — tokens earned elsewhere don't update header `CommandCenterView.swift:38`
 - [ ] #H10 — Purchase errors swallowed into generic "PURCHASE FAILED" string — no diagnostics `StoreManager.swift:39`
@@ -41,7 +41,7 @@
 - [ ] #H14 — `TierPromotionManager.promoteAgent` doesn't save context — promotion can be lost `TierPromotionManager.swift:80`
 - [ ] #H15 — `AchievementManager` strong self capture in `asyncAfter` on `@MainActor` class `AchievementManager.swift:58`
 - [ ] #H16 — Widget force-unwrap on `Calendar.date(byAdding:)` — crash risk in widget process `MatrixHabitWidget.swift:46`
-- [ ] #H17 — `checkEntitlements()` never resets `isRedPillOwned` to `false` before scanning — stale UserDefaults `true` persists even if transaction absent `StoreManager.swift:84`
+- [x] #H17 — `checkEntitlements()` never resets `isRedPillOwned` to `false` before scanning — stale UserDefaults `true` persists even if transaction absent `StoreManager.swift:84` ✅ `274a572`
 - [ ] #H18 — Onboarding progress bar visible on ContractPhase (phase 16 not in exclusion set) — overlaps hold-to-sign UI `AwakeningView.swift:207`
 - [ ] #H19 — Dead onboarding Path A (PillChoiceView → FirstHackSetupView) still compiled and reachable — bypasses 16 phases, creates incomplete setup `PillChoiceView.swift:97`
 
