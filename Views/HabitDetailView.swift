@@ -394,6 +394,16 @@ struct EditHabitSheet: View {
                         .font(.system(size: 14, design: .monospaced))
                         .foregroundColor(accentColor)
                 }
+                ToolbarItem(placement: .keyboard) {
+                    HStack {
+                        Spacer()
+                        Button("DONE") {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        }
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        .foregroundColor(accentColor)
+                    }
+                }
             }
         }
         .onAppear {
