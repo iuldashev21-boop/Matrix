@@ -12,6 +12,7 @@ struct HabitCard: View {
     var isLocked: Bool = false
     var onEdit: (() -> Void)? = nil
     var onDelete: (() -> Void)? = nil
+    var onViewDetail: (() -> Void)? = nil
 
     var progress: Double {
         guard targetDays > 0 else { return 0 }
@@ -110,8 +111,13 @@ struct HabitCard: View {
                 Image(systemName: "lock.fill")
                     .font(.system(size: 14))
                     .foregroundColor(.red.opacity(0.5))
-            } else if onEdit != nil || onDelete != nil {
+            } else if onEdit != nil || onDelete != nil || onViewDetail != nil {
                 Menu {
+                    if let onViewDetail = onViewDetail {
+                        Button(action: onViewDetail) {
+                            Label("Details", systemImage: "chart.bar")
+                        }
+                    }
                     if let onEdit = onEdit {
                         Button(action: onEdit) {
                             Label("Edit", systemImage: "pencil")

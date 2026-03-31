@@ -16,6 +16,8 @@ struct CommandCenterView: View {
     @State private var editingAgent: Agent? = nil
     @State private var deletingPower: Power? = nil
     @State private var deletingAgent: Agent? = nil
+    @State private var detailPower: Power? = nil
+    @State private var detailAgent: Agent? = nil
     @State private var showDeleteConfirmation: Bool = false
     @State private var showDeleteError: Bool = false
     @State private var showWhiteRabbit: Bool = false
@@ -215,6 +217,12 @@ struct CommandCenterView: View {
         }
         .sheet(item: $editingAgent) { agent in
             EditHabitSheet(power: nil, agent: agent)
+        }
+        .sheet(item: $detailPower) { power in
+            HabitDetailView(power: power, agent: nil)
+        }
+        .sheet(item: $detailAgent) { agent in
+            HabitDetailView(power: nil, agent: agent)
         }
         .sheet(item: $promotionCandidate) { candidate in
             TierPromotionSheet(
@@ -531,7 +539,8 @@ struct CommandCenterView: View {
                     onDelete: {
                         deletingPower = power
                         showDeleteConfirmation = true
-                    }
+                    },
+                    onViewDetail: { detailPower = power }
                 )
                 .padding(.horizontal, Spacing.md)
                 .onTapGesture {
@@ -553,7 +562,8 @@ struct CommandCenterView: View {
                     onDelete: {
                         deletingPower = power
                         showDeleteConfirmation = true
-                    }
+                    },
+                    onViewDetail: { detailPower = power }
                 )
                 .padding(.horizontal, Spacing.md)
                 .opacity(0.5)
@@ -599,7 +609,8 @@ struct CommandCenterView: View {
                     onDelete: {
                         deletingAgent = agent
                         showDeleteConfirmation = true
-                    }
+                    },
+                    onViewDetail: { detailAgent = agent }
                 )
                 .padding(.horizontal, Spacing.md)
                 .onTapGesture {
@@ -621,7 +632,8 @@ struct CommandCenterView: View {
                     onDelete: {
                         deletingAgent = agent
                         showDeleteConfirmation = true
-                    }
+                    },
+                    onViewDetail: { detailAgent = agent }
                 )
                 .padding(.horizontal, Spacing.md)
                 .opacity(0.5)
