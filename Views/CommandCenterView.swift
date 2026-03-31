@@ -35,7 +35,7 @@ struct CommandCenterView: View {
     @State private var isAgentsExpanded: Bool = true
     @State private var isSidequestsExpanded: Bool = false
     @State private var sidequestRefreshTrigger: Int = 0 // Forces refresh when sidequests complete
-    @State private var empTokenDisplayCount: Int = UserProfile.empTokens // For UI refresh
+    private var empTokenDisplayCount: Int { UserProfile.empTokens }
 
     // Paywall
     @State private var showPaywall: Bool = false
@@ -724,9 +724,6 @@ struct CommandCenterView: View {
                     RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                         .stroke(Color.purple.opacity(0.5), lineWidth: 1)
                 )
-                .onAppear {
-                    empTokenDisplayCount = UserProfile.empTokens
-                }
 
                 Text("RANK: \(UserProfile.currentRank.rawValue)")
                     .font(.system(size: 11, weight: .medium, design: .monospaced))
