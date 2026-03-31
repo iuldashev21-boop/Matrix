@@ -8,7 +8,7 @@ enum StreakCalculator {
     /// - Returns: Number of consecutive successful scheduled days
     static func calculateStreak(for checkIns: [CheckIn], scheduledDays: [Int] = []) -> Int {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
+        let today = DateHelper.today
 
         // Helper to check if a date is scheduled
         let isScheduled: (Date) -> Bool = { date in
