@@ -193,7 +193,7 @@ struct MediumWidgetView: View {
 
                 // Right side: habit list (top 4)
                 VStack(alignment: .leading, spacing: 6) {
-                    ForEach(Array(data.habits.sorted(by: { $0.streak > $1.streak }).prefix(4).enumerated()), id: \.offset) { _, habit in
+                    ForEach(Array(data.habits.sorted(by: { $0.streak > $1.streak }).prefix(4).enumerated()), id: \.element.id) { _, habit in
                         HStack(spacing: 6) {
                             if habit.completedToday {
                                 Image(systemName: "checkmark.circle.fill")
