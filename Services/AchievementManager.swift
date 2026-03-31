@@ -208,6 +208,7 @@ class AchievementManager: ObservableObject {
     // MARK: - Weekend Warrior Check
 
     private func checkWeekendWarrior(powers: [Power], agents: [Agent]) {
+        guard !isUnlocked("weekend_warrior") else { return }
         let calendar = Calendar.current
         let today = DateHelper.today
 
@@ -247,6 +248,7 @@ class AchievementManager: ObservableObject {
     // MARK: - Perfect Week Check
 
     private func checkPerfectWeek(powers: [Power], agents: [Agent]) {
+        guard !isUnlocked("perfect_week") else { return }
         let calendar = Calendar.current
         let today = DateHelper.today
 
