@@ -318,7 +318,8 @@ struct SignalAnalysisView: View {
     // MARK: - P2: Weekly Summary Section
 
     private var weeklySummarySection: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
+        let stats = weeklyStats
+        return VStack(alignment: .leading, spacing: Spacing.sm) {
             Text("// WEEKLY REPORT")
                 .font(.system(size: 12, weight: .bold, design: .monospaced))
                 .foregroundColor(Color.lightGray)
@@ -326,7 +327,7 @@ struct SignalAnalysisView: View {
             HStack(spacing: Spacing.md) {
                 // Completion count
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("\(weeklyStats.completed)/\(weeklyStats.total)")
+                    Text("\(stats.completed)/\(stats.total)")
                         .font(.system(size: 24, weight: .bold, design: .monospaced))
                         .foregroundColor(Color.matrixGreen)
 
@@ -344,18 +345,18 @@ struct SignalAnalysisView: View {
                         .frame(width: 60, height: 60)
 
                     Circle()
-                        .trim(from: 0, to: CGFloat(weeklyStats.rate) / 100)
+                        .trim(from: 0, to: CGFloat(stats.rate) / 100)
                         .stroke(Color.matrixGreen, style: StrokeStyle(lineWidth: 6, lineCap: .round))
                         .frame(width: 60, height: 60)
                         .rotationEffect(.degrees(-90))
 
-                    Text("\(weeklyStats.rate)%")
+                    Text("\(stats.rate)%")
                         .font(.system(size: 14, weight: .bold, design: .monospaced))
                         .foregroundColor(.white)
                 }
 
                 // Comparison to last week
-                if let comparison = weeklyStats.vsLastWeek {
+                if let comparison = stats.vsLastWeek {
                     VStack(alignment: .trailing, spacing: 4) {
                         HStack(spacing: 2) {
                             Image(systemName: comparison >= 0 ? "arrow.up" : "arrow.down")
