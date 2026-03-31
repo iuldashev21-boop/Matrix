@@ -42,8 +42,8 @@
 - [x] #H15 — `AchievementManager` strong self capture in `asyncAfter` on `@MainActor` class `AchievementManager.swift:58` ✅ `dbc293b`
 - [x] #H16 — Widget force-unwrap on `Calendar.date(byAdding:)` — crash risk in widget process `MatrixHabitWidget.swift:46` ✅ `ea6cd1e`
 - [x] #H17 — `checkEntitlements()` never resets `isRedPillOwned` to `false` before scanning — stale UserDefaults `true` persists even if transaction absent `StoreManager.swift:84` ✅ `274a572`
-- [ ] #H18 — Onboarding progress bar visible on ContractPhase (phase 16 not in exclusion set) — overlaps hold-to-sign UI `AwakeningView.swift:207`
-- [ ] #H19 — Dead onboarding Path A (PillChoiceView → FirstHackSetupView) still compiled and reachable — bypasses 16 phases, creates incomplete setup `PillChoiceView.swift:97`
+- [x] #H18 — Onboarding progress bar visible on ContractPhase (phase 16 not in exclusion set) — overlaps hold-to-sign UI `AwakeningView.swift:207` ✅ `181a2b2`
+- [x] #H19 — Dead onboarding Path A (PillChoiceView → FirstHackSetupView) still compiled and reachable — bypasses 16 phases, creates incomplete setup `PillChoiceView.swift:97` ✅ `6fd2873`
 
 ## MEDIUM (Performance / UX / Architecture)
 
@@ -75,11 +75,11 @@
 - [ ] #M26 — `cheatKeys` UserDefaults key may bypass content gates — should be `#if DEBUG` only `UserDefaultsKeys.swift:17`
 - [ ] #M27 — `operatorAge` personal data stored in plaintext UserDefaults — privacy risk on unencrypted backups `UserDefaultsKeys.swift:11`
 - [ ] #M28 — XP/EMP token economy in plaintext UserDefaults — freely editable, undermines gamification `UserProfile.swift:33`
-- [ ] #M29 — 17 onboarding phases with no skip option — high drop-off risk, phases 13-14 are pure narrative after emotional peak
-- [ ] #M30 — Dual progress indicators in onboarding: "DIAGNOSTIC 1/9" vs "PHASE 4 OF 17" — confusing `HookQuestionPhase.swift:33`
-- [ ] #M31 — `fillFromUniversalPool()` has fragile while loop — infinite loop risk if pool < 3 items `AwakeningView.swift:504`
-- [ ] #M32 — Onboarding back button at phase 0 is a dead tap (no-op with no feedback) `AwakeningView.swift`
-- [ ] #M33 — `VignetteOverlay` uses deprecated `UIScreen.main.bounds` `OnboardingComponents.swift:25`
+- [ ] #M29 — 17 onboarding phases with no skip option — high drop-off risk, phases 13-14 are pure narrative after emotional peak ⏭️ Product/UX decision — not a code fix
+- [x] #M30 — Dual progress indicators in onboarding: "DIAGNOSTIC 1/9" vs "PHASE 4 OF 17" — confusing `HookQuestionPhase.swift:33` ✅ `84de104`
+- [x] #M31 — `fillFromUniversalPool()` has fragile while loop — infinite loop risk if pool < 3 items `AwakeningView.swift:504` ✅ `5ad57ec`
+- [x] #M32 — Onboarding back button at phase 0 is a dead tap (no-op with no feedback) `AwakeningView.swift` ⏭️ False positive: phase 0 (PrisonerRecordPhase) has no back button
+- [x] #M33 — `VignetteOverlay` uses deprecated `UIScreen.main.bounds` `OnboardingComponents.swift:25` ✅ `149c74f`
 
 ## LOW (Deferred / Cosmetic)
 
