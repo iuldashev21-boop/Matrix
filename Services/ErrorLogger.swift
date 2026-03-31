@@ -8,7 +8,7 @@ enum ErrorLogger {
     private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MatrixHabit", category: "Error")
 
     /// Recent errors stored in memory for debugging (last 50)
-    private static var recentErrors: [(Date, String, Error)] = []
+    private static var recentErrors: [(Date, String)] = []
     private static let maxStoredErrors = 50
     private static let lock = NSLock()
 
@@ -43,7 +43,7 @@ enum ErrorLogger {
 
         // Store in memory for debugging
         lock.lock()
-        recentErrors.append((Date(), message, error))
+        recentErrors.append((Date(), message))
         if recentErrors.count > maxStoredErrors {
             recentErrors.removeFirst()
         }
@@ -60,7 +60,7 @@ enum ErrorLogger {
     static func getRecentErrors() -> [(Date, String)] {
         lock.lock()
         defer { lock.unlock() }
-        return recentErrors.map { ($0.0, $0.1) }
+        return recentErrors
     }
 
     /// Clear stored errors
