@@ -8,6 +8,7 @@ private let appGroupID = "group.com.construct.MatrixHabit"
 private let widgetDataKey = "com.matrixhabit.widget.data"
 
 struct HabitSnapshot: Codable {
+    let id: String
     let name: String
     let icon: String
     let streak: Int
@@ -65,9 +66,9 @@ struct MatrixHabitTimelineProvider: TimelineProvider {
     private var sampleData: WidgetHabitData {
         WidgetHabitData(
             habits: [
-                HabitSnapshot(name: "Meditate", icon: "brain.head.profile", streak: 12, completedToday: true, isPower: true),
-                HabitSnapshot(name: "Exercise", icon: "figure.run", streak: 7, completedToday: false, isPower: true),
-                HabitSnapshot(name: "No Sugar", icon: "xmark.shield", streak: 21, completedToday: true, isPower: false)
+                HabitSnapshot(id: "1", name: "Meditate", icon: "brain.head.profile", streak: 12, completedToday: true, isPower: true),
+                HabitSnapshot(id: "2", name: "Exercise", icon: "figure.run", streak: 7, completedToday: false, isPower: true),
+                HabitSnapshot(id: "3", name: "No Sugar", icon: "xmark.shield", streak: 21, completedToday: true, isPower: false)
             ],
             totalStreak: 40,
             completedToday: 2,
@@ -199,7 +200,7 @@ struct MediumWidgetView: View {
                                     .font(.system(size: 11))
                                     .foregroundColor(matrixGreen)
                             } else {
-                                Button(intent: CheckInHabitIntent(habitName: habit.name, isPower: habit.isPower)) {
+                                Button(intent: CheckInHabitIntent(habitId: habit.id, habitName: habit.name, isPower: habit.isPower)) {
                                     Image(systemName: "circle")
                                         .font(.system(size: 11))
                                         .foregroundColor(mediumGray)
@@ -301,8 +302,8 @@ struct WidgetEntryView: View {
 } timeline: {
     MatrixHabitEntry(date: Date(), data: WidgetHabitData(
         habits: [
-            HabitSnapshot(name: "Meditate", icon: "brain.head.profile", streak: 12, completedToday: true, isPower: true),
-            HabitSnapshot(name: "Exercise", icon: "figure.run", streak: 7, completedToday: false, isPower: true)
+            HabitSnapshot(id: "1", name: "Meditate", icon: "brain.head.profile", streak: 12, completedToday: true, isPower: true),
+            HabitSnapshot(id: "2", name: "Exercise", icon: "figure.run", streak: 7, completedToday: false, isPower: true)
         ],
         totalStreak: 19,
         completedToday: 1,
@@ -316,10 +317,10 @@ struct WidgetEntryView: View {
 } timeline: {
     MatrixHabitEntry(date: Date(), data: WidgetHabitData(
         habits: [
-            HabitSnapshot(name: "Lock In", icon: "brain", streak: 32, completedToday: true, isPower: true),
-            HabitSnapshot(name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true),
-            HabitSnapshot(name: "Doomscrolling", icon: "iphone.slash", streak: 14, completedToday: false, isPower: false),
-            HabitSnapshot(name: "Deep Sleep", icon: "moon.zzz.fill", streak: 7, completedToday: true, isPower: true)
+            HabitSnapshot(id: "4", name: "Lock In", icon: "brain", streak: 32, completedToday: true, isPower: true),
+            HabitSnapshot(id: "5", name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true),
+            HabitSnapshot(id: "6", name: "Doomscrolling", icon: "iphone.slash", streak: 14, completedToday: false, isPower: false),
+            HabitSnapshot(id: "7", name: "Deep Sleep", icon: "moon.zzz.fill", streak: 7, completedToday: true, isPower: true)
         ],
         totalStreak: 74,
         completedToday: 2,
@@ -333,8 +334,8 @@ struct WidgetEntryView: View {
 } timeline: {
     MatrixHabitEntry(date: Date(), data: WidgetHabitData(
         habits: [
-            HabitSnapshot(name: "Lock In", icon: "brain", streak: 32, completedToday: true, isPower: true),
-            HabitSnapshot(name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true)
+            HabitSnapshot(id: "4", name: "Lock In", icon: "brain", streak: 32, completedToday: true, isPower: true),
+            HabitSnapshot(id: "5", name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true)
         ],
         totalStreak: 53,
         completedToday: 1,
@@ -348,9 +349,9 @@ struct WidgetEntryView: View {
 } timeline: {
     MatrixHabitEntry(date: Date(), data: WidgetHabitData(
         habits: [
-            HabitSnapshot(name: "Lock In", icon: "brain", streak: 32, completedToday: false, isPower: true),
-            HabitSnapshot(name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true),
-            HabitSnapshot(name: "Doomscrolling", icon: "iphone.slash", streak: 14, completedToday: true, isPower: false)
+            HabitSnapshot(id: "4", name: "Lock In", icon: "brain", streak: 32, completedToday: false, isPower: true),
+            HabitSnapshot(id: "5", name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true),
+            HabitSnapshot(id: "6", name: "Doomscrolling", icon: "iphone.slash", streak: 14, completedToday: true, isPower: false)
         ],
         totalStreak: 67,
         completedToday: 1,

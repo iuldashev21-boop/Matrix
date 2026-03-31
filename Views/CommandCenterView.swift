@@ -840,8 +840,8 @@ struct CommandCenterView: View {
 
     private func syncWidgetData() {
         WidgetDataManager.update(
-            powers: powers.map { ($0.name, $0.icon, $0.currentStreak, $0.completedToday, $0.isScheduledToday) },
-            agents: agents.map { ($0.name, $0.icon, $0.currentStreak, $0.resistedToday, $0.isScheduledToday) }
+            powers: powers.map { ($0.id.uuidString, $0.name, $0.icon, $0.currentStreak, $0.completedToday, $0.isScheduledToday) },
+            agents: agents.map { ($0.id.uuidString, $0.name, $0.icon, $0.currentStreak, $0.resistedToday, $0.isScheduledToday) }
         )
     }
 

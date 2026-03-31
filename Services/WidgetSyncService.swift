@@ -19,14 +19,14 @@ enum WidgetSyncService {
 
         for entry in pending {
             if entry.isPower {
-                guard let power = allPowers.first(where: { $0.name == entry.habitName }) else { continue }
+                guard let power = allPowers.first(where: { $0.id.uuidString == entry.habitId }) else { continue }
                 CheckInService.recordPowerCheckIn(
                     power: power,
                     date: entry.date,
                     context: context
                 )
             } else {
-                guard let agent = allAgents.first(where: { $0.name == entry.habitName }) else { continue }
+                guard let agent = allAgents.first(where: { $0.id.uuidString == entry.habitId }) else { continue }
                 CheckInService.recordAgentResistance(
                     agent: agent,
                     date: entry.date,
