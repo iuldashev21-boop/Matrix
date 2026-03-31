@@ -94,7 +94,8 @@ struct PillChoiceView: View {
             }
         }
         .fullScreenCover(isPresented: $navigateToNextScreen) {
-            FirstHackSetupView(isPresented: $navigateToNextScreen)
+            // Dead path — old onboarding Path A removed (H19)
+            EmptyView()
         }
     }
 

@@ -48,8 +48,7 @@
 		A10000000000000000000020 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000020 /* UserProfile.swift */; };
 		A10000000000000000000021 /* TerminalWakeUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000021 /* TerminalWakeUpView.swift */; };
 		A10000000000000000000022 /* PillChoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000022 /* PillChoiceView.swift */; };
-		A10000000000000000000023 /* FirstHackSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000023 /* FirstHackSetupView.swift */; };
-		A10000000000000000000024 /* RankSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000024 /* RankSystem.swift */; };
+A10000000000000000000024 /* RankSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000024 /* RankSystem.swift */; };
 		A10000000000000000000025 /* CommandCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000025 /* CommandCenterView.swift */; };
 		A10000000000000000000026 /* DialInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000026 /* DialInView.swift */; };
 		A10000000000000000000027 /* EMPRecoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000027 /* EMPRecoveryView.swift */; };
@@ -194,8 +193,7 @@
 		A20000000000000000000020 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		A20000000000000000000021 /* TerminalWakeUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalWakeUpView.swift; sourceTree = "<group>"; };
 		A20000000000000000000022 /* PillChoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillChoiceView.swift; sourceTree = "<group>"; };
-		A20000000000000000000023 /* FirstHackSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstHackSetupView.swift; sourceTree = "<group>"; };
-		A20000000000000000000024 /* RankSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankSystem.swift; sourceTree = "<group>"; };
+A20000000000000000000024 /* RankSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankSystem.swift; sourceTree = "<group>"; };
 		A20000000000000000000025 /* CommandCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandCenterView.swift; sourceTree = "<group>"; };
 		A20000000000000000000026 /* DialInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialInView.swift; sourceTree = "<group>"; };
 		A20000000000000000000027 /* EMPRecoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EMPRecoveryView.swift; sourceTree = "<group>"; };
@@ -473,8 +471,7 @@
 			children = (
 				A20000000000000000000021 /* TerminalWakeUpView.swift */,
 				A20000000000000000000022 /* PillChoiceView.swift */,
-				A20000000000000000000023 /* FirstHackSetupView.swift */,
-				A20000000000000000000025 /* CommandCenterView.swift */,
+A20000000000000000000025 /* CommandCenterView.swift */,
 				A20000000000000000000120 /* AddHabitSheet.swift */,
 				A20000000000000000000121 /* AchievementsTabView.swift */,
 				A20000000000000000000122 /* CommandCenterOverlays.swift */,
@@ -713,8 +710,7 @@
 				A10000000000000000000020 /* UserProfile.swift in Sources */,
 				A10000000000000000000021 /* TerminalWakeUpView.swift in Sources */,
 				A10000000000000000000022 /* PillChoiceView.swift in Sources */,
-				A10000000000000000000023 /* FirstHackSetupView.swift in Sources */,
-				A10000000000000000000024 /* RankSystem.swift in Sources */,
+A10000000000000000000024 /* RankSystem.swift in Sources */,
 				A10000000000000000000025 /* CommandCenterView.swift in Sources */,
 				A10000000000000000000026 /* DialInView.swift in Sources */,
 				A10000000000000000000027 /* EMPRecoveryView.swift in Sources */,
