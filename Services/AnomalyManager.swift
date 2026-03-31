@@ -2,6 +2,7 @@ import Foundation
 
 // MARK: - Anomaly Progress Tracking
 
+@MainActor
 class AnomalyManager: ObservableObject {
     @Published var unlockedReports: Set<String> = []
     @Published var decryptionProgress: [String: Int] = [:] // reportId: days (0-5)
@@ -185,7 +186,7 @@ class AnomalyManager: ObservableObject {
 
     // MARK: - Text Scramble Helper
 
-    static func scrambleText(_ text: String, revealPercentage: Double) -> String {
+    nonisolated static func scrambleText(_ text: String, revealPercentage: Double) -> String {
         let matrixChars = "ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロワヲン0123456789"
 
         var result = ""
