@@ -535,7 +535,6 @@ struct CommandCenterView: View {
                 )
                 .padding(.horizontal, Spacing.md)
                 .onTapGesture {
-                    guard !isCompleted else { return }
                     selectedPower = power
                 }
             }
@@ -604,7 +603,6 @@ struct CommandCenterView: View {
                 )
                 .padding(.horizontal, Spacing.md)
                 .onTapGesture {
-                    guard !isCompleted else { return }
                     selectedAgent = agent
                 }
             }
