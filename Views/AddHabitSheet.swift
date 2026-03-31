@@ -379,7 +379,7 @@ struct FrequencyPresetButton: View {
                 .padding(.horizontal, Spacing.sm)
                 .padding(.vertical, Spacing.xs)
                 .background(isSelected ? accentColor : Color.charcoal)
-                .cornerRadius(6)
+                .cornerRadius(Theme.cornerRadiusCompact)
         }
     }
 }

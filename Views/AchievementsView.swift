@@ -277,7 +277,7 @@ struct AchievementDetailSheet: View {
                     .padding(.horizontal, 10)
                     .padding(.vertical, 4)
                     .background(rarityColor.opacity(0.2))
-                    .cornerRadius(6)
+                    .cornerRadius(Theme.cornerRadiusCompact)
 
                 // Description
                 Text(isUnlocked ? achievement.description : "??? ENCRYPTED ???")
