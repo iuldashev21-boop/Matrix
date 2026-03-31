@@ -113,15 +113,17 @@ struct SmallWidgetView: View {
 
                 Spacer()
 
-                // Top streak habit
-                if let topHabit = data.habits.sorted(by: { $0.streak > $1.streak }).first {
+                // Most urgent: first incomplete habit, or top streak if all done
+                if let nextHabit = data.habits.first(where: { !$0.completedToday })
+                    ?? data.habits.sorted(by: { $0.streak > $1.streak }).first {
                     HStack(spacing: 4) {
-                        Image(systemName: topHabit.icon)
+                        Image(systemName: nextHabit.icon)
                             .font(.system(size: 10))
-                            .foregroundColor(matrixGreen)
-                        Text("\(topHabit.streak)d")
+                            .foregroundColor(nextHabit.completedToday ? matrixGreen : mediumGray)
+                        Text(nextHabit.completedToday ? "\(nextHabit.streak)d" : nextHabit.name.uppercased())
                             .font(.system(size: 11, weight: .bold, design: .monospaced))
                             .foregroundColor(.white)
+                            .lineLimit(1)
                     }
                 }
             }
