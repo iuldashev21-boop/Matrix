@@ -205,7 +205,7 @@ struct AwakeningView: View {
     }
 
     private var shouldShowProgressIndicator: Bool {
-        ![13, 14, 15, 17].contains(currentPhase)
+        ![13, 14, 15, 16, 17].contains(currentPhase)
     }
 
     private func advancePhase() {
