@@ -43,6 +43,7 @@ struct CommandCenterView: View {
     // Submit All
     @State private var isSubmittingAll: Bool = false
     @State private var showSubmitAllSuccess: Bool = false
+    @State private var cachedAffirmation: String?
 
     // MARK: - Computed Properties
 
@@ -361,6 +362,8 @@ struct CommandCenterView: View {
     }
 
     private var dailyAffirmation: String {
+        if let cached = cachedAffirmation { return cached }
+        let result: String
         if let streak = bestStreak, streak.days > 0 {
             let messages = [
                 "Day \(streak.days) of \(streak.name).\nMost people can't do 3 days.\nYou're not most people.",
@@ -369,15 +372,17 @@ struct CommandCenterView: View {
                 "\(streak.days) consecutive uploads.\nThe old you would have quit.\nBut you're still here.",
                 "Day \(streak.days). The compound effect is real.\nSmall wins create momentum.\nMomentum creates change."
             ]
-            return messages.randomElement() ?? messages[0]
+            result = messages.randomElement() ?? messages[0]
         } else {
             let messages = [
                 "Every master was once a disaster.\nToday is Day 1.\nMake it count.",
                 "The journey of 66 days\nbegins with a single check-in.\nYou've got this.",
                 "Welcome back, Operator.\nThe Matrix is waiting.\nTime to fight back."
             ]
-            return messages.randomElement() ?? messages[0]
+            result = messages.randomElement() ?? messages[0]
         }
+        DispatchQueue.main.async { cachedAffirmation = result }
+        return result
     }
 
     // MARK: - Dashboard Content
