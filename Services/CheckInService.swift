@@ -69,6 +69,9 @@ enum CheckInService {
             WidgetCenter.shared.reloadAllTimelines()
             return .success(xpEarned)
         } catch {
+            // Roll back in-memory state to match store
+            power.checkIns.removeAll { $0 === checkIn }
+            context.delete(checkIn)
             ErrorLogger.logSaveFailure(error, context: "CheckInService.recordPowerCheckIn")
             return .failure(.saveFailed(error))
         }
@@ -130,6 +133,9 @@ enum CheckInService {
             WidgetCenter.shared.reloadAllTimelines()
             return .success(xpEarned)
         } catch {
+            // Roll back in-memory state to match store
+            agent.checkIns.removeAll { $0 === checkIn }
+            context.delete(checkIn)
             ErrorLogger.logSaveFailure(error, context: "CheckInService.recordAgentResistance")
             return .failure(.saveFailed(error))
         }
@@ -158,6 +164,9 @@ enum CheckInService {
 
             return .success(())
         } catch {
+            // Roll back in-memory state to match store
+            agent.checkIns.removeAll { $0 === checkIn }
+            context.delete(checkIn)
             ErrorLogger.logSaveFailure(error, context: "CheckInService.recordAgentRelapse")
             return .failure(.saveFailed(error))
         }
