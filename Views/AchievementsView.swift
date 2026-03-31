@@ -1,12 +1,13 @@
 import SwiftUI
 import SwiftData
 
-struct AchievementsView: View {
-    @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var modelContext
-    @Query private var unlockedAchievements: [Achievement]
+// MARK: - Shared Achievement Content
 
+struct AchievementGridContent: View {
+    @Query private var unlockedAchievements: [Achievement]
     @State private var selectedAchievement: AchievementDefinition? = nil
+
+    var showAnomalyReports: Bool = false
 
     private var unlockedIds: Set<String> {
         Set(unlockedAchievements.map { $0.id })
@@ -23,57 +24,36 @@ struct AchievementsView: View {
     private let gridColumns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 5)
 
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color.matrixBlack.ignoresSafeArea()
+        VStack(spacing: Spacing.lg) {
+            progressHeader
 
-                ScrollView {
-                    VStack(spacing: Spacing.lg) {
-                        // Progress Header
-                        progressHeader
+            achievementGridSection(
+                title: "STREAK DECRYPTIONS",
+                achievements: AchievementLibrary.streakAchievements
+            )
 
-                        // Achievement Grid Sections
-                        achievementGridSection(
-                            title: "STREAK DECRYPTIONS",
-                            achievements: AchievementLibrary.streakAchievements
-                        )
+            achievementGridSection(
+                title: "CONSISTENCY PROTOCOLS",
+                achievements: AchievementLibrary.consistencyAchievements
+            )
 
-                        achievementGridSection(
-                            title: "CONSISTENCY PROTOCOLS",
-                            achievements: AchievementLibrary.consistencyAchievements
-                        )
+            achievementGridSection(
+                title: "SPECIAL OPS",
+                achievements: AchievementLibrary.specialAchievements
+            )
 
-                        achievementGridSection(
-                            title: "SPECIAL OPS",
-                            achievements: AchievementLibrary.specialAchievements
-                        )
-
-                        // Anomaly Reports
-                        AnomalyReportsSection()
-
-                        Spacer(minLength: 50)
-                    }
-                    .padding(.top, Spacing.md)
-                }
+            if showAnomalyReports {
+                AnomalyReportsSection()
             }
-            .navigationTitle("DECRYPTIONS")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("CLOSE") { dismiss() }
-                        .font(.system(size: 14, weight: .medium, design: .monospaced))
-                        .foregroundColor(Color.matrixGreen)
-                }
-            }
-            .sheet(item: $selectedAchievement) { achievement in
-                AchievementDetailSheet(
-                    achievement: achievement,
-                    isUnlocked: unlockedIds.contains(achievement.id),
-                    unlockedAt: unlockedAchievements.first { $0.id == achievement.id }?.unlockedAt
-                )
-                .presentationDetents([.height(280)])
-                .presentationDragIndicator(.visible)
-            }
+        }
+        .sheet(item: $selectedAchievement) { achievement in
+            AchievementDetailSheet(
+                achievement: achievement,
+                isUnlocked: unlockedIds.contains(achievement.id),
+                unlockedAt: unlockedAchievements.first { $0.id == achievement.id }?.unlockedAt
+            )
+            .presentationDetents([.height(280)])
+            .presentationDragIndicator(.visible)
         }
     }
 
@@ -157,6 +137,36 @@ struct AchievementsView: View {
             .background(Color.darkGray.opacity(0.5))
             .cornerRadius(12)
             .padding(.horizontal, Spacing.md)
+        }
+    }
+}
+
+// MARK: - Modal Achievements View (Settings)
+
+struct AchievementsView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color.matrixBlack.ignoresSafeArea()
+
+                ScrollView {
+                    AchievementGridContent(showAnomalyReports: true)
+                        .padding(.top, Spacing.md)
+
+                    Spacer(minLength: 50)
+                }
+            }
+            .navigationTitle("DECRYPTIONS")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("CLOSE") { dismiss() }
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        .foregroundColor(Color.matrixGreen)
+                }
+            }
         }
     }
 }
