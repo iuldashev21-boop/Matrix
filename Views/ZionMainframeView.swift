@@ -765,7 +765,7 @@ struct ExportDataView: View {
     @Query private var checkIns: [CheckIn]
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 Color.matrixBlack.ignoresSafeArea()
 

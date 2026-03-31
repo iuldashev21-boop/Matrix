@@ -324,7 +324,7 @@ struct EditHabitSheet: View {
     private let agentIcons = ["xmark.shield", "iphone", "moon.zzz", "cup.and.saucer", "tv", "creditcard", "flame", "wineglass", "cigarette", "gamecontroller"]
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 Color.matrixBlack.ignoresSafeArea()
 
