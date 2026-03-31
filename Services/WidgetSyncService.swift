@@ -11,9 +11,11 @@ enum WidgetSyncService {
         let pending = WidgetDataManager.readPendingCheckIns()
         guard !pending.isEmpty else { return }
 
-        // Fetch all habits once
-        let allPowers = (try? context.fetch(FetchDescriptor<Power>())) ?? []
-        let allAgents = (try? context.fetch(FetchDescriptor<Agent>())) ?? []
+        // Fetch all habits — abort sync if fetch fails to avoid losing pending data
+        guard let allPowers = try? context.fetch(FetchDescriptor<Power>()),
+              let allAgents = try? context.fetch(FetchDescriptor<Agent>()) else {
+            return
+        }
 
         for entry in pending {
             if entry.isPower {
@@ -33,7 +35,7 @@ enum WidgetSyncService {
             }
         }
 
-        // Clear pending regardless of individual success/failure
+        // Clear pending only after successful fetch + processing
         // (duplicates are handled by CheckInService returning .duplicateCheckIn)
         WidgetDataManager.clearPendingCheckIns()
     }
