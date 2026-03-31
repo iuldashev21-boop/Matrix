@@ -399,10 +399,12 @@ struct SignalAnalysisView: View {
             }
             .padding(.horizontal, Spacing.md)
 
-            // Day labels
+            // Day labels (dynamic, aligned with grid columns going back from today)
             HStack(spacing: 2) {
-                ForEach(["M", "T", "W", "T", "F", "S", "S"], id: \.self) { day in
-                    Text(day)
+                let weekday = Calendar.current.component(.weekday, from: Date())
+                let dayLetters = ["S", "M", "T", "W", "T", "F", "S"]
+                ForEach(0..<7, id: \.self) { offset in
+                    Text(dayLetters[((weekday - 1) - offset + 7) % 7])
                         .font(.system(size: 8, design: .monospaced))
                         .foregroundColor(Color.mediumGray)
                         .frame(maxWidth: .infinity)
