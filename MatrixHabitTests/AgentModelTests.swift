@@ -265,12 +265,11 @@ final class AgentModelTests: XCTestCase {
 
     func test_touch_updatesUpdatedAt() {
         let agent = Agent(name: "Test")
-        let originalDate = agent.updatedAt
-
-        Thread.sleep(forTimeInterval: 0.01)
+        // Set updatedAt to a known past date to avoid timing dependency
+        agent.updatedAt = Date.distantPast
         agent.touch()
 
-        XCTAssertGreaterThan(agent.updatedAt, originalDate)
+        XCTAssertGreaterThan(agent.updatedAt, Date.distantPast)
     }
 
     // MARK: - Helpers

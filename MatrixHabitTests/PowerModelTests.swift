@@ -240,13 +240,11 @@ final class PowerModelTests: XCTestCase {
 
     func test_touch_updatesUpdatedAt() {
         let power = Power(name: "Test")
-        let originalDate = power.updatedAt
-
-        // Wait a tiny bit to ensure time difference
-        Thread.sleep(forTimeInterval: 0.01)
+        // Set updatedAt to a known past date to avoid timing dependency
+        power.updatedAt = Date.distantPast
         power.touch()
 
-        XCTAssertGreaterThan(power.updatedAt, originalDate)
+        XCTAssertGreaterThan(power.updatedAt, Date.distantPast)
     }
 
     // MARK: - Helpers
