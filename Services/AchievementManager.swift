@@ -190,37 +190,34 @@ class AchievementManager: ObservableObject {
 
     private func checkWeekendWarrior(powers: [Power], agents: [Agent]) {
         let calendar = Calendar.current
-        let today = DateHelper.today  // Use cached, normalized date
+        let today = DateHelper.today
 
-        guard let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today)) else { return }
+        // Find this week's Saturday (weekday 7) and Sunday (weekday 1)
+        // using weekday component — works regardless of locale's firstWeekday
+        let todayWeekday = calendar.component(.weekday, from: today)
+        let daysToSaturday = (7 - todayWeekday + 7) % 7  // 7 = Saturday
+        let daysToSunday = (1 - todayWeekday + 7) % 7     // 1 = Sunday
 
-        // Saturday = day 6, Sunday = day 0 (or 7) of the week
-        guard let saturday = calendar.date(byAdding: .day, value: 6, to: weekStart),
-              let sunday = calendar.date(byAdding: .day, value: 7, to: weekStart) else { return }
+        guard let saturday = calendar.date(byAdding: .day, value: daysToSaturday == 0 ? 0 : daysToSaturday - 7, to: today),
+              let sunday = calendar.date(byAdding: .day, value: daysToSunday == 0 ? 0 : daysToSunday - 7, to: today) else { return }
 
-        var saturdayLogged = false
-        var sundayLogged = false
+        // Only check days that have already passed
+        let checkSaturday = saturday <= today
+        let checkSunday = sunday <= today
+        guard checkSaturday || checkSunday else { return }
 
-        for power in powers {
-            for checkIn in power.checkIns {
-                if calendar.isDate(checkIn.date, inSameDayAs: saturday) {
-                    saturdayLogged = true
-                }
-                if calendar.isDate(checkIn.date, inSameDayAs: sunday) {
-                    sundayLogged = true
-                }
+        var saturdayLogged = !checkSaturday  // skip if future
+        var sundayLogged = !checkSunday
+
+        let allCheckIns = powers.flatMap(\.checkIns) + agents.flatMap(\.checkIns)
+        for checkIn in allCheckIns {
+            if !saturdayLogged && calendar.isDate(checkIn.date, inSameDayAs: saturday) {
+                saturdayLogged = true
             }
-        }
-
-        for agent in agents {
-            for checkIn in agent.checkIns {
-                if calendar.isDate(checkIn.date, inSameDayAs: saturday) {
-                    saturdayLogged = true
-                }
-                if calendar.isDate(checkIn.date, inSameDayAs: sunday) {
-                    sundayLogged = true
-                }
+            if !sundayLogged && calendar.isDate(checkIn.date, inSameDayAs: sunday) {
+                sundayLogged = true
             }
+            if saturdayLogged && sundayLogged { break }
         }
 
         if saturdayLogged && sundayLogged {
