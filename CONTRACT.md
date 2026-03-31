@@ -14,8 +14,8 @@
 - [x] #C1 — `submitAllHabits` XP over-awarded: streak read after in-memory append, `currentStreak + 1` is one too high at milestone boundaries (7/21/66) `CheckInService.swift:185` ✅ `f7dd8a1`
 - [x] #C2 — `AnomalyManager.onDailyCheckIn` mutates dictionary during key iteration — undefined behavior, crash risk `AnomalyManager.swift:123` ✅ `67d13ff`
 - [x] #C3 — `DateHelper` static cache (`_cachedToday`, `_cachedYesterday`) is a data race — no thread safety `DateHelper.swift:21` ✅ `d19cc2c`
-- [ ] #C4 — Widget interactive check-in gives no visual feedback — `reloadAllTimelines()` missing from `CheckInHabitIntent.perform()` `CheckInHabitIntent.swift:83`
-- [ ] #C5 — App foreground sync doesn't refresh widget — `WidgetSyncService` clears pending but never reloads timelines `WidgetSyncService.swift:38`
+- [x] #C4 — Widget interactive check-in gives no visual feedback — `reloadAllTimelines()` missing from `CheckInHabitIntent.perform()` `CheckInHabitIntent.swift:83` ✅ `3700616`
+- [x] #C5 — App foreground sync doesn't refresh widget — `WidgetSyncService` clears pending but never reloads timelines `WidgetSyncService.swift:38` ✅ `9b64f98`
 - [ ] #C6 — `showSubmitAllSuccess` declared but never set or rendered — no batch check-in confirmation `CommandCenterView.swift:45`
 - [x] #C7 — `handleBreach()` doesn't update `agent.currentStreak` or `longestStreak` — breach path bypasses model update `DialInView.swift:606` ✅ `30ec78b`
 - [x] #C8 — `checkMilestone()` reads stale streak — `power?.currentStreak` may be pre-save value `DialInView.swift:534` ⏭️ False positive: `saveCheckIn()` runs synchronously before `checkMilestone()`, and `currentStreak` is a computed property that reads the already-appended check-in
@@ -29,7 +29,7 @@
 - [x] #H2 — `recoverWithEMP` spends token before validating habit target — token lost if both power/agent are nil `CheckInService.swift:253` ✅ `f98962f`
 - [ ] #H3 — `checkWeekendWarrior` uses locale-dependent week offsets — broken for non-US locales (most of Europe) `AchievementManager.swift:196`
 - [ ] #H4 — `checkPerfectWeek` ignores per-habit `scheduledDays` — partial-schedule habits can never achieve it `AchievementManager.swift:233`
-- [ ] #H5 — Widget habit lookup by `name` not `id` — renamed habit = silently dropped check-in `WidgetSyncService.swift:20`
+- [x] #H5 — Widget habit lookup by `name` not `id` — renamed habit = silently dropped check-in `WidgetSyncService.swift:20` ✅ `e336566`
 - [x] #H6 — `WidgetSyncService` fetch errors silently clear all pending check-ins — permanent data loss `WidgetSyncService.swift:15` ✅ `3f1fcc1`
 - [x] #H7 — In-memory model diverges from store on `context.save()` failure — stale session data `CheckInService.swift:36` ✅ `a4ea92b`
 - [ ] #H8 — Random quotes re-roll on every SwiftUI body recompute (DailyAffirmation, OracleReward, BreachMessage) `CommandCenterView.swift:356`, `DialInView.swift:711,960`
@@ -40,7 +40,7 @@
 - [ ] #H13 — HabitDetailView unreachable from main list — only accessible via context menu `CommandCenterView.swift`
 - [ ] #H14 — `TierPromotionManager.promoteAgent` doesn't save context — promotion can be lost `TierPromotionManager.swift:80`
 - [ ] #H15 — `AchievementManager` strong self capture in `asyncAfter` on `@MainActor` class `AchievementManager.swift:58`
-- [ ] #H16 — Widget force-unwrap on `Calendar.date(byAdding:)` — crash risk in widget process `MatrixHabitWidget.swift:46`
+- [x] #H16 — Widget force-unwrap on `Calendar.date(byAdding:)` — crash risk in widget process `MatrixHabitWidget.swift:46` ✅ `ea6cd1e`
 - [x] #H17 — `checkEntitlements()` never resets `isRedPillOwned` to `false` before scanning — stale UserDefaults `true` persists even if transaction absent `StoreManager.swift:84` ✅ `274a572`
 - [ ] #H18 — Onboarding progress bar visible on ContractPhase (phase 16 not in exclusion set) — overlaps hold-to-sign UI `AwakeningView.swift:207`
 - [ ] #H19 — Dead onboarding Path A (PillChoiceView → FirstHackSetupView) still compiled and reachable — bypasses 16 phases, creates incomplete setup `PillChoiceView.swift:97`
@@ -60,10 +60,10 @@
 - [ ] #M11 — `SettingsToggleRow` is custom button, not `Toggle` — VoiceOver announces as generic button `ZionMainframeView.swift:743`
 - [ ] #M12 — `ZionMainframeView` version string hardcoded "v1.0.0" — app is v1.1 `ZionMainframeView.swift:301`
 - [ ] #M13 — No confirmation on "Submit All" — destructive batch op with no undo `CommandCenterView.swift:283`
-- [ ] #M14 — Widget small view shows highest-streak habit, not most urgent incomplete one `MatrixHabitWidget.swift:87`
-- [ ] #M15 — Medium widget sorts by streak (reorders on update) with `id: \.offset` — unstable identity `MatrixHabitWidget.swift:195`
-- [ ] #M16 — Lock screen widget `remaining` can go negative `LockScreenWidgets.swift:56`
-- [ ] #M17 — Widget shared types duplicated across 3 files — any rename breaks JSON contract silently `MatrixHabitWidget.swift:5`
+- [x] #M14 — Widget small view shows highest-streak habit, not most urgent incomplete one `MatrixHabitWidget.swift:87` ✅ `d0433de`
+- [x] #M15 — Medium widget sorts by streak (reorders on update) with `id: \.offset` — unstable identity `MatrixHabitWidget.swift:195` ✅ `c44103b`
+- [x] #M16 — Lock screen widget `remaining` can go negative `LockScreenWidgets.swift:56` ✅ `ce4e374`
+- [ ] #M17 — Widget shared types duplicated across 3 files — any rename breaks JSON contract silently `MatrixHabitWidget.swift:5` ⏭️ Requires shared framework (new build target) — out of scope for atomic change. Field names are aligned after #H5.
 - [ ] #M18 — `powersContent` and `agentsContent` are structural mirrors — duplicated layout code `CommandCenterView.swift:495`
 - [ ] #M19 — Keyboard not dismissed in AddHabitSheet/EditHabitSheet — obscures save button
 - [ ] #M20 — `TypeToggleButton` infers color from title string comparison `AddHabitSheet.swift:345`
