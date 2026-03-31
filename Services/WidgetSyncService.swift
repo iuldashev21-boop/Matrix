@@ -38,5 +38,6 @@ enum WidgetSyncService {
         // Clear pending only after successful fetch + processing
         // (duplicates are handled by CheckInService returning .duplicateCheckIn)
         WidgetDataManager.clearPendingCheckIns()
+        WidgetCenter.shared.reloadAllTimelines()
     }
 }
