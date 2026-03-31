@@ -294,9 +294,16 @@ struct CommandCenterView: View {
 
         switch result {
         case .success:
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 withAnimation {
                     isSubmittingAll = false
+                    showSubmitAllSuccess = true
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    withAnimation {
+                        showSubmitAllSuccess = false
+                    }
                 }
             }
         case .failure:
@@ -466,11 +473,14 @@ struct CommandCenterView: View {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .black))
                         .scaleEffect(0.8)
+                } else if showSubmitAllSuccess {
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.system(size: 18))
                 } else {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.system(size: 18))
                 }
-                Text(isSubmittingAll ? "SYNCING..." : "SUBMIT ALL (\(incompleteHabitsCount))")
+                Text(submitAllButtonLabel)
                     .font(.system(size: 14, weight: .bold, design: .monospaced))
             }
             .foregroundColor(.black)
@@ -486,8 +496,14 @@ struct CommandCenterView: View {
             .cornerRadius(Theme.cornerRadius)
             .shadow(color: Color.matrixGreen.opacity(0.4), radius: 8, x: 0, y: 4)
         }
-        .disabled(isSubmittingAll)
+        .disabled(isSubmittingAll || showSubmitAllSuccess)
         .opacity(isSubmittingAll ? 0.7 : 1.0)
+    }
+
+    private var submitAllButtonLabel: String {
+        if isSubmittingAll { return "SYNCING..." }
+        if showSubmitAllSuccess { return "ALL SIGNALS LOCKED" }
+        return "SUBMIT ALL (\(incompleteHabitsCount))"
     }
 
     // MARK: - Powers Content
