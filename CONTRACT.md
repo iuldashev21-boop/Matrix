@@ -83,14 +83,14 @@
 
 ## LOW (Deferred / Cosmetic)
 
-- [ ] #L1 — `GhostTutorialOverlay` not dismissible by tapping background (inconsistent with other overlays)
-- [ ] #L2 — `RedPillPaywallView` `try? context.save()` silently discards save errors
-- [ ] #L3 — `Power.progressPercent` missing `targetDays > 0` guard (inconsistent with Agent)
-- [ ] #L4 — `StreakCalculator` bypasses `DateHelper`, potential near-midnight streak inconsistency
-- [ ] #L5 — `recentErrors` in `ErrorLogger` stores Error references indefinitely (up to 50)
-- [ ] #L6 — `FrequencyPresetButton` uses magic `cornerRadius(6)` bypassing Theme constant
-- [ ] #L7 — 20+ repeating badge pulse animations when many achievements unlocked
-- [ ] #L8 — `SoundManager.audioPlayers` held forever after loading
+- [x] #L1 — `GhostTutorialOverlay` not dismissible by tapping background (inconsistent with other overlays) ✅ `429d665`
+- [x] #L2 — `RedPillPaywallView` `try? context.save()` silently discards save errors ⏭️ Skip: no `try? context.save()` found — already fixed in earlier wave
+- [x] #L3 — `Power.progressPercent` missing `targetDays > 0` guard (inconsistent with Agent) ✅ `15f437a`
+- [x] #L4 — `StreakCalculator` bypasses `DateHelper`, potential near-midnight streak inconsistency ✅ `3a0ee1e`
+- [x] #L5 — `recentErrors` in `ErrorLogger` stores Error references indefinitely (up to 50) ✅ `b877483`
+- [x] #L6 — `FrequencyPresetButton` uses magic `cornerRadius(6)` bypassing Theme constant ✅ `843d325`
+- [x] #L7 — 20+ repeating badge pulse animations when many achievements unlocked ✅ `bd34c05`
+- [x] #L8 — `SoundManager.audioPlayers` held forever after loading ⏭️ Skip: only 10 small WAV files in a singleton — cache eviction adds complexity for negligible gain
 
 ## THREAD SAFETY (Cross-cutting)
 
