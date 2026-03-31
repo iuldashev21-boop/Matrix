@@ -46,10 +46,8 @@ struct MatrixHabitTimelineProvider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<MatrixHabitEntry>) -> Void) {
         let entry = MatrixHabitEntry(date: Date(), data: readData())
         // Refresh at midnight (main app also triggers reloads on check-in)
-        let tomorrow = Calendar.current.startOfDay(
-            for: Calendar.current.date(byAdding: .day, value: 1, to: Date())!
-        )
-        let nextUpdate = tomorrow
+        let nextUpdate = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date()))
+            ?? Date().addingTimeInterval(86400)
         let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
         completion(timeline)
     }
