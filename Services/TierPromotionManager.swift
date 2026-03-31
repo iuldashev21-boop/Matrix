@@ -94,6 +94,12 @@ class TierPromotionManager {
         oldAgent.isDefeated = true
         oldAgent.defeatedAt = Date()
 
+        do {
+            try modelContext.save()
+        } catch {
+            ErrorLogger.logSaveFailure(error, context: "TierPromotionManager.promoteAgent")
+        }
+
         return newAgent
     }
 
