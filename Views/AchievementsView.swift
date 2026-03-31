@@ -177,8 +177,6 @@ struct AchievementBadge: View {
     let achievement: AchievementDefinition
     let isUnlocked: Bool
 
-    @State private var glowPulse: Bool = false
-
     private var rarityColor: Color {
         switch achievement.rarity {
         case .common: return Color.lightGray
@@ -200,7 +198,7 @@ struct AchievementBadge: View {
                 Circle()
                     .stroke(rarityColor, lineWidth: 2)
                     .frame(width: 56, height: 56)
-                    .shadow(color: rarityColor.opacity(glowPulse ? 0.8 : 0.4), radius: glowPulse ? 8 : 4)
+                    .shadow(color: rarityColor.opacity(0.6), radius: 6)
             }
 
             // Icon
@@ -212,13 +210,6 @@ struct AchievementBadge: View {
                 Image(systemName: "lock.fill")
                     .font(.system(size: 18))
                     .foregroundColor(Color.mediumGray.opacity(0.5))
-            }
-        }
-        .onAppear {
-            if isUnlocked {
-                withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
-                    glowPulse = true
-                }
             }
         }
     }
