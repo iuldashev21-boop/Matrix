@@ -185,7 +185,7 @@ enum CheckInService {
             power.checkIns.append(checkIn)
             context.insert(checkIn)
 
-            let newStreak = power.currentStreak + 1
+            let newStreak = power.currentStreak
             totalXP += calculateXP(streak: newStreak)
         }
 
@@ -195,7 +195,7 @@ enum CheckInService {
             agent.checkIns.append(checkIn)
             context.insert(checkIn)
 
-            let newStreak = agent.currentStreak + 1
+            let newStreak = agent.currentStreak
             totalXP += calculateXP(streak: newStreak)
         }
 
