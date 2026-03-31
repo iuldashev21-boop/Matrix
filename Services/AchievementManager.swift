@@ -55,9 +55,9 @@ class AchievementManager: ObservableObject {
             UINotificationFeedbackGenerator().notificationOccurred(.success)
 
             // Auto-hide after delay
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                self.showUnlockAnimation = false
-                self.recentlyUnlocked = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
+                self?.showUnlockAnimation = false
+                self?.recentlyUnlocked = nil
             }
         }
     }
