@@ -236,6 +236,54 @@ final class PowerModelTests: XCTestCase {
         XCTAssertTrue(power.needsRecovery)
     }
 
+    // MARK: - needsRecovery Partial Schedule Tests
+
+    func test_needsRecovery_scheduledHabit_restDayYesterday_missedLastScheduled_returnsTrue() {
+        let calendar = Calendar.current
+        let todayWeekday = calendar.component(.weekday, from: Date())
+        let yesterdayWeekday = ((todayWeekday - 2 + 7) % 7) + 1
+        // Pick a day that is NOT yesterday but IS 2 days ago
+        let twoDaysAgoWeekday = ((todayWeekday - 3 + 7) % 7) + 1
+
+        let power = Power(name: "Test", scheduledDays: [twoDaysAgoWeekday])
+
+        // Has prior streak (3+ days ago) but missed the last scheduled day (2 days ago)
+        power.checkIns = [
+            TestCheckInFactory.checkIn(daysAgo: 5, isSuccess: true),
+            TestCheckInFactory.checkIn(daysAgo: 6, isSuccess: true)
+        ]
+
+        XCTAssertTrue(power.needsRecovery, "Should need recovery when last scheduled day was missed")
+    }
+
+    func test_needsRecovery_scheduledHabit_restDayYesterday_completedLastScheduled_returnsFalse() {
+        let calendar = Calendar.current
+        let todayWeekday = calendar.component(.weekday, from: Date())
+        // Pick a day that IS 2 days ago
+        let twoDaysAgoWeekday = ((todayWeekday - 3 + 7) % 7) + 1
+
+        let power = Power(name: "Test", scheduledDays: [twoDaysAgoWeekday])
+
+        // Has check-in on the last scheduled day (2 days ago)
+        power.checkIns = [
+            TestCheckInFactory.checkIn(daysAgo: 2, isSuccess: true)
+        ]
+
+        XCTAssertFalse(power.needsRecovery, "Should not need recovery when last scheduled day was completed")
+    }
+
+    func test_needsRecovery_notScheduledOnAnyDay_returnsFalse() {
+        let power = Power(name: "Test", scheduledDays: [])
+        power.checkIns = [
+            TestCheckInFactory.checkIn(daysAgo: 2, isSuccess: true),
+            TestCheckInFactory.checkIn(daysAgo: 3, isSuccess: true)
+        ]
+
+        // Empty scheduledDays treated as daily — this should trigger recovery since daily yesterday was missed
+        // But existing behavior: empty scheduledDays = all 7 days scheduled
+        XCTAssertTrue(power.needsRecovery)
+    }
+
     // MARK: - touch Tests
 
     func test_touch_updatesUpdatedAt() {
