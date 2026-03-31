@@ -338,7 +338,7 @@ struct ZionMainframeView: View {
                     }
                     .foregroundColor(.white)
                     .padding(Spacing.md)
-                    .background(Color.orange.opacity(0.2))
+                    .background(Color.warning.opacity(0.2))
                     .cornerRadius(Theme.cornerRadiusCompact)
                 }
 
@@ -346,14 +346,14 @@ struct ZionMainframeView: View {
                 Button(action: simulate28DayStreak) {
                     HStack {
                         Image(systemName: "flame.fill")
-                            .foregroundColor(.red)
+                            .foregroundColor(.danger)
                         Text("SIMULATE 28-DAY STREAK")
                             .font(.system(size: 14, weight: .medium, design: .monospaced))
                         Spacer()
                     }
                     .foregroundColor(.white)
                     .padding(Spacing.md)
-                    .background(Color.red.opacity(0.2))
+                    .background(Color.danger.opacity(0.2))
                     .cornerRadius(Theme.cornerRadiusCompact)
                 }
 

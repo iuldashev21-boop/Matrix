@@ -97,7 +97,7 @@ struct ProgramStatusRow: View {
             HStack(spacing: 2) {
                 Image(systemName: "flame.fill")
                     .font(.system(size: 9))
-                    .foregroundColor(program.currentStreak > 0 ? .orange : Color.mediumGray)
+                    .foregroundColor(program.currentStreak > 0 ? .warning : Color.mediumGray)
                 Text("\(program.currentStreak)")
                     .font(.system(size: 10, weight: .bold, design: .monospaced))
                     .foregroundColor(program.currentStreak > 0 ? .white : Color.mediumGray)
@@ -125,7 +125,7 @@ struct ProgramStatusRow: View {
     private var statusColor: Color {
         if program.currentStreak >= 7 { return Color.matrixGreen }
         if program.currentStreak >= 3 { return .yellow }
-        if program.currentStreak > 0 { return .orange }
+        if program.currentStreak > 0 { return .warning }
         return Color.agentRed
     }
 

@@ -36,7 +36,7 @@ struct HabitCard: View {
                 if isLocked {
                     Image(systemName: "pill.fill")
                         .font(.system(size: 16))
-                        .foregroundColor(.red.opacity(0.8))
+                        .foregroundColor(.danger.opacity(0.8))
                         .offset(x: 14, y: 14)
                 } else if isCompletedToday {
                     Image(systemName: "checkmark.circle.fill")
@@ -65,10 +65,10 @@ struct HabitCard: View {
                     if isLocked {
                         Text("LOCKED")
                             .font(.system(size: 8, weight: .bold, design: .monospaced))
-                            .foregroundColor(.red)
+                            .foregroundColor(.danger)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(Color.red.opacity(0.2))
+                            .background(Color.danger.opacity(0.2))
                             .cornerRadius(Theme.cornerRadiusSm)
                     } else if isCompletedToday {
                         Text("UPLOADED")
@@ -84,7 +84,7 @@ struct HabitCard: View {
                 if isLocked {
                     Text("TAKE THE RED PILL TO UNLOCK")
                         .font(.system(size: 11, design: .monospaced))
-                        .foregroundColor(.red.opacity(0.5))
+                        .foregroundColor(.danger.opacity(0.5))
                         .lineLimit(1)
                 } else if isCompletedToday {
                     UnlockCountdownView()
@@ -110,7 +110,7 @@ struct HabitCard: View {
             if isLocked {
                 Image(systemName: "lock.fill")
                     .font(.system(size: 14))
-                    .foregroundColor(.red.opacity(0.5))
+                    .foregroundColor(.danger.opacity(0.5))
             } else if onEdit != nil || onDelete != nil || onViewDetail != nil {
                 Menu {
                     if let onViewDetail = onViewDetail {
@@ -157,7 +157,7 @@ struct HabitCard: View {
         .cornerRadius(Theme.cardCornerRadius)
         .overlay(
             RoundedRectangle(cornerRadius: Theme.cardCornerRadius)
-                .stroke(isLocked ? Color.red.opacity(0.2) : (isCompletedToday ? accentColor.opacity(0.5) : Color.clear), lineWidth: 1)
+                .stroke(isLocked ? Color.danger.opacity(0.2) : (isCompletedToday ? accentColor.opacity(0.5) : Color.clear), lineWidth: 1)
         )
     }
 }

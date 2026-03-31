@@ -56,7 +56,7 @@ struct SystemStatusCard: View {
                     HStack(spacing: 3) {
                         Image(systemName: "flame.fill")
                             .font(.system(size: 12))
-                            .foregroundColor(currentStreak > 0 ? .orange : Color.mediumGray)
+                            .foregroundColor(currentStreak > 0 ? .warning : Color.mediumGray)
                         Text("\(currentStreak)")
                             .font(.system(size: 18, weight: .bold, design: .monospaced))
                             .foregroundColor(currentStreak > 0 ? .white : Color.mediumGray)
@@ -150,7 +150,7 @@ struct SystemStatusCard: View {
         if todayTotal == 0 { return Color.mediumGray }
         if completionRatio >= 1.0 { return Color.matrixGreen }
         if completionRatio >= 0.5 { return .yellow }
-        if completionRatio > 0 { return .orange }
+        if completionRatio > 0 { return .warning }
         return Color.agentRed
     }
 
