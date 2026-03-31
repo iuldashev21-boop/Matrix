@@ -45,6 +45,7 @@ struct CommandCenterView: View {
     // Submit All
     @State private var isSubmittingAll: Bool = false
     @State private var showSubmitAllSuccess: Bool = false
+    @State private var showSubmitAllConfirmation: Bool = false
     @State private var cachedAffirmation: String?
 
     // MARK: - Computed Properties
@@ -266,6 +267,12 @@ struct CommandCenterView: View {
         } message: {
             Text("Failed to delete program. Please try again.")
         }
+        .alert("SUBMIT ALL?", isPresented: $showSubmitAllConfirmation) {
+            Button("CANCEL", role: .cancel) { }
+            Button("SUBMIT") { submitAllHabits() }
+        } message: {
+            Text("This will check in all \(incompleteHabitsCount) remaining habits at once. This cannot be undone.")
+        }
     }
 
     // MARK: - Delete Habit
@@ -480,7 +487,7 @@ struct CommandCenterView: View {
     // MARK: - Submit All Button
 
     private var submitAllButton: some View {
-        Button(action: submitAllHabits) {
+        Button(action: { showSubmitAllConfirmation = true }) {
             HStack(spacing: Spacing.sm) {
                 if isSubmittingAll {
                     ProgressView()
