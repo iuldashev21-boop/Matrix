@@ -494,15 +494,10 @@ struct AwakeningView: View {
             .noBedScrolling, .noLiquidSugar, .morningMaker, .noChairLock, .noGhostingIRL, .noRageBait
         ]
 
-        while suggestedLoadout.agents.count < 3 {
-            for agent in universalPool {
-                if !suggestedLoadout.agents.contains(agent) {
-                    suggestedLoadout.agents.append(agent)
-                    break
-                }
-            }
-            if suggestedLoadout.agents.count < 3 && universalPool.allSatisfy({ suggestedLoadout.agents.contains($0) }) {
-                break
+        for agent in universalPool {
+            guard suggestedLoadout.agents.count < 3 else { break }
+            if !suggestedLoadout.agents.contains(agent) {
+                suggestedLoadout.agents.append(agent)
             }
         }
     }
@@ -511,13 +506,11 @@ struct AwakeningView: View {
         if suggestedLoadout.hacks.isEmpty {
             suggestedLoadout.hacks = [.hydrationMax, .morningWin, .solarLoad]
         }
-        while suggestedLoadout.hacks.count < 3 {
-            let fallbacks: [HackHabit] = [.hydrationMax, .morningWin, .solarLoad, .phoneJail, .staticStretch, .dailyWs]
-            for hack in fallbacks {
-                if !suggestedLoadout.hacks.contains(hack) {
-                    suggestedLoadout.hacks.append(hack)
-                    break
-                }
+        let fallbacks: [HackHabit] = [.hydrationMax, .morningWin, .solarLoad, .phoneJail, .staticStretch, .dailyWs]
+        for hack in fallbacks {
+            guard suggestedLoadout.hacks.count < 3 else { break }
+            if !suggestedLoadout.hacks.contains(hack) {
+                suggestedLoadout.hacks.append(hack)
             }
         }
 
