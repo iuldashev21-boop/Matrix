@@ -250,6 +250,11 @@ enum CheckInService {
         agent: Agent? = nil,
         context: ModelContext
     ) -> Result<Void, CheckInError> {
+        // Validate at least one target exists before spending the token
+        guard power != nil || agent != nil else {
+            return .failure(.saveFailed(NSError(domain: "CheckInService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No habit target provided"])))
+        }
+
         guard UserProfile.spendEMPToken() else {
             return .failure(.insufficientEMPTokens)
         }
