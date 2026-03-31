@@ -1,5 +1,6 @@
 import Foundation
 import StoreKit
+import SwiftData
 
 @MainActor
 @Observable
@@ -19,9 +20,13 @@ final class StoreManager {
     private var transactionListener: Task<Void, Never>?
 
     private init() {
-        self.isRedPillOwned = UserDefaults.standard.bool(forKey: purchasedKey)
+        // Don't trust UserDefaults — it can be edited by the user.
+        // Start false and let checkEntitlements() verify with StoreKit.
+        self.isRedPillOwned = false
 
-        Task { await checkEntitlements() }
+        Task {
+            await checkEntitlements()
+        }
 
         transactionListener = Task(priority: .background) {
             for await verificationResult in Transaction.updates {
@@ -82,8 +87,20 @@ final class StoreManager {
     }
 
     private func checkEntitlements() async {
+        // Reset before scanning — if the product isn't in currentEntitlements,
+        // it means it's been revoked or was never purchased.
+        var foundRedPill = false
         for await verificationResult in Transaction.currentEntitlements {
+            if case .verified(let transaction) = verificationResult,
+               transaction.productID == productID,
+               transaction.revocationDate == nil {
+                foundRedPill = true
+            }
             await handle(verificationResult)
+        }
+        if !foundRedPill {
+            isRedPillOwned = false
+            UserDefaults.standard.set(false, forKey: purchasedKey)
         }
     }
 
@@ -107,7 +124,7 @@ final class StoreManager {
         isRedPillOwned || currentCount < StoreManager.freeHabitLimit
     }
 
-    func unlockAllHabits(powers: [Power], agents: [Agent]) {
+    func unlockAllHabits(powers: [Power], agents: [Agent], context: ModelContext) {
         for power in powers where power.isPremiumLocked {
             power.isPremiumLocked = false
             power.touch()
@@ -116,5 +133,6 @@ final class StoreManager {
             agent.isPremiumLocked = false
             agent.touch()
         }
+        try? context.save()
     }
 }
