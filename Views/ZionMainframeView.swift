@@ -726,7 +726,13 @@ struct SettingsToggleRow: View {
     let onChange: () -> Void
 
     var body: some View {
-        HStack {
+        Toggle(isOn: Binding(
+            get: { isOn },
+            set: { newValue in
+                isOn = newValue
+                onChange()
+            }
+        )) {
             VStack(alignment: .leading, spacing: Spacing.xs) {
                 Text(title)
                     .font(.system(size: 14, weight: .medium, design: .monospaced))
@@ -736,22 +742,26 @@ struct SettingsToggleRow: View {
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundColor(Color.lightGray)
             }
-
-            Spacer()
-
-            // Custom Matrix-style toggle
-            Button(action: {
-                isOn.toggle()
-                onChange()
-            }) {
-                Text(isOn ? "[ ON ]" : "[ OFF ]")
-                    .font(.system(size: 14, weight: .bold, design: .monospaced))
-                    .foregroundColor(isOn ? Color.matrixGreen : Color.mediumGray)
-            }
         }
+        .toggleStyle(MatrixToggleStyle())
         .padding(Spacing.md)
         .background(Color.charcoal)
         .cornerRadius(Theme.cornerRadius)
+    }
+}
+
+struct MatrixToggleStyle: ToggleStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack {
+            configuration.label
+            Spacer()
+            Text(configuration.isOn ? "[ ON ]" : "[ OFF ]")
+                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                .foregroundColor(configuration.isOn ? Color.matrixGreen : Color.mediumGray)
+                .onTapGesture {
+                    configuration.isOn.toggle()
+                }
+        }
     }
 }
 
