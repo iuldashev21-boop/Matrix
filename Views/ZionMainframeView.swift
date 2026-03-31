@@ -298,7 +298,7 @@ struct ZionMainframeView: View {
             VStack(spacing: Spacing.lg) {
                 // Version (tappable for easter egg)
                 Button(action: handleVersionTap) {
-                    Text("CONSTRUCT v1.0.0")
+                    Text("CONSTRUCT v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?")")
                         .font(.system(size: 14, design: .monospaced))
                         .foregroundColor(Color.mediumGray)
                 }
@@ -833,7 +833,7 @@ struct ExportDataView: View {
 
     private func generateExportData() -> String? {
         let export = ExportData(
-            version: "1.0.0",
+            version: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?",
             exportDate: Date(),
             totalXP: UserProfile.totalXP,
             rank: UserProfile.currentRank.rawValue,
