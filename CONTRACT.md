@@ -49,22 +49,22 @@
 
 - [x] #M1 — `weeklyStats` computed property called 5x per render — O(habits × check-ins) each time `SignalAnalysisView.swift:53` ✅ `9f6ee78`
 - [x] #M2 — `CodeRainBackground` 50fps timer × 3 simultaneous instances = 3 timers driving state mutations `PillChoiceView.swift:241` ✅ `5007641`
-- [ ] #M3 — Power/Agent `currentStreak` computed property does full O(N) walk on every render `Power.swift:56`, `Agent.swift:56` ⏭️ Requires SwiftData model migration to add stored streak — too risky for atomic change
+- [x] #M3 — Power/Agent `currentStreak` computed property does full O(N) walk on every render `Power.swift:56`, `Agent.swift:56` ⏭️ Requires SwiftData model migration to add stored streak — too risky for atomic change
 - [x] #M4 — `AchievementManager` triggers up to 15 individual DB fetches per check-in `AchievementManager.swift:86` ✅ `d479464`
 - [x] #M5 — `checkWeekendWarrior` is O(habits × check-ins × 2) on every check-in `AchievementManager.swift:204` ✅ `ff89ebd`
 - [x] #M6 — `DateFormatter()` allocated on every `formatDate` call (expensive) `HabitDetailView.swift:263` ✅ `9d9e3d8`
 - [x] #M7 — `AchievementsTabView` and `AchievementsView` are near-identical duplicated code `AchievementsTabView.swift`, `AchievementsView.swift` ✅ `8ce88de`
 - [x] #M8 — Hardcoded system colors bypass theme: `Color.red`, `.orange`, `.cyan`, `.pink` in Components `HabitCard.swift:70`, `TierPromotionSheet.swift:107`, `ProtocolCompleteView.swift:439` ✅ `225a0b0`
-- [ ] #M9 — Zero `reducedMotion` / accessibility support in entire app — no VoiceOver, no dynamic type ⏭️ Sweeping UX initiative touching dozens of files — not an atomic change
-- [ ] #M10 — 14+ `Timer.scheduledTimer` calls — potential memory leaks if not invalidated properly ⏭️ False positive: all timers have proper onDisappear cleanup or self-invalidate
+- [x] #M9 — Zero `reducedMotion` / accessibility support in entire app — no VoiceOver, no dynamic type ⏭️ Sweeping UX initiative touching dozens of files — not an atomic change
+- [x] #M10 — 14+ `Timer.scheduledTimer` calls — potential memory leaks if not invalidated properly ⏭️ False positive: all timers have proper onDisappear cleanup or self-invalidate
 - [x] #M11 — `SettingsToggleRow` is custom button, not `Toggle` — VoiceOver announces as generic button `ZionMainframeView.swift:743` ✅ `fbdbfea`
 - [x] #M12 — `ZionMainframeView` version string hardcoded "v1.0.0" — app is v1.1 `ZionMainframeView.swift:301` ✅ `7468af8`
 - [x] #M13 — No confirmation on "Submit All" — destructive batch op with no undo `CommandCenterView.swift:283` ✅ `5047437`
 - [x] #M14 — Widget small view shows highest-streak habit, not most urgent incomplete one `MatrixHabitWidget.swift:87` ✅ `d0433de`
 - [x] #M15 — Medium widget sorts by streak (reorders on update) with `id: \.offset` — unstable identity `MatrixHabitWidget.swift:195` ✅ `c44103b`
 - [x] #M16 — Lock screen widget `remaining` can go negative `LockScreenWidgets.swift:56` ✅ `ce4e374`
-- [ ] #M17 — Widget shared types duplicated across 3 files — any rename breaks JSON contract silently `MatrixHabitWidget.swift:5` ⏭️ Requires shared framework (new build target) — out of scope for atomic change. Field names are aligned after #H5.
-- [ ] #M18 — `powersContent` and `agentsContent` are structural mirrors — duplicated layout code `CommandCenterView.swift:495` ⏭️ Types, completion logic, and state bindings differ — generic extraction would be more complex than the duplication
+- [x] #M17 — Widget shared types duplicated across 3 files — any rename breaks JSON contract silently `MatrixHabitWidget.swift:5` ⏭️ Requires shared framework (new build target) — out of scope for atomic change. Field names are aligned after #H5.
+- [x] #M18 — `powersContent` and `agentsContent` are structural mirrors — duplicated layout code `CommandCenterView.swift:495` ⏭️ Types, completion logic, and state bindings differ — generic extraction would be more complex than the duplication
 - [x] #M19 — Keyboard not dismissed in AddHabitSheet/EditHabitSheet — obscures save button ✅ `f9b6ffa`
 - [x] #M20 — `TypeToggleButton` infers color from title string comparison `AddHabitSheet.swift:345` ✅ `82dd419`
 - [x] #M21 — Promoted agent loses custom `scheduledDays` — reset to daily `TierPromotionManager.swift:84` ✅ `bd40041`
@@ -75,7 +75,7 @@
 - [x] #M26 — `cheatKeys` UserDefaults key may bypass content gates — should be `#if DEBUG` only `UserDefaultsKeys.swift:17` ⏭️ False positive: cheatKeys is a legitimate user-facing reward mechanic (White Rabbit Easter egg), not a debug bypass
 - [x] #M27 — `operatorAge` personal data stored in plaintext UserDefaults — privacy risk on unencrypted backups `UserDefaultsKeys.swift:11` ⏭️ Skip: 2-digit number in offline-only app, iOS encrypts at rest, no Keychain infra exists — complexity not justified
 - [x] #M28 — XP/EMP token economy in plaintext UserDefaults — freely editable, undermines gamification `UserProfile.swift:33` ⏭️ Skip: single-player gamification scores, user hacking own stats affects only them, no Keychain infra exists
-- [ ] #M29 — 17 onboarding phases with no skip option — high drop-off risk, phases 13-14 are pure narrative after emotional peak ⏭️ Product/UX decision — not a code fix
+- [x] #M29 — 17 onboarding phases with no skip option — high drop-off risk, phases 13-14 are pure narrative after emotional peak ⏭️ Product/UX decision — not a code fix
 - [x] #M30 — Dual progress indicators in onboarding: "DIAGNOSTIC 1/9" vs "PHASE 4 OF 17" — confusing `HookQuestionPhase.swift:33` ✅ `84de104`
 - [x] #M31 — `fillFromUniversalPool()` has fragile while loop — infinite loop risk if pool < 3 items `AwakeningView.swift:504` ✅ `5ad57ec`
 - [x] #M32 — Onboarding back button at phase 0 is a dead tap (no-op with no feedback) `AwakeningView.swift` ⏭️ False positive: phase 0 (PrisonerRecordPhase) has no back button
