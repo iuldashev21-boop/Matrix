@@ -1,61 +1,168 @@
-# MatrixHabit Bug Fix Contract
+# MatrixHabit Self-Improvement Contract
 
-> **Branch:** `contract/2026-03-28-bugfixes`
-> **Started:** 2026-03-28
-> **Status:** COMPLETE
+> **Branch:** `contract/2026-03-31-self-improvement`
+> **Started:** 2026-03-31
+> **Status:** IN PROGRESS
+> **Method:** 6-agent parallel audit (Models, Views, Components, Widgets, Onboarding, Security)
 
-**Goal:** Fix all discovered bugs, inconsistencies, and illogical behavior in MatrixHabit.
-
-**Root cause cluster:** Most issues stem from **three independent check-in code paths** that diverged over time, plus **scheduled-day logic not applied uniformly**.
-
----
-
-## CRITICAL (Data Correctness)
-
-- [x] #C1 — `needsRecovery` ignores scheduled days — false EMP recovery prompts on rest days `fbaced3`
-- [x] #C2 — `CommandCenterView.submitAllHabits()` bypasses CheckInService entirely `ab89db1`
-- [x] #C3 — `DialInView` XP formula differs from `CheckInService` `a7fb84b`
-- [x] #C4 — Construct (sidequests) not behind paywall `9521e87`
-
-## HIGH (Significant UX Issues)
-
-- [x] #H1 — Dual UserDefaults keys for user name — reset doesn't clear dashboard name `55e6ea1`
-- [x] #H2 — Reset doesn't clear `hasSeenPostOnboardingPaywall` and other AppStorage keys `f47baf9`
-- [x] #H3 — `todayCompletedCount` vs `agentsCompletedCount` semantic mismatch `c18a0f1`
-- [x] #H4 — DialInView "+10 XP" display is hardcoded (fixed with C3) `a7fb84b`
-
-## MEDIUM (Consistency Issues)
-
-- [x] #M1 — `daysActiveCount` calculated differently in two views `ad38d49`
-- [x] #M2 — EMPRecoveryView uses raw date calculation instead of DateHelper `a32d348`
-- [x] #M3 — Widget data not refreshed from Submit All path (fixed with C2) `ab89db1`
-- [x] #M4 — Dead sidequest keys in UserDefaultsKeys `81797f1`
-
-## LOW (Deferred)
-
-- [ ] #L1 — No model-level duplicate check-in prevention (risk mitigated by CheckInService consolidation)
-- [ ] #L2 — 66-day count = streak-days not calendar-days for non-daily habits (design choice)
+**Goal:** Fix all bugs, logic errors, UX gaps, performance issues, and architectural problems discovered by comprehensive codebase audit.
 
 ---
 
-## Completed (10 items)
+## CRITICAL (Data Correctness / Crash Risk)
 
-| # | Commit | Description |
-|---|--------|-------------|
-| H1 | `55e6ea1` | Unified user name to single UserDefaults key |
-| C1 | `fbaced3` | needsRecovery respects scheduled days |
-| C3+H4 | `a7fb84b` | Wired DialInView through CheckInService, dynamic XP display |
-| C2+M3 | `ab89db1` | Wired Submit All through CheckInService |
-| H2 | `f47baf9` | Reset clears all AppStorage keys |
-| H3 | `c18a0f1` | todayCompletedCount includes addressed agents |
-| M1 | `ad38d49` | Unified daysActiveCount to unique check-in dates |
-| M2 | `a32d348` | EMPRecoveryView uses DateHelper.yesterday |
-| M4 | `81797f1` | Removed dead sidequest keys from UserDefaultsKeys |
-| C4 | `9521e87` | Locked The Construct behind Red Pill paywall |
+- [ ] #C1 — `submitAllHabits` XP over-awarded: streak read after in-memory append, `currentStreak + 1` is one too high at milestone boundaries (7/21/66) `CheckInService.swift:185`
+- [ ] #C2 — `AnomalyManager.onDailyCheckIn` mutates dictionary during key iteration — undefined behavior, crash risk `AnomalyManager.swift:123`
+- [ ] #C3 — `DateHelper` static cache (`_cachedToday`, `_cachedYesterday`) is a data race — no thread safety `DateHelper.swift:21`
+- [ ] #C4 — Widget interactive check-in gives no visual feedback — `reloadAllTimelines()` missing from `CheckInHabitIntent.perform()` `CheckInHabitIntent.swift:83`
+- [ ] #C5 — App foreground sync doesn't refresh widget — `WidgetSyncService` clears pending but never reloads timelines `WidgetSyncService.swift:38`
+- [ ] #C6 — `showSubmitAllSuccess` declared but never set or rendered — no batch check-in confirmation `CommandCenterView.swift:45`
+- [ ] #C7 — `handleBreach()` doesn't update `agent.currentStreak` or `longestStreak` — breach path bypasses model update `DialInView.swift:606`
+- [ ] #C8 — `checkMilestone()` reads stale streak — `power?.currentStreak` may be pre-save value `DialInView.swift:534`
+- [ ] #C9 — IAP bypass: `isRedPillOwned` seeded from UserDefaults on cold launch before `checkEntitlements()` — any user can write `true` to the key with free tools, no jailbreak needed `StoreManager.swift:22`
+- [ ] #C10 — ContractPhase `startHold()` double-fire: re-press before first timer resolves → `completeContract()` called twice → duplicate Power/Agent records in SwiftData `ContractPhase.swift:113`
+- [ ] #C11 — Blue pill back-then-dismiss race: user taps BACK during 3s blue pill timer → phase decrements but timer still fires `onBluePill()` → user ejected despite pressing back `RedBluePillPhase.swift:131`
 
-## Reverted / Skipped
+## HIGH (Silent Data Loss / IAP / UX Breakage)
 
-| # | Reason |
-|---|--------|
-| L1 | Deferred — CheckInService consolidation mitigates risk |
-| L2 | Deferred — design choice, not a bug |
+- [ ] #H1 — `unlockAllHabits` never calls `context.save()` — paid IAP unlock can be lost on background `StoreManager.swift:110`
+- [ ] #H2 — `recoverWithEMP` spends token before validating habit target — token lost if both power/agent are nil `CheckInService.swift:253`
+- [ ] #H3 — `checkWeekendWarrior` uses locale-dependent week offsets — broken for non-US locales (most of Europe) `AchievementManager.swift:196`
+- [ ] #H4 — `checkPerfectWeek` ignores per-habit `scheduledDays` — partial-schedule habits can never achieve it `AchievementManager.swift:233`
+- [ ] #H5 — Widget habit lookup by `name` not `id` — renamed habit = silently dropped check-in `WidgetSyncService.swift:20`
+- [ ] #H6 — `WidgetSyncService` fetch errors silently clear all pending check-ins — permanent data loss `WidgetSyncService.swift:15`
+- [ ] #H7 — In-memory model diverges from store on `context.save()` failure — stale session data `CheckInService.swift:36`
+- [ ] #H8 — Random quotes re-roll on every SwiftUI body recompute (DailyAffirmation, OracleReward, BreachMessage) `CommandCenterView.swift:356`, `DialInView.swift:711,960`
+- [ ] #H9 — `empTokenDisplayCount` is stale manual mirror — tokens earned elsewhere don't update header `CommandCenterView.swift:38`
+- [ ] #H10 — Purchase errors swallowed into generic "PURCHASE FAILED" string — no diagnostics `StoreManager.swift:39`
+- [ ] #H11 — `NavigationView` used in 4 sheets (deprecated, known double-render bugs on iOS 16+) `AddHabitSheet.swift:81`, `HabitDetailView.swift:327`, `ZionMainframeView.swift:768`, `AchievementsView.swift:26`
+- [ ] #H12 — Tapping completed HabitCard does nothing — no way to view detail of already-checked habit `CommandCenterView.swift:516`
+- [ ] #H13 — HabitDetailView unreachable from main list — only accessible via context menu `CommandCenterView.swift`
+- [ ] #H14 — `TierPromotionManager.promoteAgent` doesn't save context — promotion can be lost `TierPromotionManager.swift:80`
+- [ ] #H15 — `AchievementManager` strong self capture in `asyncAfter` on `@MainActor` class `AchievementManager.swift:58`
+- [ ] #H16 — Widget force-unwrap on `Calendar.date(byAdding:)` — crash risk in widget process `MatrixHabitWidget.swift:46`
+- [ ] #H17 — `checkEntitlements()` never resets `isRedPillOwned` to `false` before scanning — stale UserDefaults `true` persists even if transaction absent `StoreManager.swift:84`
+- [ ] #H18 — Onboarding progress bar visible on ContractPhase (phase 16 not in exclusion set) — overlaps hold-to-sign UI `AwakeningView.swift:207`
+- [ ] #H19 — Dead onboarding Path A (PillChoiceView → FirstHackSetupView) still compiled and reachable — bypasses 16 phases, creates incomplete setup `PillChoiceView.swift:97`
+
+## MEDIUM (Performance / UX / Architecture)
+
+- [ ] #M1 — `weeklyStats` computed property called 5x per render — O(habits × check-ins) each time `SignalAnalysisView.swift:53`
+- [ ] #M2 — `CodeRainBackground` 50fps timer × 3 simultaneous instances = 3 timers driving state mutations `PillChoiceView.swift:241`
+- [ ] #M3 — Power/Agent `currentStreak` computed property does full O(N) walk on every render `Power.swift:56`, `Agent.swift:56`
+- [ ] #M4 — `AchievementManager` triggers up to 15 individual DB fetches per check-in `AchievementManager.swift:86`
+- [ ] #M5 — `checkWeekendWarrior` is O(habits × check-ins × 2) on every check-in `AchievementManager.swift:204`
+- [ ] #M6 — `DateFormatter()` allocated on every `formatDate` call (expensive) `HabitDetailView.swift:263`
+- [ ] #M7 — `AchievementsTabView` and `AchievementsView` are near-identical duplicated code `AchievementsTabView.swift`, `AchievementsView.swift`
+- [ ] #M8 — Hardcoded system colors bypass theme: `Color.red`, `.orange`, `.cyan`, `.pink` in Components `HabitCard.swift:70`, `TierPromotionSheet.swift:107`, `ProtocolCompleteView.swift:439`
+- [ ] #M9 — Zero `reducedMotion` / accessibility support in entire app — no VoiceOver, no dynamic type
+- [ ] #M10 — 14+ `Timer.scheduledTimer` calls — potential memory leaks if not invalidated properly
+- [ ] #M11 — `SettingsToggleRow` is custom button, not `Toggle` — VoiceOver announces as generic button `ZionMainframeView.swift:743`
+- [ ] #M12 — `ZionMainframeView` version string hardcoded "v1.0.0" — app is v1.1 `ZionMainframeView.swift:301`
+- [ ] #M13 — No confirmation on "Submit All" — destructive batch op with no undo `CommandCenterView.swift:283`
+- [ ] #M14 — Widget small view shows highest-streak habit, not most urgent incomplete one `MatrixHabitWidget.swift:87`
+- [ ] #M15 — Medium widget sorts by streak (reorders on update) with `id: \.offset` — unstable identity `MatrixHabitWidget.swift:195`
+- [ ] #M16 — Lock screen widget `remaining` can go negative `LockScreenWidgets.swift:56`
+- [ ] #M17 — Widget shared types duplicated across 3 files — any rename breaks JSON contract silently `MatrixHabitWidget.swift:5`
+- [ ] #M18 — `powersContent` and `agentsContent` are structural mirrors — duplicated layout code `CommandCenterView.swift:495`
+- [ ] #M19 — Keyboard not dismissed in AddHabitSheet/EditHabitSheet — obscures save button
+- [ ] #M20 — `TypeToggleButton` infers color from title string comparison `AddHabitSheet.swift:345`
+- [ ] #M21 — Promoted agent loses custom `scheduledDays` — reset to daily `TierPromotionManager.swift:84`
+- [ ] #M22 — `AnomalyManager.onDailyCheckIn` not idempotent — multiple rapid check-ins increment counters multiple times `AnomalyManager.swift:107`
+- [ ] #M23 — SignalAnalysisView day column headers always Mon-Sun — don't align with actual grid days `SignalAnalysisView.swift:403`
+- [ ] #M24 — `notificationsEnabled` toggle snapshots stale value at init `ZionMainframeView.swift:13`
+- [ ] #M25 — No per-habit calendar heatmap or history — can't see which days a specific habit was missed
+- [ ] #M26 — `cheatKeys` UserDefaults key may bypass content gates — should be `#if DEBUG` only `UserDefaultsKeys.swift:17`
+- [ ] #M27 — `operatorAge` personal data stored in plaintext UserDefaults — privacy risk on unencrypted backups `UserDefaultsKeys.swift:11`
+- [ ] #M28 — XP/EMP token economy in plaintext UserDefaults — freely editable, undermines gamification `UserProfile.swift:33`
+- [ ] #M29 — 17 onboarding phases with no skip option — high drop-off risk, phases 13-14 are pure narrative after emotional peak
+- [ ] #M30 — Dual progress indicators in onboarding: "DIAGNOSTIC 1/9" vs "PHASE 4 OF 17" — confusing `HookQuestionPhase.swift:33`
+- [ ] #M31 — `fillFromUniversalPool()` has fragile while loop — infinite loop risk if pool < 3 items `AwakeningView.swift:504`
+- [ ] #M32 — Onboarding back button at phase 0 is a dead tap (no-op with no feedback) `AwakeningView.swift`
+- [ ] #M33 — `VignetteOverlay` uses deprecated `UIScreen.main.bounds` `OnboardingComponents.swift:25`
+
+## LOW (Deferred / Cosmetic)
+
+- [ ] #L1 — `GhostTutorialOverlay` not dismissible by tapping background (inconsistent with other overlays)
+- [ ] #L2 — `RedPillPaywallView` `try? context.save()` silently discards save errors
+- [ ] #L3 — `Power.progressPercent` missing `targetDays > 0` guard (inconsistent with Agent)
+- [ ] #L4 — `StreakCalculator` bypasses `DateHelper`, potential near-midnight streak inconsistency
+- [ ] #L5 — `recentErrors` in `ErrorLogger` stores Error references indefinitely (up to 50)
+- [ ] #L6 — `FrequencyPresetButton` uses magic `cornerRadius(6)` bypassing Theme constant
+- [ ] #L7 — 20+ repeating badge pulse animations when many achievements unlocked
+- [ ] #L8 — `SoundManager.audioPlayers` held forever after loading
+
+## THREAD SAFETY (Cross-cutting)
+
+- [ ] #T1 — `UserProfile` read-modify-write on XP/EMP tokens is not atomic `UserProfile.swift`
+- [ ] #T2 — `ErrorLogger.recentErrors` mutated without synchronization `ErrorLogger.swift:44`
+- [ ] #T3 — `SoundManager` uses `@AppStorage` in non-`@MainActor` singleton `SoundManager.swift`
+- [ ] #T4 — `ReviewManager` not `@MainActor` but calls `UIApplication.shared` `ReviewManager.swift`
+- [ ] #T5 — `NotificationManager` singleton init may fire from non-main thread `NotificationManager.swift:63`
+- [ ] #T6 — `AnomalyManager` not `@MainActor` but has `@Published` properties `AnomalyManager.swift`
+
+## TEST GAPS (Top 10 Untested Critical Paths)
+
+- [ ] #TG1 — `CheckInService.recordPowerCheckIn` / `recordAgentResistance` — zero integration tests
+- [ ] #TG2 — `WidgetSyncService.syncPendingCheckIns` — name-mismatch data loss path untested
+- [ ] #TG3 — `CheckInHabitIntent.perform()` — widget interactive check-in untested
+- [ ] #TG4 — `StoreManager` paywall enforcement — `canCreateHabit` and IAP unlock untested
+- [ ] #TG5 — `WidgetDataManager.update()` — App Group write correctness untested
+- [ ] #TG6 — `CheckInService.recoverWithEMP` — token refund on save failure untested
+- [ ] #TG7 — `CheckInService.submitAllHabits` — bulk XP calculation untested
+- [ ] #TG8 — `Power.needsRecovery` / `Agent.needsRecovery` — partial schedule edge cases untested
+- [ ] #TG9 — `WidgetDataManager.markHabitCompleted` — name collision overcount untested
+- [ ] #TG10 — `AchievementManager` / `TierPromotionManager` — entirely absent from test suite
+
+## FLAKY TESTS (Existing Tests That Need Fixing)
+
+- [ ] #FT1 — FrequencySchedulingTests use `>=` assertions — non-falsifiable `FrequencySchedulingTests.swift:9`
+- [ ] #FT2 — `test_streak_missedScheduledDay_breaksStreak` is non-deterministic by day of week `FrequencySchedulingTests.swift:55`
+- [ ] #FT3 — `Thread.sleep` in model touch tests — flaky on CI `AgentModelTests.swift:265`, `PowerModelTests.swift:241`
+- [ ] #FT4 — `calculateStreak` duplicate dedup only tested on `calculateLongestStreak` path `StreakCalculatorTests.swift:160`
+
+---
+
+## Implementation Priority
+
+### Wave 1: Data Correctness + Security (ship-blocking)
+C1, C2, C3, C7, C8, C9, C10, C11, H1, H2, H6, H7, H17
+
+### Wave 2: Widget Fixes
+C4, C5, H5, H16, M14, M15, M16, M17
+
+### Wave 3: IAP & Achievements
+H3, H4, H10, H14, H15
+
+### Wave 4: Onboarding Fixes
+H18, H19, M29, M30, M31, M32, M33
+
+### Wave 5: UX Polish
+C6, H8, H9, H11, H12, H13, M11, M12, M13, M19, M25
+
+### Wave 6: Performance
+M1, M2, M3, M4, M5, M6
+
+### Wave 7: Architecture & Code Quality
+M7, M8, M9, M18, M20, M21, M22, M23, M24, M26, M27, M28, T1-T6
+
+### Wave 8: Tests
+TG1-TG10, FT1-FT4
+
+### Wave 9: Low Priority
+L1-L8
+
+---
+
+## Totals
+
+| Severity | Count |
+|----------|-------|
+| Critical | 11 |
+| High | 19 |
+| Medium | 33 |
+| Low | 8 |
+| Thread Safety | 6 |
+| Test Gaps | 10 |
+| Flaky Tests | 4 |
+| **Total** | **91** |
