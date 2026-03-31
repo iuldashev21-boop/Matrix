@@ -71,6 +71,9 @@ struct ZionMainframeView: View {
         } message: {
             Text("Failed to purge system data. Please try again or restart the app.")
         }
+        .onAppear {
+            notificationsEnabled = NotificationManager.shared.notificationsEnabled
+        }
     }
 
     // MARK: - Header
