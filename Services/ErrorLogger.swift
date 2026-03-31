@@ -10,6 +10,7 @@ enum ErrorLogger {
     /// Recent errors stored in memory for debugging (last 50)
     private static var recentErrors: [(Date, String, Error)] = []
     private static let maxStoredErrors = 50
+    private static let lock = NSLock()
 
     // MARK: - Logging Methods
 
@@ -41,10 +42,12 @@ enum ErrorLogger {
         logger.error("\(message, privacy: .public)")
 
         // Store in memory for debugging
+        lock.lock()
         recentErrors.append((Date(), message, error))
         if recentErrors.count > maxStoredErrors {
             recentErrors.removeFirst()
         }
+        lock.unlock()
 
         #if DEBUG
         print("❌ ERROR: \(message)")
@@ -55,12 +58,16 @@ enum ErrorLogger {
 
     /// Get recent errors for debugging UI (if needed later)
     static func getRecentErrors() -> [(Date, String)] {
-        recentErrors.map { ($0.0, $0.1) }
+        lock.lock()
+        defer { lock.unlock() }
+        return recentErrors.map { ($0.0, $0.1) }
     }
 
     /// Clear stored errors
     static func clearErrors() {
+        lock.lock()
         recentErrors.removeAll()
+        lock.unlock()
     }
 }
 
