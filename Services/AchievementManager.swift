@@ -8,14 +8,30 @@ class AchievementManager: ObservableObject {
     @Published var showUnlockAnimation: Bool = false
 
     private var modelContext: ModelContext?
+    private var unlockedCache: Set<String>?
 
     func setContext(_ context: ModelContext) {
         self.modelContext = context
     }
 
+    private func loadUnlockedCache() {
+        guard let context = modelContext else { return }
+        let descriptor = FetchDescriptor<Achievement>()
+        do {
+            let all = try context.fetch(descriptor)
+            unlockedCache = Set(all.map { $0.id })
+        } catch {
+            ErrorLogger.logFetchFailure(error, context: "AchievementManager.loadUnlockedCache")
+            unlockedCache = nil
+        }
+    }
+
     // MARK: - Check if Achievement is Unlocked
 
     func isUnlocked(_ achievementId: String) -> Bool {
+        if let cache = unlockedCache {
+            return cache.contains(achievementId)
+        }
         guard let context = modelContext else { return false }
         let descriptor = FetchDescriptor<Achievement>(
             predicate: #Predicate { $0.id == achievementId }
@@ -37,6 +53,7 @@ class AchievementManager: ObservableObject {
 
         let achievement = Achievement(id: achievementId)
         context.insert(achievement)
+        unlockedCache?.insert(achievementId)
         do {
             try context.save()
         } catch {
@@ -88,6 +105,8 @@ class AchievementManager: ObservableObject {
         agents: [Agent],
         totalCheckIns: Int
     ) {
+        loadUnlockedCache()
+
         // First signal
         if totalCheckIns == 1 {
             unlock("log_first")
