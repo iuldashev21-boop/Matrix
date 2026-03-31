@@ -121,7 +121,7 @@ class AnomalyManager: ObservableObject {
 
     // Call this on each check-in to progress all active decryptions
     func onDailyCheckIn() {
-        for reportId in decryptionProgress.keys {
+        for reportId in Array(decryptionProgress.keys) {
             incrementDecryption(reportId)
         }
     }
