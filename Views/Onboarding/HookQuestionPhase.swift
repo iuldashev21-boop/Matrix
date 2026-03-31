@@ -30,9 +30,6 @@ struct HookQuestionPhase: View {
 
             if showContent {
                 VStack(spacing: Spacing.lg) {
-                    Text("DIAGNOSTIC 1/9")
-                        .font(.system(size: 12, weight: .bold, design: .monospaced))
-                        .foregroundColor(Color.mediumGray)
 
                     Text("MORPHEUS:")
                         .font(.system(size: 14, weight: .bold, design: .monospaced))

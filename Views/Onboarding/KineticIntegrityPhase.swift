@@ -35,9 +35,6 @@ struct KineticIntegrityPhase: View {
                         .foregroundColor(Color.matrixGreen)
                         .matrixGlow()
 
-                    Text("DIAGNOSTIC 6/9")
-                        .font(.system(size: 12, weight: .bold, design: .monospaced))
-                        .foregroundColor(Color.mediumGray)
 
                     Text("When did you last break a sweat?")
                         .font(.system(size: 18, weight: .bold, design: .monospaced))

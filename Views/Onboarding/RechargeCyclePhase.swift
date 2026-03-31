@@ -35,9 +35,6 @@ struct RechargeCyclePhase: View {
                         .foregroundColor(Color.matrixGreen)
                         .matrixGlow()
 
-                    Text("DIAGNOSTIC 8/9")
-                        .font(.system(size: 12, weight: .bold, design: .monospaced))
-                        .foregroundColor(Color.mediumGray)
 
                     Text("How would you rate your sleep quality last night?")
                         .font(.system(size: 18, weight: .bold, design: .monospaced))
