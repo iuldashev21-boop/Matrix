@@ -71,7 +71,19 @@ final class StoreManager {
                 break
             }
         } catch {
-            errorMessage = "PURCHASE FAILED"
+            ErrorLogger.logSaveFailure(error, context: "StoreManager.purchaseProduct")
+            if let storeError = error as? StoreKitError {
+                switch storeError {
+                case .networkError:
+                    errorMessage = "NETWORK ERROR — CHECK CONNECTION"
+                case .notAvailableInStorefront:
+                    errorMessage = "NOT AVAILABLE IN YOUR REGION"
+                default:
+                    errorMessage = "PURCHASE FAILED"
+                }
+            } else {
+                errorMessage = "PURCHASE FAILED"
+            }
         }
 
         purchaseInProgress = false
@@ -82,6 +94,7 @@ final class StoreManager {
             try await AppStore.sync()
             await checkEntitlements()
         } catch {
+            ErrorLogger.logSaveFailure(error, context: "StoreManager.restorePurchases")
             errorMessage = "RESTORE FAILED"
         }
     }
