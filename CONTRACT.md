@@ -27,19 +27,19 @@
 
 - [x] #H1 — `unlockAllHabits` never calls `context.save()` — paid IAP unlock can be lost on background `StoreManager.swift:110` ✅ `274a572`
 - [x] #H2 — `recoverWithEMP` spends token before validating habit target — token lost if both power/agent are nil `CheckInService.swift:253` ✅ `f98962f`
-- [ ] #H3 — `checkWeekendWarrior` uses locale-dependent week offsets — broken for non-US locales (most of Europe) `AchievementManager.swift:196`
-- [ ] #H4 — `checkPerfectWeek` ignores per-habit `scheduledDays` — partial-schedule habits can never achieve it `AchievementManager.swift:233`
+- [x] #H3 — `checkWeekendWarrior` uses locale-dependent week offsets — broken for non-US locales (most of Europe) `AchievementManager.swift:196` ✅ `9e8fb00`
+- [x] #H4 — `checkPerfectWeek` ignores per-habit `scheduledDays` — partial-schedule habits can never achieve it `AchievementManager.swift:233` ✅ `fc156cf`
 - [x] #H5 — Widget habit lookup by `name` not `id` — renamed habit = silently dropped check-in `WidgetSyncService.swift:20` ✅ `e336566`
 - [x] #H6 — `WidgetSyncService` fetch errors silently clear all pending check-ins — permanent data loss `WidgetSyncService.swift:15` ✅ `3f1fcc1`
 - [x] #H7 — In-memory model diverges from store on `context.save()` failure — stale session data `CheckInService.swift:36` ✅ `a4ea92b`
 - [ ] #H8 — Random quotes re-roll on every SwiftUI body recompute (DailyAffirmation, OracleReward, BreachMessage) `CommandCenterView.swift:356`, `DialInView.swift:711,960`
 - [ ] #H9 — `empTokenDisplayCount` is stale manual mirror — tokens earned elsewhere don't update header `CommandCenterView.swift:38`
-- [ ] #H10 — Purchase errors swallowed into generic "PURCHASE FAILED" string — no diagnostics `StoreManager.swift:39`
+- [x] #H10 — Purchase errors swallowed into generic "PURCHASE FAILED" string — no diagnostics `StoreManager.swift:39` ✅ `14ec20f`
 - [ ] #H11 — `NavigationView` used in 4 sheets (deprecated, known double-render bugs on iOS 16+) `AddHabitSheet.swift:81`, `HabitDetailView.swift:327`, `ZionMainframeView.swift:768`, `AchievementsView.swift:26`
 - [ ] #H12 — Tapping completed HabitCard does nothing — no way to view detail of already-checked habit `CommandCenterView.swift:516`
 - [ ] #H13 — HabitDetailView unreachable from main list — only accessible via context menu `CommandCenterView.swift`
-- [ ] #H14 — `TierPromotionManager.promoteAgent` doesn't save context — promotion can be lost `TierPromotionManager.swift:80`
-- [ ] #H15 — `AchievementManager` strong self capture in `asyncAfter` on `@MainActor` class `AchievementManager.swift:58`
+- [x] #H14 — `TierPromotionManager.promoteAgent` doesn't save context — promotion can be lost `TierPromotionManager.swift:80` ✅ `3da5e56`
+- [x] #H15 — `AchievementManager` strong self capture in `asyncAfter` on `@MainActor` class `AchievementManager.swift:58` ✅ `dbc293b`
 - [x] #H16 — Widget force-unwrap on `Calendar.date(byAdding:)` — crash risk in widget process `MatrixHabitWidget.swift:46` ✅ `ea6cd1e`
 - [x] #H17 — `checkEntitlements()` never resets `isRedPillOwned` to `false` before scanning — stale UserDefaults `true` persists even if transaction absent `StoreManager.swift:84` ✅ `274a572`
 - [ ] #H18 — Onboarding progress bar visible on ContractPhase (phase 16 not in exclusion set) — overlaps hold-to-sign UI `AwakeningView.swift:207`
