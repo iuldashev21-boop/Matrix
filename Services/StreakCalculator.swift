@@ -47,6 +47,19 @@ enum StreakCalculator {
         // If missed more than 1 scheduled day, streak is broken
         if scheduledDaysMissed > 1 { return 0 }
 
+        // If a gap day has a failed check-in (breach/relapse), streak is broken
+        if scheduledDaysMissed > 0 {
+            let failedDates = Set(checkIns.filter { !$0.isSuccess }.map { calendar.startOfDay(for: $0.date) })
+            var gapCheck = lastScheduledDay
+            while gapCheck > mostRecentDay {
+                if isScheduled(gapCheck) && failedDates.contains(gapCheck) {
+                    return 0
+                }
+                guard let prev = calendar.date(byAdding: .day, value: -1, to: gapCheck) else { break }
+                gapCheck = prev
+            }
+        }
+
         var streak = 0
 
         // Build set of check-in dates for O(1) lookup
