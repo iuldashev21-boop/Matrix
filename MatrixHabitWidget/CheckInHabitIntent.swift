@@ -80,6 +80,7 @@ struct CheckInHabitIntent: AppIntent {
             }
         }
 
+        WidgetCenter.shared.reloadAllTimelines()
         return .result()
     }
 }
