@@ -47,12 +47,12 @@
 
 ## MEDIUM (Performance / UX / Architecture)
 
-- [ ] #M1 — `weeklyStats` computed property called 5x per render — O(habits × check-ins) each time `SignalAnalysisView.swift:53`
-- [ ] #M2 — `CodeRainBackground` 50fps timer × 3 simultaneous instances = 3 timers driving state mutations `PillChoiceView.swift:241`
-- [ ] #M3 — Power/Agent `currentStreak` computed property does full O(N) walk on every render `Power.swift:56`, `Agent.swift:56`
-- [ ] #M4 — `AchievementManager` triggers up to 15 individual DB fetches per check-in `AchievementManager.swift:86`
-- [ ] #M5 — `checkWeekendWarrior` is O(habits × check-ins × 2) on every check-in `AchievementManager.swift:204`
-- [ ] #M6 — `DateFormatter()` allocated on every `formatDate` call (expensive) `HabitDetailView.swift:263`
+- [x] #M1 — `weeklyStats` computed property called 5x per render — O(habits × check-ins) each time `SignalAnalysisView.swift:53` ✅ `9f6ee78`
+- [x] #M2 — `CodeRainBackground` 50fps timer × 3 simultaneous instances = 3 timers driving state mutations `PillChoiceView.swift:241` ✅ `5007641`
+- [ ] #M3 — Power/Agent `currentStreak` computed property does full O(N) walk on every render `Power.swift:56`, `Agent.swift:56` ⏭️ Requires SwiftData model migration to add stored streak — too risky for atomic change
+- [x] #M4 — `AchievementManager` triggers up to 15 individual DB fetches per check-in `AchievementManager.swift:86` ✅ `d479464`
+- [x] #M5 — `checkWeekendWarrior` is O(habits × check-ins × 2) on every check-in `AchievementManager.swift:204` ✅ `ff89ebd`
+- [x] #M6 — `DateFormatter()` allocated on every `formatDate` call (expensive) `HabitDetailView.swift:263` ✅ `9d9e3d8`
 - [ ] #M7 — `AchievementsTabView` and `AchievementsView` are near-identical duplicated code `AchievementsTabView.swift`, `AchievementsView.swift`
 - [ ] #M8 — Hardcoded system colors bypass theme: `Color.red`, `.orange`, `.cyan`, `.pink` in Components `HabitCard.swift:70`, `TierPromotionSheet.swift:107`, `ProtocolCompleteView.swift:439`
 - [ ] #M9 — Zero `reducedMotion` / accessibility support in entire app — no VoiceOver, no dynamic type
