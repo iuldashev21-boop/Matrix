@@ -229,41 +229,28 @@ class AchievementManager: ObservableObject {
 
     private func checkPerfectWeek(powers: [Power], agents: [Agent]) {
         let calendar = Calendar.current
-        let today = DateHelper.today  // Use cached, normalized date
+        let today = DateHelper.today
 
         guard let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today)) else { return }
+        guard !powers.isEmpty || !agents.isEmpty else { return }
 
-        let totalHabits = powers.count + agents.count
-        guard totalHabits > 0 else { return }
-
-        // Check each day of the week
+        // Check each day of the week up to today
         for dayOffset in 0..<7 {
             guard let day = calendar.date(byAdding: .day, value: dayOffset, to: weekStart) else { continue }
+            if day > today { break }
 
-            // Skip future days
-            if day > today { return }
-
-            var completedOnDay = 0
-
-            for power in powers {
-                if power.checkIns.contains(where: { calendar.isDate($0.date, inSameDayAs: day) }) {
-                    completedOnDay += 1
-                }
+            // Only count habits scheduled on this specific day
+            for power in powers where power.isScheduled(on: day) {
+                let completed = power.checkIns.contains { calendar.isDate($0.date, inSameDayAs: day) }
+                if !completed { return }
             }
 
-            for agent in agents {
-                if agent.checkIns.contains(where: { calendar.isDate($0.date, inSameDayAs: day) }) {
-                    completedOnDay += 1
-                }
-            }
-
-            // If any day is incomplete, no perfect week
-            if completedOnDay < totalHabits {
-                return
+            for agent in agents where agent.isScheduled(on: day) {
+                let completed = agent.checkIns.contains { calendar.isDate($0.date, inSameDayAs: day) }
+                if !completed { return }
             }
         }
 
-        // All days complete!
         unlock("perfect_week")
     }
 }
