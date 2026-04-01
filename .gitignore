@@ -38,3 +38,6 @@ fastlane/test_output
 *.swp
 *.lock
 *~
+
+# XcodeBuildMCP
+.xcodebuildmcp/
