@@ -697,8 +697,9 @@ struct BreachMessageOverlay: View {
     @Binding var isPresented: Bool
     @State private var glitchOffset: CGSize = .zero
     @State private var showContent: Bool = false
+    @State private var selectedEncouragement: String
 
-    private let encouragements = [
+    private static let encouragements = [
         "BREACH LOGGED.\nFIREWALL REBUILDING.\nDAY 1.",
         "AGENT INFILTRATION DETECTED.\nRESETTING DEFENSES.\nYOU ARE STILL IN CONTROL.",
         "SYSTEM COMPROMISED.\nINITIATING RECOVERY PROTOCOL.\nTHE FIGHT CONTINUES.",
@@ -707,8 +708,9 @@ struct BreachMessageOverlay: View {
         "BREACH ACKNOWLEDGED.\nHONESTY IS STRENGTH.\nREBUILD STRONGER."
     ]
 
-    private var randomEncouragement: String {
-        encouragements.randomElement() ?? encouragements[0]
+    init(isPresented: Binding<Bool>) {
+        _isPresented = isPresented
+        _selectedEncouragement = State(initialValue: Self.encouragements.randomElement() ?? Self.encouragements[0])
     }
 
     var body: some View {
@@ -731,7 +733,7 @@ struct BreachMessageOverlay: View {
                         .offset(glitchOffset)
 
                     // Message
-                    Text(randomEncouragement)
+                    Text(selectedEncouragement)
                         .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
@@ -942,8 +944,9 @@ struct OracleRewardView: View {
     @Binding var isPresented: Bool
     @State private var glitchOffset: CGSize = .zero
     @State private var showContent: Bool = false
+    @State private var selectedQuote: String
 
-    private let quotes = [
+    private static let quotes = [
         "\"There is no spoon.\"",
         "\"The Matrix cannot tell you who you are.\"",
         "\"You have to let it all go. Fear, doubt, disbelief.\"",
@@ -956,8 +959,9 @@ struct OracleRewardView: View {
         "\"Remember, all I'm offering is the truth. Nothing more.\""
     ]
 
-    private var randomQuote: String {
-        quotes.randomElement() ?? quotes[0]
+    init(isPresented: Binding<Bool>) {
+        _isPresented = isPresented
+        _selectedQuote = State(initialValue: Self.quotes.randomElement() ?? Self.quotes[0])
     }
 
     var body: some View {
@@ -986,7 +990,7 @@ struct OracleRewardView: View {
                         .offset(glitchOffset)
 
                     // Quote
-                    Text(randomQuote)
+                    Text(selectedQuote)
                         .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)

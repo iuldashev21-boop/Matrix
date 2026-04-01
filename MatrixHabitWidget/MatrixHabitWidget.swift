@@ -8,6 +8,7 @@ private let appGroupID = "group.com.construct.MatrixHabit"
 private let widgetDataKey = "com.matrixhabit.widget.data"
 
 struct HabitSnapshot: Codable {
+    let id: String
     let name: String
     let icon: String
     let streak: Int
@@ -45,10 +46,8 @@ struct MatrixHabitTimelineProvider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<MatrixHabitEntry>) -> Void) {
         let entry = MatrixHabitEntry(date: Date(), data: readData())
         // Refresh at midnight (main app also triggers reloads on check-in)
-        let tomorrow = Calendar.current.startOfDay(
-            for: Calendar.current.date(byAdding: .day, value: 1, to: Date())!
-        )
-        let nextUpdate = tomorrow
+        let nextUpdate = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date()))
+            ?? Date().addingTimeInterval(86400)
         let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
         completion(timeline)
     }
@@ -65,9 +64,9 @@ struct MatrixHabitTimelineProvider: TimelineProvider {
     private var sampleData: WidgetHabitData {
         WidgetHabitData(
             habits: [
-                HabitSnapshot(name: "Meditate", icon: "brain.head.profile", streak: 12, completedToday: true, isPower: true),
-                HabitSnapshot(name: "Exercise", icon: "figure.run", streak: 7, completedToday: false, isPower: true),
-                HabitSnapshot(name: "No Sugar", icon: "xmark.shield", streak: 21, completedToday: true, isPower: false)
+                HabitSnapshot(id: "1", name: "Meditate", icon: "brain.head.profile", streak: 12, completedToday: true, isPower: true),
+                HabitSnapshot(id: "2", name: "Exercise", icon: "figure.run", streak: 7, completedToday: false, isPower: true),
+                HabitSnapshot(id: "3", name: "No Sugar", icon: "xmark.shield", streak: 21, completedToday: true, isPower: false)
             ],
             totalStreak: 40,
             completedToday: 2,
@@ -114,15 +113,17 @@ struct SmallWidgetView: View {
 
                 Spacer()
 
-                // Top streak habit
-                if let topHabit = data.habits.sorted(by: { $0.streak > $1.streak }).first {
+                // Most urgent: first incomplete habit, or top streak if all done
+                if let nextHabit = data.habits.first(where: { !$0.completedToday })
+                    ?? data.habits.sorted(by: { $0.streak > $1.streak }).first {
                     HStack(spacing: 4) {
-                        Image(systemName: topHabit.icon)
+                        Image(systemName: nextHabit.icon)
                             .font(.system(size: 10))
-                            .foregroundColor(matrixGreen)
-                        Text("\(topHabit.streak)d")
+                            .foregroundColor(nextHabit.completedToday ? matrixGreen : mediumGray)
+                        Text(nextHabit.completedToday ? "\(nextHabit.streak)d" : nextHabit.name.uppercased())
                             .font(.system(size: 11, weight: .bold, design: .monospaced))
                             .foregroundColor(.white)
+                            .lineLimit(1)
                     }
                 }
             }
@@ -192,14 +193,14 @@ struct MediumWidgetView: View {
 
                 // Right side: habit list (top 4)
                 VStack(alignment: .leading, spacing: 6) {
-                    ForEach(Array(data.habits.sorted(by: { $0.streak > $1.streak }).prefix(4).enumerated()), id: \.offset) { _, habit in
+                    ForEach(Array(data.habits.sorted(by: { $0.streak > $1.streak }).prefix(4).enumerated()), id: \.element.id) { _, habit in
                         HStack(spacing: 6) {
                             if habit.completedToday {
                                 Image(systemName: "checkmark.circle.fill")
                                     .font(.system(size: 11))
                                     .foregroundColor(matrixGreen)
                             } else {
-                                Button(intent: CheckInHabitIntent(habitName: habit.name, isPower: habit.isPower)) {
+                                Button(intent: CheckInHabitIntent(habitId: habit.id, habitName: habit.name, isPower: habit.isPower)) {
                                     Image(systemName: "circle")
                                         .font(.system(size: 11))
                                         .foregroundColor(mediumGray)
@@ -301,8 +302,8 @@ struct WidgetEntryView: View {
 } timeline: {
     MatrixHabitEntry(date: Date(), data: WidgetHabitData(
         habits: [
-            HabitSnapshot(name: "Meditate", icon: "brain.head.profile", streak: 12, completedToday: true, isPower: true),
-            HabitSnapshot(name: "Exercise", icon: "figure.run", streak: 7, completedToday: false, isPower: true)
+            HabitSnapshot(id: "1", name: "Meditate", icon: "brain.head.profile", streak: 12, completedToday: true, isPower: true),
+            HabitSnapshot(id: "2", name: "Exercise", icon: "figure.run", streak: 7, completedToday: false, isPower: true)
         ],
         totalStreak: 19,
         completedToday: 1,
@@ -316,10 +317,10 @@ struct WidgetEntryView: View {
 } timeline: {
     MatrixHabitEntry(date: Date(), data: WidgetHabitData(
         habits: [
-            HabitSnapshot(name: "Lock In", icon: "brain", streak: 32, completedToday: true, isPower: true),
-            HabitSnapshot(name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true),
-            HabitSnapshot(name: "Doomscrolling", icon: "iphone.slash", streak: 14, completedToday: false, isPower: false),
-            HabitSnapshot(name: "Deep Sleep", icon: "moon.zzz.fill", streak: 7, completedToday: true, isPower: true)
+            HabitSnapshot(id: "4", name: "Lock In", icon: "brain", streak: 32, completedToday: true, isPower: true),
+            HabitSnapshot(id: "5", name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true),
+            HabitSnapshot(id: "6", name: "Doomscrolling", icon: "iphone.slash", streak: 14, completedToday: false, isPower: false),
+            HabitSnapshot(id: "7", name: "Deep Sleep", icon: "moon.zzz.fill", streak: 7, completedToday: true, isPower: true)
         ],
         totalStreak: 74,
         completedToday: 2,
@@ -333,8 +334,8 @@ struct WidgetEntryView: View {
 } timeline: {
     MatrixHabitEntry(date: Date(), data: WidgetHabitData(
         habits: [
-            HabitSnapshot(name: "Lock In", icon: "brain", streak: 32, completedToday: true, isPower: true),
-            HabitSnapshot(name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true)
+            HabitSnapshot(id: "4", name: "Lock In", icon: "brain", streak: 32, completedToday: true, isPower: true),
+            HabitSnapshot(id: "5", name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true)
         ],
         totalStreak: 53,
         completedToday: 1,
@@ -348,9 +349,9 @@ struct WidgetEntryView: View {
 } timeline: {
     MatrixHabitEntry(date: Date(), data: WidgetHabitData(
         habits: [
-            HabitSnapshot(name: "Lock In", icon: "brain", streak: 32, completedToday: false, isPower: true),
-            HabitSnapshot(name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true),
-            HabitSnapshot(name: "Doomscrolling", icon: "iphone.slash", streak: 14, completedToday: true, isPower: false)
+            HabitSnapshot(id: "4", name: "Lock In", icon: "brain", streak: 32, completedToday: false, isPower: true),
+            HabitSnapshot(id: "5", name: "Combat Prep", icon: "dumbbell.fill", streak: 21, completedToday: false, isPower: true),
+            HabitSnapshot(id: "6", name: "Doomscrolling", icon: "iphone.slash", streak: 14, completedToday: true, isPower: false)
         ],
         totalStreak: 67,
         completedToday: 1,

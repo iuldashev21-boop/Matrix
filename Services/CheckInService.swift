@@ -69,6 +69,9 @@ enum CheckInService {
             WidgetCenter.shared.reloadAllTimelines()
             return .success(xpEarned)
         } catch {
+            // Roll back in-memory state to match store
+            power.checkIns.removeAll { $0 === checkIn }
+            context.delete(checkIn)
             ErrorLogger.logSaveFailure(error, context: "CheckInService.recordPowerCheckIn")
             return .failure(.saveFailed(error))
         }
@@ -130,6 +133,9 @@ enum CheckInService {
             WidgetCenter.shared.reloadAllTimelines()
             return .success(xpEarned)
         } catch {
+            // Roll back in-memory state to match store
+            agent.checkIns.removeAll { $0 === checkIn }
+            context.delete(checkIn)
             ErrorLogger.logSaveFailure(error, context: "CheckInService.recordAgentResistance")
             return .failure(.saveFailed(error))
         }
@@ -158,6 +164,9 @@ enum CheckInService {
 
             return .success(())
         } catch {
+            // Roll back in-memory state to match store
+            agent.checkIns.removeAll { $0 === checkIn }
+            context.delete(checkIn)
             ErrorLogger.logSaveFailure(error, context: "CheckInService.recordAgentRelapse")
             return .failure(.saveFailed(error))
         }
@@ -185,7 +194,7 @@ enum CheckInService {
             power.checkIns.append(checkIn)
             context.insert(checkIn)
 
-            let newStreak = power.currentStreak + 1
+            let newStreak = power.currentStreak
             totalXP += calculateXP(streak: newStreak)
         }
 
@@ -195,7 +204,7 @@ enum CheckInService {
             agent.checkIns.append(checkIn)
             context.insert(checkIn)
 
-            let newStreak = agent.currentStreak + 1
+            let newStreak = agent.currentStreak
             totalXP += calculateXP(streak: newStreak)
         }
 
@@ -250,6 +259,11 @@ enum CheckInService {
         agent: Agent? = nil,
         context: ModelContext
     ) -> Result<Void, CheckInError> {
+        // Validate at least one target exists before spending the token
+        guard power != nil || agent != nil else {
+            return .failure(.saveFailed(NSError(domain: "CheckInService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No habit target provided"])))
+        }
+
         guard UserProfile.spendEMPToken() else {
             return .failure(.insufficientEMPTokens)
         }

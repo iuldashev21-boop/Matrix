@@ -16,6 +16,8 @@ struct CommandCenterView: View {
     @State private var editingAgent: Agent? = nil
     @State private var deletingPower: Power? = nil
     @State private var deletingAgent: Agent? = nil
+    @State private var detailPower: Power? = nil
+    @State private var detailAgent: Agent? = nil
     @State private var showDeleteConfirmation: Bool = false
     @State private var showDeleteError: Bool = false
     @State private var showWhiteRabbit: Bool = false
@@ -35,7 +37,7 @@ struct CommandCenterView: View {
     @State private var isAgentsExpanded: Bool = true
     @State private var isSidequestsExpanded: Bool = false
     @State private var sidequestRefreshTrigger: Int = 0 // Forces refresh when sidequests complete
-    @State private var empTokenDisplayCount: Int = UserProfile.empTokens // For UI refresh
+    private var empTokenDisplayCount: Int { UserProfile.empTokens }
 
     // Paywall
     @State private var showPaywall: Bool = false
@@ -43,6 +45,8 @@ struct CommandCenterView: View {
     // Submit All
     @State private var isSubmittingAll: Bool = false
     @State private var showSubmitAllSuccess: Bool = false
+    @State private var showSubmitAllConfirmation: Bool = false
+    @State private var cachedAffirmation: String?
 
     // MARK: - Computed Properties
 
@@ -215,6 +219,12 @@ struct CommandCenterView: View {
         .sheet(item: $editingAgent) { agent in
             EditHabitSheet(power: nil, agent: agent)
         }
+        .sheet(item: $detailPower) { power in
+            HabitDetailView(power: power, agent: nil)
+        }
+        .sheet(item: $detailAgent) { agent in
+            HabitDetailView(power: nil, agent: agent)
+        }
         .sheet(item: $promotionCandidate) { candidate in
             TierPromotionSheet(
                 candidate: candidate,
@@ -257,6 +267,12 @@ struct CommandCenterView: View {
         } message: {
             Text("Failed to delete program. Please try again.")
         }
+        .alert("SUBMIT ALL?", isPresented: $showSubmitAllConfirmation) {
+            Button("CANCEL", role: .cancel) { }
+            Button("SUBMIT") { submitAllHabits() }
+        } message: {
+            Text("This will check in all \(incompleteHabitsCount) remaining habits at once. This cannot be undone.")
+        }
     }
 
     // MARK: - Delete Habit
@@ -294,9 +310,16 @@ struct CommandCenterView: View {
 
         switch result {
         case .success:
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 withAnimation {
                     isSubmittingAll = false
+                    showSubmitAllSuccess = true
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    withAnimation {
+                        showSubmitAllSuccess = false
+                    }
                 }
             }
         case .failure:
@@ -354,6 +377,8 @@ struct CommandCenterView: View {
     }
 
     private var dailyAffirmation: String {
+        if let cached = cachedAffirmation { return cached }
+        let result: String
         if let streak = bestStreak, streak.days > 0 {
             let messages = [
                 "Day \(streak.days) of \(streak.name).\nMost people can't do 3 days.\nYou're not most people.",
@@ -362,15 +387,17 @@ struct CommandCenterView: View {
                 "\(streak.days) consecutive uploads.\nThe old you would have quit.\nBut you're still here.",
                 "Day \(streak.days). The compound effect is real.\nSmall wins create momentum.\nMomentum creates change."
             ]
-            return messages.randomElement() ?? messages[0]
+            result = messages.randomElement() ?? messages[0]
         } else {
             let messages = [
                 "Every master was once a disaster.\nToday is Day 1.\nMake it count.",
                 "The journey of 66 days\nbegins with a single check-in.\nYou've got this.",
                 "Welcome back, Operator.\nThe Matrix is waiting.\nTime to fight back."
             ]
-            return messages.randomElement() ?? messages[0]
+            result = messages.randomElement() ?? messages[0]
         }
+        DispatchQueue.main.async { cachedAffirmation = result }
+        return result
     }
 
     // MARK: - Dashboard Content
@@ -460,17 +487,20 @@ struct CommandCenterView: View {
     // MARK: - Submit All Button
 
     private var submitAllButton: some View {
-        Button(action: submitAllHabits) {
+        Button(action: { showSubmitAllConfirmation = true }) {
             HStack(spacing: Spacing.sm) {
                 if isSubmittingAll {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .black))
                         .scaleEffect(0.8)
+                } else if showSubmitAllSuccess {
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.system(size: 18))
                 } else {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.system(size: 18))
                 }
-                Text(isSubmittingAll ? "SYNCING..." : "SUBMIT ALL (\(incompleteHabitsCount))")
+                Text(submitAllButtonLabel)
                     .font(.system(size: 14, weight: .bold, design: .monospaced))
             }
             .foregroundColor(.black)
@@ -486,8 +516,14 @@ struct CommandCenterView: View {
             .cornerRadius(Theme.cornerRadius)
             .shadow(color: Color.matrixGreen.opacity(0.4), radius: 8, x: 0, y: 4)
         }
-        .disabled(isSubmittingAll)
+        .disabled(isSubmittingAll || showSubmitAllSuccess)
         .opacity(isSubmittingAll ? 0.7 : 1.0)
+    }
+
+    private var submitAllButtonLabel: String {
+        if isSubmittingAll { return "SYNCING..." }
+        if showSubmitAllSuccess { return "ALL SIGNALS LOCKED" }
+        return "SUBMIT ALL (\(incompleteHabitsCount))"
     }
 
     // MARK: - Powers Content
@@ -510,11 +546,11 @@ struct CommandCenterView: View {
                     onDelete: {
                         deletingPower = power
                         showDeleteConfirmation = true
-                    }
+                    },
+                    onViewDetail: { detailPower = power }
                 )
                 .padding(.horizontal, Spacing.md)
                 .onTapGesture {
-                    guard !isCompleted else { return }
                     selectedPower = power
                 }
             }
@@ -533,7 +569,8 @@ struct CommandCenterView: View {
                     onDelete: {
                         deletingPower = power
                         showDeleteConfirmation = true
-                    }
+                    },
+                    onViewDetail: { detailPower = power }
                 )
                 .padding(.horizontal, Spacing.md)
                 .opacity(0.5)
@@ -579,11 +616,11 @@ struct CommandCenterView: View {
                     onDelete: {
                         deletingAgent = agent
                         showDeleteConfirmation = true
-                    }
+                    },
+                    onViewDetail: { detailAgent = agent }
                 )
                 .padding(.horizontal, Spacing.md)
                 .onTapGesture {
-                    guard !isCompleted else { return }
                     selectedAgent = agent
                 }
             }
@@ -602,7 +639,8 @@ struct CommandCenterView: View {
                     onDelete: {
                         deletingAgent = agent
                         showDeleteConfirmation = true
-                    }
+                    },
+                    onViewDetail: { detailAgent = agent }
                 )
                 .padding(.horizontal, Spacing.md)
                 .opacity(0.5)
@@ -703,9 +741,6 @@ struct CommandCenterView: View {
                     RoundedRectangle(cornerRadius: Theme.cornerRadiusCompact)
                         .stroke(Color.purple.opacity(0.5), lineWidth: 1)
                 )
-                .onAppear {
-                    empTokenDisplayCount = UserProfile.empTokens
-                }
 
                 Text("RANK: \(UserProfile.currentRank.rawValue)")
                     .font(.system(size: 11, weight: .medium, design: .monospaced))
@@ -840,8 +875,8 @@ struct CommandCenterView: View {
 
     private func syncWidgetData() {
         WidgetDataManager.update(
-            powers: powers.map { ($0.name, $0.icon, $0.currentStreak, $0.completedToday, $0.isScheduledToday) },
-            agents: agents.map { ($0.name, $0.icon, $0.currentStreak, $0.resistedToday, $0.isScheduledToday) }
+            powers: powers.map { ($0.id.uuidString, $0.name, $0.icon, $0.currentStreak, $0.completedToday, $0.isScheduledToday) },
+            agents: agents.map { ($0.id.uuidString, $0.name, $0.icon, $0.currentStreak, $0.resistedToday, $0.isScheduledToday) }
         )
     }
 

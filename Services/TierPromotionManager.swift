@@ -80,11 +80,8 @@ class TierPromotionManager {
         let oldAgent = candidate.agent
         let newHabit = candidate.nextHabit
 
-        // Create new agent with next tier habit
-        let newAgent = Agent(name: newHabit.rawValue, icon: newHabit.icon)
-
-        // Transfer some progress context (keep streaks fresh for new challenge)
-        // But preserve the creation momentum
+        // Create new agent with next tier habit, preserving schedule
+        let newAgent = Agent(name: newHabit.rawValue, icon: newHabit.icon, scheduledDays: oldAgent.scheduledDays)
         newAgent.createdAt = Date()
 
         // Insert new agent
@@ -93,6 +90,12 @@ class TierPromotionManager {
         // Mark old agent as defeated (graduated)
         oldAgent.isDefeated = true
         oldAgent.defeatedAt = Date()
+
+        do {
+            try modelContext.save()
+        } catch {
+            ErrorLogger.logSaveFailure(error, context: "TierPromotionManager.promoteAgent")
+        }
 
         return newAgent
     }

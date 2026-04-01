@@ -48,8 +48,7 @@
 		A10000000000000000000020 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000020 /* UserProfile.swift */; };
 		A10000000000000000000021 /* TerminalWakeUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000021 /* TerminalWakeUpView.swift */; };
 		A10000000000000000000022 /* PillChoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000022 /* PillChoiceView.swift */; };
-		A10000000000000000000023 /* FirstHackSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000023 /* FirstHackSetupView.swift */; };
-		A10000000000000000000024 /* RankSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000024 /* RankSystem.swift */; };
+A10000000000000000000024 /* RankSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000024 /* RankSystem.swift */; };
 		A10000000000000000000025 /* CommandCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000025 /* CommandCenterView.swift */; };
 		A10000000000000000000026 /* DialInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000026 /* DialInView.swift */; };
 		A10000000000000000000027 /* EMPRecoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000027 /* EMPRecoveryView.swift */; };
@@ -111,6 +110,7 @@
 		D4E2B8A0F9C3561B4A7CAD02 /* CheckInHabitIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C1A7F9E8D2450A3F6B9C01 /* CheckInHabitIntent.swift */; };
 		E5F3C9B1A0D4672C5B8DBE03 /* CheckInHabitIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C1A7F9E8D2450A3F6B9C01 /* CheckInHabitIntent.swift */; };
 		D85C4D072077AFF92F5EC2A8 /* UserProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA3C51FF0C57DE112DA7FCA /* UserProfileTests.swift */; };
+		B1D2E3F4A5B6C7D8E9F0A1B2 /* TierPromotionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E3F4A5B6C7D8E9F0A1B2C3 /* TierPromotionTests.swift */; };
 		DC441609CCAB3C3636D45834 /* MatrixHabitWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E8F8790CA4A992986788DE /* MatrixHabitWidgetBundle.swift */; };
 		E8A070F8574889CB556BD7E5 /* checkin_success.wav in Resources */ = {isa = PBXBuildFile; fileRef = A88AFE7440F045B4586986D4 /* checkin_success.wav */; };
 		EDFCEE40A028CE2F23357D85 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD956249358B70A8E378656 /* NotificationManager.swift */; };
@@ -194,8 +194,7 @@
 		A20000000000000000000020 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		A20000000000000000000021 /* TerminalWakeUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalWakeUpView.swift; sourceTree = "<group>"; };
 		A20000000000000000000022 /* PillChoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillChoiceView.swift; sourceTree = "<group>"; };
-		A20000000000000000000023 /* FirstHackSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstHackSetupView.swift; sourceTree = "<group>"; };
-		A20000000000000000000024 /* RankSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankSystem.swift; sourceTree = "<group>"; };
+A20000000000000000000024 /* RankSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankSystem.swift; sourceTree = "<group>"; };
 		A20000000000000000000025 /* CommandCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandCenterView.swift; sourceTree = "<group>"; };
 		A20000000000000000000026 /* DialInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialInView.swift; sourceTree = "<group>"; };
 		A20000000000000000000027 /* EMPRecoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EMPRecoveryView.swift; sourceTree = "<group>"; };
@@ -265,6 +264,7 @@
 		BBD956249358B70A8E378656 /* NotificationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationManager.swift; path = Services/NotificationManager.swift; sourceTree = "<group>"; };
 		C9B9E58C0D2C85184C07FD0A /* MatrixHabitWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = MatrixHabitWidget.entitlements; sourceTree = "<group>"; };
 		E353CAF5616CDFF66A0B72EF /* terminal_type.wav */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.wav; path = terminal_type.wav; sourceTree = "<group>"; };
+		C2E3F4A5B6C7D8E9F0A1B2C3 /* TierPromotionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TierPromotionTests.swift; sourceTree = "<group>"; };
 		F6CEB398142C7F3D85608A39 /* FrequencySchedulingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FrequencySchedulingTests.swift; sourceTree = "<group>"; };
 		FD45AF3888E4A411E42F5919 /* protocol_complete.wav */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.wav; path = protocol_complete.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -473,8 +473,7 @@
 			children = (
 				A20000000000000000000021 /* TerminalWakeUpView.swift */,
 				A20000000000000000000022 /* PillChoiceView.swift */,
-				A20000000000000000000023 /* FirstHackSetupView.swift */,
-				A20000000000000000000025 /* CommandCenterView.swift */,
+A20000000000000000000025 /* CommandCenterView.swift */,
 				A20000000000000000000120 /* AddHabitSheet.swift */,
 				A20000000000000000000121 /* AchievementsTabView.swift */,
 				A20000000000000000000122 /* CommandCenterOverlays.swift */,
@@ -517,6 +516,7 @@
 				5E87ED45BDE6FDAFBD3ACF7D /* DateHelperTests.swift */,
 				8EA3C51FF0C57DE112DA7FCA /* UserProfileTests.swift */,
 				F6CEB398142C7F3D85608A39 /* FrequencySchedulingTests.swift */,
+				C2E3F4A5B6C7D8E9F0A1B2C3 /* TierPromotionTests.swift */,
 			);
 			path = MatrixHabitTests;
 			sourceTree = "<group>";
@@ -713,8 +713,7 @@
 				A10000000000000000000020 /* UserProfile.swift in Sources */,
 				A10000000000000000000021 /* TerminalWakeUpView.swift in Sources */,
 				A10000000000000000000022 /* PillChoiceView.swift in Sources */,
-				A10000000000000000000023 /* FirstHackSetupView.swift in Sources */,
-				A10000000000000000000024 /* RankSystem.swift in Sources */,
+A10000000000000000000024 /* RankSystem.swift in Sources */,
 				A10000000000000000000025 /* CommandCenterView.swift in Sources */,
 				A10000000000000000000026 /* DialInView.swift in Sources */,
 				A10000000000000000000027 /* EMPRecoveryView.swift in Sources */,
@@ -793,6 +792,7 @@
 				492E93962F77CCF4BCCCE054 /* DateHelperTests.swift in Sources */,
 				D85C4D072077AFF92F5EC2A8 /* UserProfileTests.swift in Sources */,
 				A07F01D86CAE814474D67506 /* FrequencySchedulingTests.swift in Sources */,
+				B1D2E3F4A5B6C7D8E9F0A1B2 /* TierPromotionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

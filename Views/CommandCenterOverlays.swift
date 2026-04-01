@@ -63,6 +63,7 @@ struct GhostTutorialOverlay: View {
         ZStack {
             Color.black.opacity(0.85)
                 .ignoresSafeArea()
+                .onTapGesture { onDismiss() }
 
             VStack(spacing: Spacing.xl) {
                 // Header

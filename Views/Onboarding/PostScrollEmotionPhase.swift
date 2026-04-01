@@ -35,9 +35,6 @@ struct PostScrollEmotionPhase: View {
                         .foregroundColor(Color.matrixGreen)
                         .matrixGlow()
 
-                    Text("DIAGNOSTIC 5/9")
-                        .font(.system(size: 12, weight: .bold, design: .monospaced))
-                        .foregroundColor(Color.mediumGray)
 
                     Text("How do you feel about the RESULT of that time?")
                         .font(.system(size: 18, weight: .bold, design: .monospaced))

@@ -94,7 +94,8 @@ struct PillChoiceView: View {
             }
         }
         .fullScreenCover(isPresented: $navigateToNextScreen) {
-            FirstHackSetupView(isPresented: $navigateToNextScreen)
+            // Dead path — old onboarding Path A removed (H19)
+            EmptyView()
         }
     }
 
@@ -232,13 +233,13 @@ struct CodeRainBackground: View {
                 x: CGFloat(i % columns) * 20 + 10,
                 y: CGFloat.random(in: -screenHeight...screenHeight),
                 opacity: Double.random(in: 0.3...1.0),
-                speed: Double.random(in: 2...6) * speed
+                speed: Double.random(in: 2.7...8) * speed
             )
         }
     }
 
     private func startAnimation() {
-        animationTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
+        animationTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 15, repeats: true) { _ in
             let screenHeight = UIScreen.main.bounds.height
 
             for i in characters.indices {

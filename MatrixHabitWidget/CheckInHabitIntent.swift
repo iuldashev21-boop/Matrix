@@ -6,6 +6,9 @@ struct CheckInHabitIntent: AppIntent {
     static var title: LocalizedStringResource = "Check In Habit"
     static var description = IntentDescription("Mark a habit as complete for today")
 
+    @Parameter(title: "Habit ID")
+    var habitId: String
+
     @Parameter(title: "Habit Name")
     var habitName: String
 
@@ -13,11 +16,13 @@ struct CheckInHabitIntent: AppIntent {
     var isPower: Bool
 
     init() {
+        self.habitId = ""
         self.habitName = ""
         self.isPower = true
     }
 
-    init(habitName: String, isPower: Bool) {
+    init(habitId: String, habitName: String, isPower: Bool) {
+        self.habitId = habitId
         self.habitName = habitName
         self.isPower = isPower
     }
@@ -33,6 +38,7 @@ struct CheckInHabitIntent: AppIntent {
 
         // 1. Add pending check-in
         let pending = PendingEntry(
+            habitId: habitId,
             habitName: habitName,
             isPower: isPower,
             date: Calendar.current.startOfDay(for: Date())
@@ -44,9 +50,9 @@ struct CheckInHabitIntent: AppIntent {
             existingPending = decoded
         }
 
-        // Deduplicate
+        // Deduplicate by habit ID + date
         let isDuplicate = existingPending.contains {
-            $0.habitName == pending.habitName &&
+            $0.habitId == pending.habitId &&
             Calendar.current.startOfDay(for: $0.date) == Calendar.current.startOfDay(for: pending.date)
         }
         guard !isDuplicate else { return .result() }
@@ -61,8 +67,9 @@ struct CheckInHabitIntent: AppIntent {
            var widgetData = try? JSONDecoder().decode(WidgetDataSnapshot.self, from: widgetRaw) {
 
             widgetData.habits = widgetData.habits.map { habit in
-                if habit.name == habitName && !habit.completedToday {
+                if habit.id == habitId && !habit.completedToday {
                     return HabitEntry(
+                        id: habit.id,
                         name: habit.name,
                         icon: habit.icon,
                         streak: habit.streak,
@@ -80,6 +87,7 @@ struct CheckInHabitIntent: AppIntent {
             }
         }
 
+        WidgetCenter.shared.reloadAllTimelines()
         return .result()
     }
 }
@@ -87,12 +95,14 @@ struct CheckInHabitIntent: AppIntent {
 // MARK: - Local Codable types (self-contained, no cross-target dependency)
 
 private struct PendingEntry: Codable {
+    let habitId: String
     let habitName: String
     let isPower: Bool
     let date: Date
 }
 
 private struct HabitEntry: Codable {
+    let id: String
     let name: String
     let icon: String
     let streak: Int

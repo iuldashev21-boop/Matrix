@@ -12,6 +12,7 @@ struct RedBluePillPhase: View {
     @State private var selectedPill: String? = nil
     @State private var dimScreen: Bool = false
     @State private var showExitText: Bool = false
+    @State private var bluePillCancelled: Bool = false
 
     var body: some View {
         ZStack {
@@ -26,7 +27,7 @@ struct RedBluePillPhase: View {
             VStack(spacing: Spacing.xxl) {
                 // Back button
                 HStack {
-                    Button(action: onBack) {
+                    Button(action: { bluePillCancelled = true; onBack() }) {
                         HStack(spacing: 4) {
                             Image(systemName: "chevron.left")
                             Text("BACK")
@@ -133,6 +134,7 @@ struct RedBluePillPhase: View {
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            guard !bluePillCancelled else { return }
             onBluePill()
         }
     }

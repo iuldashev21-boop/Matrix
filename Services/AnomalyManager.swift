@@ -2,12 +2,14 @@ import Foundation
 
 // MARK: - Anomaly Progress Tracking
 
+@MainActor
 class AnomalyManager: ObservableObject {
     @Published var unlockedReports: Set<String> = []
     @Published var decryptionProgress: [String: Int] = [:] // reportId: days (0-5)
 
     private let unlockedKey = "unlockedAnomalyReports"
     private let progressKey = "anomalyDecryptionProgress"
+    private let lastCheckInDateKey = "anomalyLastCheckInDate"
 
     init() {
         loadProgress()
@@ -119,9 +121,16 @@ class AnomalyManager: ObservableObject {
         saveProgress()
     }
 
-    // Call this on each check-in to progress all active decryptions
+    // Call this on each check-in to progress all active decryptions (once per day)
     func onDailyCheckIn() {
-        for reportId in decryptionProgress.keys {
+        let today = Calendar.current.startOfDay(for: Date())
+        if let last = UserDefaults.standard.object(forKey: lastCheckInDateKey) as? Date,
+           Calendar.current.isDate(last, inSameDayAs: today) {
+            return // Already progressed today
+        }
+        UserDefaults.standard.set(today, forKey: lastCheckInDateKey)
+
+        for reportId in Array(decryptionProgress.keys) {
             incrementDecryption(reportId)
         }
     }
@@ -177,7 +186,7 @@ class AnomalyManager: ObservableObject {
 
     // MARK: - Text Scramble Helper
 
-    static func scrambleText(_ text: String, revealPercentage: Double) -> String {
+    nonisolated static func scrambleText(_ text: String, revealPercentage: Double) -> String {
         let matrixChars = "ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロワヲン0123456789"
 
         var result = ""

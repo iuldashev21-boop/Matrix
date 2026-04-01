@@ -20,12 +20,14 @@ struct ScanlineOverlay: View {
 
 struct VignetteOverlay: View {
     var body: some View {
-        RadialGradient(
-            gradient: Gradient(colors: [.clear, .black.opacity(0.6)]),
-            center: .center,
-            startRadius: UIScreen.main.bounds.width * 0.3,
-            endRadius: UIScreen.main.bounds.width * 0.9
-        )
+        GeometryReader { geo in
+            RadialGradient(
+                gradient: Gradient(colors: [.clear, .black.opacity(0.6)]),
+                center: .center,
+                startRadius: geo.size.width * 0.3,
+                endRadius: geo.size.width * 0.9
+            )
+        }
         .allowsHitTesting(false)
     }
 }

@@ -10,6 +10,7 @@ struct ContractPhase: View {
     @State private var showScanner: Bool = false
     @State private var holdProgress: CGFloat = 0
     @State private var isHolding: Bool = false
+    @State private var isCompleted: Bool = false
     @State private var showFlash: Bool = false
     @State private var showFinalText: Bool = false
 
@@ -111,11 +112,11 @@ struct ContractPhase: View {
     }
 
     private func startHold() {
-        guard !isHolding && holdProgress < 1.0 else { return }
+        guard !isHolding && !isCompleted && holdProgress < 1.0 else { return }
         isHolding = true
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         withAnimation(.linear(duration: holdDuration)) { holdProgress = 1.0 }
-        DispatchQueue.main.asyncAfter(deadline: .now() + holdDuration) { if isHolding { completeContract() } }
+        DispatchQueue.main.asyncAfter(deadline: .now() + holdDuration) { if isHolding && !isCompleted { completeContract() } }
         for i in 1...10 {
             DispatchQueue.main.asyncAfter(deadline: .now() + holdDuration * Double(i) / 10.0) {
                 guard isHolding else { return }
@@ -131,6 +132,8 @@ struct ContractPhase: View {
     }
 
     private func completeContract() {
+        guard !isCompleted else { return }
+        isCompleted = true
         SoundManager.shared.playProtocolComplete()
         withAnimation(.easeIn(duration: 0.1)) { showFlash = true; showText = false; showScanner = false }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { withAnimation(.easeOut(duration: 0.3)) { showFlash = false } }

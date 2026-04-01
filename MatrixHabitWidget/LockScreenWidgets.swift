@@ -53,7 +53,7 @@ struct RectangularWidgetView: View {
                     ForEach(Array(scheduled.prefix(2).enumerated()), id: \.offset) { _, habit in
                         habitRow(habit, done: false)
                     }
-                    let remaining = data.totalScheduledToday - data.completedToday
+                    let remaining = max(0, data.totalScheduledToday - data.completedToday)
                     Text("\(remaining) REMAINING")
                         .font(.system(size: 10, design: .monospaced))
                         .foregroundStyle(.secondary)

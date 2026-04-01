@@ -169,4 +169,20 @@ final class StreakCalculatorTests: XCTestCase {
 
         XCTAssertEqual(longest, 2, "Duplicate dates should not inflate streak")
     }
+
+    // MARK: - calculateStreak Duplicate Dedup
+
+    func test_calculateStreak_handlesDuplicateDates() {
+        let checkIns = [
+            TestCheckInFactory.checkIn(daysAgo: 0, isSuccess: true),
+            TestCheckInFactory.checkIn(daysAgo: 0, isSuccess: true), // Duplicate
+            TestCheckInFactory.checkIn(daysAgo: 1, isSuccess: true),
+            TestCheckInFactory.checkIn(daysAgo: 1, isSuccess: true), // Duplicate
+            TestCheckInFactory.checkIn(daysAgo: 2, isSuccess: true),
+        ]
+
+        let streak = StreakCalculator.calculateStreak(for: checkIns)
+
+        XCTAssertEqual(streak, 3, "Duplicate dates should not inflate current streak")
+    }
 }

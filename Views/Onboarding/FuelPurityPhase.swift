@@ -35,9 +35,6 @@ struct FuelPurityPhase: View {
                         .foregroundColor(Color.matrixGreen)
                         .matrixGlow()
 
-                    Text("DIAGNOSTIC 7/9")
-                        .font(.system(size: 12, weight: .bold, design: .monospaced))
-                        .foregroundColor(Color.mediumGray)
 
                     Text("When do your energy systems typically crash?")
                         .font(.system(size: 18, weight: .bold, design: .monospaced))

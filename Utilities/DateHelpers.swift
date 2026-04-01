@@ -18,6 +18,7 @@ enum DateHelper {
 
     // MARK: - Cache Storage
 
+    private static let lock = NSLock()
     private static var _cachedToday: Date?
     private static var _cachedYesterday: Date?
     private static var _lastCacheTime: Date?
@@ -30,19 +31,19 @@ enum DateHelper {
     /// Today's date (start of day), cached for stability during operations
     static var today: Date {
         refreshCacheIfNeeded()
-        return _cachedToday!
+        return lock.withLock { _cachedToday! }
     }
 
     /// Yesterday's date (start of day), cached for stability
     static var yesterday: Date {
         refreshCacheIfNeeded()
-        return _cachedYesterday!
+        return lock.withLock { _cachedYesterday! }
     }
 
     /// Current hour (0-23) based on cached time
     static var currentHour: Int {
         refreshCacheIfNeeded()
-        return Calendar.current.component(.hour, from: _lastCacheTime!)
+        return lock.withLock { Calendar.current.component(.hour, from: _lastCacheTime!) }
     }
 
     // MARK: - Comparison Methods
@@ -66,28 +67,32 @@ enum DateHelper {
 
     /// Force a cache refresh - call this when the app comes to foreground
     static func invalidateCache() {
-        _cachedToday = nil
-        _cachedYesterday = nil
-        _lastCacheTime = nil
+        lock.withLock {
+            _cachedToday = nil
+            _cachedYesterday = nil
+            _lastCacheTime = nil
+        }
     }
 
     // MARK: - Private
 
     private static func refreshCacheIfNeeded() {
-        let now = Date()
+        lock.withLock {
+            let now = Date()
 
-        // Check if cache is still valid
-        if let lastCache = _lastCacheTime,
-           now.timeIntervalSince(lastCache) < cacheDuration,
-           _cachedToday != nil {
-            return
+            // Check if cache is still valid
+            if let lastCache = _lastCacheTime,
+               now.timeIntervalSince(lastCache) < cacheDuration,
+               _cachedToday != nil {
+                return
+            }
+
+            // Refresh cache
+            let calendar = Calendar.current
+            _cachedToday = calendar.startOfDay(for: now)
+            _cachedYesterday = calendar.date(byAdding: .day, value: -1, to: _cachedToday!)
+            _lastCacheTime = now
         }
-
-        // Refresh cache
-        let calendar = Calendar.current
-        _cachedToday = calendar.startOfDay(for: now)
-        _cachedYesterday = calendar.date(byAdding: .day, value: -1, to: _cachedToday!)
-        _lastCacheTime = now
     }
 }
 

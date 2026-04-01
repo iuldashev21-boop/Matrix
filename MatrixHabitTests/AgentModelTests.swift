@@ -261,16 +261,46 @@ final class AgentModelTests: XCTestCase {
         XCTAssertTrue(agent.needsRecovery)
     }
 
+    // MARK: - needsRecovery Partial Schedule Tests
+
+    func test_needsRecovery_scheduledHabit_missedLastScheduled_returnsTrue() {
+        let calendar = Calendar.current
+        let todayWeekday = calendar.component(.weekday, from: Date())
+        let twoDaysAgoWeekday = ((todayWeekday - 3 + 7) % 7) + 1
+
+        let agent = Agent(name: "Test", scheduledDays: [twoDaysAgoWeekday])
+
+        agent.checkIns = [
+            TestCheckInFactory.checkIn(daysAgo: 5, isSuccess: true),
+            TestCheckInFactory.checkIn(daysAgo: 6, isSuccess: true)
+        ]
+
+        XCTAssertTrue(agent.needsRecovery, "Should need recovery when last scheduled day was missed")
+    }
+
+    func test_needsRecovery_scheduledHabit_completedLastScheduled_returnsFalse() {
+        let calendar = Calendar.current
+        let todayWeekday = calendar.component(.weekday, from: Date())
+        let twoDaysAgoWeekday = ((todayWeekday - 3 + 7) % 7) + 1
+
+        let agent = Agent(name: "Test", scheduledDays: [twoDaysAgoWeekday])
+
+        agent.checkIns = [
+            TestCheckInFactory.checkIn(daysAgo: 2, isSuccess: true)
+        ]
+
+        XCTAssertFalse(agent.needsRecovery, "Should not need recovery when last scheduled day was completed")
+    }
+
     // MARK: - touch Tests
 
     func test_touch_updatesUpdatedAt() {
         let agent = Agent(name: "Test")
-        let originalDate = agent.updatedAt
-
-        Thread.sleep(forTimeInterval: 0.01)
+        // Set updatedAt to a known past date to avoid timing dependency
+        agent.updatedAt = Date.distantPast
         agent.touch()
 
-        XCTAssertGreaterThan(agent.updatedAt, originalDate)
+        XCTAssertGreaterThan(agent.updatedAt, Date.distantPast)
     }
 
     // MARK: - Helpers

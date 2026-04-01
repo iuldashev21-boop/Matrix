@@ -42,9 +42,6 @@ struct YearsDeletedPhase: View {
 
             if showContent && !showResult {
                 VStack(spacing: Spacing.lg) {
-                    Text("DIAGNOSTIC 3/9")
-                        .font(.system(size: 12, weight: .bold, design: .monospaced))
-                        .foregroundColor(Color.mediumGray)
 
                     Text("How many hours do you lose to these loops daily?")
                         .font(.system(size: 18, weight: .bold, design: .monospaced))

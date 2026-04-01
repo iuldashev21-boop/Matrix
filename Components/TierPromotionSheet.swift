@@ -97,14 +97,14 @@ struct TierPromotionSheet: View {
                 // Streak badge
                 HStack(spacing: Spacing.xs) {
                     Image(systemName: "flame.fill")
-                        .foregroundColor(.orange)
+                        .foregroundColor(.warning)
                     Text("\(candidate.currentStreak) DAY STREAK")
                         .font(.system(size: 14, weight: .bold, design: .monospaced))
-                        .foregroundColor(.orange)
+                        .foregroundColor(.warning)
                 }
                 .padding(.vertical, Spacing.sm)
                 .padding(.horizontal, Spacing.lg)
-                .background(Color.orange.opacity(0.15))
+                .background(Color.warning.opacity(0.15))
                 .cornerRadius(Theme.cornerRadiusCompact)
 
                 Spacer()

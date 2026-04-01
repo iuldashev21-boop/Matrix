@@ -22,6 +22,7 @@ struct HabitDetailView: View {
     private var targetDays: Int { power?.targetDays ?? agent?.targetDays ?? Theme.habitFormationDays }
     private var createdAt: Date { power?.createdAt ?? agent?.createdAt ?? Date() }
     private var totalCheckIns: Int { power?.checkIns.count ?? agent?.checkIns.count ?? 0 }
+    private var habitCheckIns: [CheckIn] { power?.checkIns ?? agent?.checkIns ?? [] }
     private var isCompletedToday: Bool {
         power?.completedToday ?? agent?.resistedToday ?? false
     }
@@ -53,6 +54,9 @@ struct HabitDetailView: View {
 
                         // Progress Section
                         progressSection
+
+                        // History Heatmap
+                        historySection
 
                         // Actions
                         actionsSection
@@ -203,6 +207,20 @@ struct HabitDetailView: View {
         .padding(.horizontal, Spacing.md)
     }
 
+    // MARK: - History Section
+
+    private var historySection: some View {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
+            Text("// ACTIVITY LOG")
+                .font(.system(size: 11, weight: .bold, design: .monospaced))
+                .foregroundColor(Color.mediumGray)
+                .padding(.horizontal, Spacing.md)
+
+            HabitHeatmapView(checkIns: habitCheckIns, accentColor: accentColor)
+                .padding(.horizontal, Spacing.md)
+        }
+    }
+
     // MARK: - Actions Section
 
     private var actionsSection: some View {
@@ -260,10 +278,14 @@ struct HabitDetailView: View {
 
     // MARK: - Helpers
 
-    private func formatDate(_ date: Date) -> String {
+    private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d"
-        return formatter.string(from: date)
+        return formatter
+    }()
+
+    private func formatDate(_ date: Date) -> String {
+        Self.dateFormatter.string(from: date)
     }
 
     private func deleteHabit() {
@@ -324,7 +346,7 @@ struct EditHabitSheet: View {
     private let agentIcons = ["xmark.shield", "iphone", "moon.zzz", "cup.and.saucer", "tv", "creditcard", "flame", "wineglass", "cigarette", "gamecontroller"]
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 Color.matrixBlack.ignoresSafeArea()
 
@@ -394,6 +416,16 @@ struct EditHabitSheet: View {
                         .font(.system(size: 14, design: .monospaced))
                         .foregroundColor(accentColor)
                 }
+                ToolbarItem(placement: .keyboard) {
+                    HStack {
+                        Spacer()
+                        Button("DONE") {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        }
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        .foregroundColor(accentColor)
+                    }
+                }
             }
         }
         .onAppear {
@@ -424,6 +456,74 @@ struct EditHabitSheet: View {
         } catch {
             showSaveError = true
         }
+    }
+}
+
+// MARK: - Habit Heatmap View
+
+struct HabitHeatmapView: View {
+    let checkIns: [CheckIn]
+    let accentColor: Color
+
+    private let columns = 7 // days per row (Mon-Sun)
+    private let weeks = 5 // show 5 weeks of history
+
+    private var checkInDates: Set<String> {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return Set(checkIns.filter { $0.isSuccess }.map { formatter.string(from: $0.date) })
+    }
+
+    private var days: [Date] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let totalDays = weeks * columns
+        return (0..<totalDays).compactMap { offset in
+            calendar.date(byAdding: .day, value: -(totalDays - 1 - offset), to: today)
+        }
+    }
+
+    private func isCheckedIn(_ date: Date) -> Bool {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return checkInDates.contains(formatter.string(from: date))
+    }
+
+    private func isToday(_ date: Date) -> Bool {
+        Calendar.current.isDateInToday(date)
+    }
+
+    var body: some View {
+        VStack(spacing: Spacing.xs) {
+            // Day labels
+            HStack(spacing: 3) {
+                ForEach(["M", "T", "W", "T", "F", "S", "S"], id: \.self) { day in
+                    Text(day)
+                        .font(.system(size: 8, weight: .medium, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+                        .frame(maxWidth: .infinity)
+                }
+            }
+
+            // Grid
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 3), count: columns), spacing: 3) {
+                ForEach(days, id: \.self) { date in
+                    let checked = isCheckedIn(date)
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(checked ? accentColor : Color.charcoal)
+                        .opacity(checked ? 1.0 : 0.5)
+                        .frame(height: 14)
+                        .overlay(
+                            isToday(date) ?
+                                RoundedRectangle(cornerRadius: 2)
+                                    .stroke(accentColor, lineWidth: 1) : nil
+                        )
+                }
+            }
+        }
+        .padding(Spacing.md)
+        .background(Color.charcoal.opacity(0.3))
+        .cornerRadius(Theme.cornerRadius)
     }
 }
 

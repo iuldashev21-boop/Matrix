@@ -8,14 +8,30 @@ class AchievementManager: ObservableObject {
     @Published var showUnlockAnimation: Bool = false
 
     private var modelContext: ModelContext?
+    private var unlockedCache: Set<String>?
 
     func setContext(_ context: ModelContext) {
         self.modelContext = context
     }
 
+    private func loadUnlockedCache() {
+        guard let context = modelContext else { return }
+        let descriptor = FetchDescriptor<Achievement>()
+        do {
+            let all = try context.fetch(descriptor)
+            unlockedCache = Set(all.map { $0.id })
+        } catch {
+            ErrorLogger.logFetchFailure(error, context: "AchievementManager.loadUnlockedCache")
+            unlockedCache = nil
+        }
+    }
+
     // MARK: - Check if Achievement is Unlocked
 
     func isUnlocked(_ achievementId: String) -> Bool {
+        if let cache = unlockedCache {
+            return cache.contains(achievementId)
+        }
         guard let context = modelContext else { return false }
         let descriptor = FetchDescriptor<Achievement>(
             predicate: #Predicate { $0.id == achievementId }
@@ -37,6 +53,7 @@ class AchievementManager: ObservableObject {
 
         let achievement = Achievement(id: achievementId)
         context.insert(achievement)
+        unlockedCache?.insert(achievementId)
         do {
             try context.save()
         } catch {
@@ -55,9 +72,9 @@ class AchievementManager: ObservableObject {
             UINotificationFeedbackGenerator().notificationOccurred(.success)
 
             // Auto-hide after delay
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                self.showUnlockAnimation = false
-                self.recentlyUnlocked = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
+                self?.showUnlockAnimation = false
+                self?.recentlyUnlocked = nil
             }
         }
     }
@@ -88,6 +105,8 @@ class AchievementManager: ObservableObject {
         agents: [Agent],
         totalCheckIns: Int
     ) {
+        loadUnlockedCache()
+
         // First signal
         if totalCheckIns == 1 {
             unlock("log_first")
@@ -189,38 +208,36 @@ class AchievementManager: ObservableObject {
     // MARK: - Weekend Warrior Check
 
     private func checkWeekendWarrior(powers: [Power], agents: [Agent]) {
+        guard !isUnlocked("weekend_warrior") else { return }
         let calendar = Calendar.current
-        let today = DateHelper.today  // Use cached, normalized date
+        let today = DateHelper.today
 
-        guard let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today)) else { return }
+        // Find this week's Saturday (weekday 7) and Sunday (weekday 1)
+        // using weekday component — works regardless of locale's firstWeekday
+        let todayWeekday = calendar.component(.weekday, from: today)
+        let daysToSaturday = (7 - todayWeekday + 7) % 7  // 7 = Saturday
+        let daysToSunday = (1 - todayWeekday + 7) % 7     // 1 = Sunday
 
-        // Saturday = day 6, Sunday = day 0 (or 7) of the week
-        guard let saturday = calendar.date(byAdding: .day, value: 6, to: weekStart),
-              let sunday = calendar.date(byAdding: .day, value: 7, to: weekStart) else { return }
+        guard let saturday = calendar.date(byAdding: .day, value: daysToSaturday == 0 ? 0 : daysToSaturday - 7, to: today),
+              let sunday = calendar.date(byAdding: .day, value: daysToSunday == 0 ? 0 : daysToSunday - 7, to: today) else { return }
 
-        var saturdayLogged = false
-        var sundayLogged = false
+        // Only check days that have already passed
+        let checkSaturday = saturday <= today
+        let checkSunday = sunday <= today
+        guard checkSaturday || checkSunday else { return }
 
-        for power in powers {
-            for checkIn in power.checkIns {
-                if calendar.isDate(checkIn.date, inSameDayAs: saturday) {
-                    saturdayLogged = true
-                }
-                if calendar.isDate(checkIn.date, inSameDayAs: sunday) {
-                    sundayLogged = true
-                }
+        var saturdayLogged = !checkSaturday  // skip if future
+        var sundayLogged = !checkSunday
+
+        let allCheckIns = powers.flatMap(\.checkIns) + agents.flatMap(\.checkIns)
+        for checkIn in allCheckIns {
+            if !saturdayLogged && calendar.isDate(checkIn.date, inSameDayAs: saturday) {
+                saturdayLogged = true
             }
-        }
-
-        for agent in agents {
-            for checkIn in agent.checkIns {
-                if calendar.isDate(checkIn.date, inSameDayAs: saturday) {
-                    saturdayLogged = true
-                }
-                if calendar.isDate(checkIn.date, inSameDayAs: sunday) {
-                    sundayLogged = true
-                }
+            if !sundayLogged && calendar.isDate(checkIn.date, inSameDayAs: sunday) {
+                sundayLogged = true
             }
+            if saturdayLogged && sundayLogged { break }
         }
 
         if saturdayLogged && sundayLogged {
@@ -231,42 +248,30 @@ class AchievementManager: ObservableObject {
     // MARK: - Perfect Week Check
 
     private func checkPerfectWeek(powers: [Power], agents: [Agent]) {
+        guard !isUnlocked("perfect_week") else { return }
         let calendar = Calendar.current
-        let today = DateHelper.today  // Use cached, normalized date
+        let today = DateHelper.today
 
         guard let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today)) else { return }
+        guard !powers.isEmpty || !agents.isEmpty else { return }
 
-        let totalHabits = powers.count + agents.count
-        guard totalHabits > 0 else { return }
-
-        // Check each day of the week
+        // Check each day of the week up to today
         for dayOffset in 0..<7 {
             guard let day = calendar.date(byAdding: .day, value: dayOffset, to: weekStart) else { continue }
+            if day > today { break }
 
-            // Skip future days
-            if day > today { return }
-
-            var completedOnDay = 0
-
-            for power in powers {
-                if power.checkIns.contains(where: { calendar.isDate($0.date, inSameDayAs: day) }) {
-                    completedOnDay += 1
-                }
+            // Only count habits scheduled on this specific day
+            for power in powers where power.isScheduled(on: day) {
+                let completed = power.checkIns.contains { calendar.isDate($0.date, inSameDayAs: day) }
+                if !completed { return }
             }
 
-            for agent in agents {
-                if agent.checkIns.contains(where: { calendar.isDate($0.date, inSameDayAs: day) }) {
-                    completedOnDay += 1
-                }
-            }
-
-            // If any day is incomplete, no perfect week
-            if completedOnDay < totalHabits {
-                return
+            for agent in agents where agent.isScheduled(on: day) {
+                let completed = agent.checkIns.contains { calendar.isDate($0.date, inSameDayAs: day) }
+                if !completed { return }
             }
         }
 
-        // All days complete!
         unlock("perfect_week")
     }
 }

@@ -124,8 +124,7 @@ struct RedPillPaywallView: View {
         }
         .onChange(of: storeManager.isRedPillOwned) { _, owned in
             if owned {
-                storeManager.unlockAllHabits(powers: powers, agents: agents)
-                try? modelContext.save()
+                storeManager.unlockAllHabits(powers: powers, agents: agents, context: modelContext)
                 dismiss()
             }
         }

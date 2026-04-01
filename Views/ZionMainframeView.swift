@@ -71,6 +71,9 @@ struct ZionMainframeView: View {
         } message: {
             Text("Failed to purge system data. Please try again or restart the app.")
         }
+        .onAppear {
+            notificationsEnabled = NotificationManager.shared.notificationsEnabled
+        }
     }
 
     // MARK: - Header
@@ -298,7 +301,7 @@ struct ZionMainframeView: View {
             VStack(spacing: Spacing.lg) {
                 // Version (tappable for easter egg)
                 Button(action: handleVersionTap) {
-                    Text("CONSTRUCT v1.0.0")
+                    Text("CONSTRUCT v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?")")
                         .font(.system(size: 14, design: .monospaced))
                         .foregroundColor(Color.mediumGray)
                 }
@@ -338,7 +341,7 @@ struct ZionMainframeView: View {
                     }
                     .foregroundColor(.white)
                     .padding(Spacing.md)
-                    .background(Color.orange.opacity(0.2))
+                    .background(Color.warning.opacity(0.2))
                     .cornerRadius(Theme.cornerRadiusCompact)
                 }
 
@@ -346,14 +349,14 @@ struct ZionMainframeView: View {
                 Button(action: simulate28DayStreak) {
                     HStack {
                         Image(systemName: "flame.fill")
-                            .foregroundColor(.red)
+                            .foregroundColor(.danger)
                         Text("SIMULATE 28-DAY STREAK")
                             .font(.system(size: 14, weight: .medium, design: .monospaced))
                         Spacer()
                     }
                     .foregroundColor(.white)
                     .padding(Spacing.md)
-                    .background(Color.red.opacity(0.2))
+                    .background(Color.danger.opacity(0.2))
                     .cornerRadius(Theme.cornerRadiusCompact)
                 }
 
@@ -726,7 +729,13 @@ struct SettingsToggleRow: View {
     let onChange: () -> Void
 
     var body: some View {
-        HStack {
+        Toggle(isOn: Binding(
+            get: { isOn },
+            set: { newValue in
+                isOn = newValue
+                onChange()
+            }
+        )) {
             VStack(alignment: .leading, spacing: Spacing.xs) {
                 Text(title)
                     .font(.system(size: 14, weight: .medium, design: .monospaced))
@@ -736,22 +745,26 @@ struct SettingsToggleRow: View {
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundColor(Color.lightGray)
             }
-
-            Spacer()
-
-            // Custom Matrix-style toggle
-            Button(action: {
-                isOn.toggle()
-                onChange()
-            }) {
-                Text(isOn ? "[ ON ]" : "[ OFF ]")
-                    .font(.system(size: 14, weight: .bold, design: .monospaced))
-                    .foregroundColor(isOn ? Color.matrixGreen : Color.mediumGray)
-            }
         }
+        .toggleStyle(MatrixToggleStyle())
         .padding(Spacing.md)
         .background(Color.charcoal)
         .cornerRadius(Theme.cornerRadius)
+    }
+}
+
+struct MatrixToggleStyle: ToggleStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack {
+            configuration.label
+            Spacer()
+            Text(configuration.isOn ? "[ ON ]" : "[ OFF ]")
+                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                .foregroundColor(configuration.isOn ? Color.matrixGreen : Color.mediumGray)
+                .onTapGesture {
+                    configuration.isOn.toggle()
+                }
+        }
     }
 }
 
@@ -765,7 +778,7 @@ struct ExportDataView: View {
     @Query private var checkIns: [CheckIn]
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 Color.matrixBlack.ignoresSafeArea()
 
@@ -823,7 +836,7 @@ struct ExportDataView: View {
 
     private func generateExportData() -> String? {
         let export = ExportData(
-            version: "1.0.0",
+            version: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?",
             exportDate: Date(),
             totalXP: UserProfile.totalXP,
             rank: UserProfile.currentRank.rawValue,

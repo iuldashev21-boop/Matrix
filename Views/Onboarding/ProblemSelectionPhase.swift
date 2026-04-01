@@ -28,10 +28,6 @@ struct ProblemSelectionPhase: View {
 
             if showContent {
                 VStack(spacing: Spacing.sm) {
-                    Text("DIAGNOSTIC 2/9")
-                        .font(.system(size: 12, weight: .bold, design: .monospaced))
-                        .foregroundColor(Color.mediumGray)
-                        .padding(.top, Spacing.md)
 
                     Text("SYSTEM:")
                         .font(.system(size: 14, weight: .bold, design: .monospaced))

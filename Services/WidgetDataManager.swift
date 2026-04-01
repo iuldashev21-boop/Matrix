@@ -6,6 +6,7 @@ enum WidgetDataManager {
     private static let widgetDataKey = "com.matrixhabit.widget.data"
 
     struct HabitSnapshot: Codable {
+        let id: String
         let name: String
         let icon: String
         let streak: Int
@@ -22,8 +23,8 @@ enum WidgetDataManager {
     }
 
     static func update(
-        powers: [(name: String, icon: String, streak: Int, completedToday: Bool, isScheduledToday: Bool)],
-        agents: [(name: String, icon: String, streak: Int, completedToday: Bool, isScheduledToday: Bool)]
+        powers: [(id: String, name: String, icon: String, streak: Int, completedToday: Bool, isScheduledToday: Bool)],
+        agents: [(id: String, name: String, icon: String, streak: Int, completedToday: Bool, isScheduledToday: Bool)]
     ) {
         guard let sharedDefaults = UserDefaults(suiteName: appGroupID) else { return }
 
@@ -33,7 +34,7 @@ enum WidgetDataManager {
         var scheduledCount = 0
 
         for p in powers {
-            snapshots.append(HabitSnapshot(name: p.name, icon: p.icon, streak: p.streak, completedToday: p.completedToday, isPower: true))
+            snapshots.append(HabitSnapshot(id: p.id, name: p.name, icon: p.icon, streak: p.streak, completedToday: p.completedToday, isPower: true))
             totalStreak += p.streak
             if p.isScheduledToday {
                 scheduledCount += 1
@@ -42,7 +43,7 @@ enum WidgetDataManager {
         }
 
         for a in agents {
-            snapshots.append(HabitSnapshot(name: a.name, icon: a.icon, streak: a.streak, completedToday: a.completedToday, isPower: false))
+            snapshots.append(HabitSnapshot(id: a.id, name: a.name, icon: a.icon, streak: a.streak, completedToday: a.completedToday, isPower: false))
             totalStreak += a.streak
             if a.isScheduledToday {
                 scheduledCount += 1
@@ -77,6 +78,7 @@ enum WidgetDataManager {
     // MARK: - Pending Check-Ins
 
     struct PendingCheckIn: Codable {
+        let habitId: String
         let habitName: String
         let isPower: Bool
         let date: Date
@@ -91,7 +93,7 @@ enum WidgetDataManager {
 
         let calendar = Calendar.current
         let isDuplicate = pending.contains { existing in
-            existing.habitName == checkIn.habitName
+            existing.habitId == checkIn.habitId
                 && calendar.isDate(existing.date, inSameDayAs: checkIn.date)
         }
 
@@ -117,7 +119,7 @@ enum WidgetDataManager {
         sharedDefaults.removeObject(forKey: pendingCheckInsKey)
     }
 
-    static func markHabitCompleted(habitName: String) {
+    static func markHabitCompleted(habitId: String) {
         guard let sharedDefaults = UserDefaults(suiteName: appGroupID),
               let data = sharedDefaults.data(forKey: widgetDataKey),
               var widgetData = try? JSONDecoder().decode(WidgetData.self, from: data) else {
@@ -128,8 +130,9 @@ enum WidgetDataManager {
         var additionalCompleted = 0
 
         for i in updatedHabits.indices {
-            if updatedHabits[i].name == habitName && !updatedHabits[i].completedToday {
+            if updatedHabits[i].id == habitId && !updatedHabits[i].completedToday {
                 updatedHabits[i] = HabitSnapshot(
+                    id: updatedHabits[i].id,
                     name: updatedHabits[i].name,
                     icon: updatedHabits[i].icon,
                     streak: updatedHabits[i].streak,

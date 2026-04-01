@@ -78,7 +78,7 @@ struct AddHabitSheet: View {
     private let agentIcons = ["xmark.shield", "iphone", "moon.zzz", "cup.and.saucer", "tv", "creditcard"]
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 Color.matrixBlack.ignoresSafeArea()
 
@@ -89,7 +89,7 @@ struct AddHabitSheet: View {
                             isAgent = false
                             selectedIcon = "bolt"
                         }
-                        TypeToggleButton(title: "AGENT", isSelected: isAgent) {
+                        TypeToggleButton(title: "AGENT", isSelected: isAgent, accentColor: Color.agentRed) {
                             isAgent = true
                             selectedIcon = "xmark.shield"
                         }
@@ -260,6 +260,16 @@ struct AddHabitSheet: View {
                         .font(.system(size: 14, design: .monospaced))
                         .foregroundColor(Color.matrixGreen)
                 }
+                ToolbarItem(placement: .keyboard) {
+                    HStack {
+                        Spacer()
+                        Button("DONE") {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        }
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        .foregroundColor(Color.matrixGreen)
+                    }
+                }
             }
             .alert("SAVE FAILED", isPresented: $showSaveError) {
                 Button("OK", role: .cancel) { }
@@ -333,6 +343,7 @@ struct SuggestionChip: View {
 struct TypeToggleButton: View {
     let title: String
     let isSelected: Bool
+    var accentColor: Color = Color.matrixGreen
     let action: () -> Void
 
     var body: some View {
@@ -342,11 +353,11 @@ struct TypeToggleButton: View {
                 .foregroundColor(isSelected ? Color.deepBlack : Color.mediumGray)
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
-                .background(isSelected ? (title == "AGENT" ? Color.agentRed : Color.matrixGreen) : Color.clear)
+                .background(isSelected ? accentColor : Color.clear)
                 .cornerRadius(Theme.cornerRadius)
                 .overlay(
                     RoundedRectangle(cornerRadius: Theme.cornerRadius)
-                        .stroke(title == "AGENT" ? Color.agentRed : Color.matrixGreen, lineWidth: 1)
+                        .stroke(accentColor, lineWidth: 1)
                 )
         }
     }
@@ -368,7 +379,7 @@ struct FrequencyPresetButton: View {
                 .padding(.horizontal, Spacing.sm)
                 .padding(.vertical, Spacing.xs)
                 .background(isSelected ? accentColor : Color.charcoal)
-                .cornerRadius(6)
+                .cornerRadius(Theme.cornerRadiusCompact)
         }
     }
 }
