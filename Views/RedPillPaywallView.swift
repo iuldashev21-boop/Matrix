@@ -49,18 +49,13 @@ struct RedPillPaywallView: View {
                         .frame(height: 1)
                         .padding(.horizontal, Spacing.xl)
 
-                    // Privacy & value block
-                    VStack(spacing: Spacing.sm) {
-                        Text("ONE-TIME PURCHASE. NO SUBSCRIPTION.\nYOURS FOREVER.")
-                            .font(.system(size: 11, weight: .semibold, design: .monospaced))
-                            .foregroundColor(.white.opacity(0.7))
-                            .multilineTextAlignment(.center)
-
-                        Text("YOUR DATA NEVER LEAVES YOUR DEVICE.\nNO ACCOUNTS. NO TRACKING. 100% PRIVATE.")
-                            .font(.system(size: 10, weight: .medium, design: .monospaced))
-                            .foregroundColor(Color.mediumGray)
-                            .multilineTextAlignment(.center)
+                    // Trust & value block
+                    VStack(spacing: Spacing.md) {
+                        trustRow(icon: "infinity", text: "PAY ONCE. KEEP IT FOR LIFE.")
+                        trustRow(icon: "xmark.circle", text: "NO SUBSCRIPTIONS. NO HIDDEN FEES. EVER.")
+                        trustRow(icon: "lock.shield.fill", text: "YOUR DATA STAYS ON YOUR DEVICE. PRIVATE.")
                     }
+                    .padding(.horizontal, Spacing.lg)
 
                     // Purchase area
                     VStack(spacing: Spacing.md) {
@@ -81,7 +76,7 @@ struct RedPillPaywallView: View {
                                 .task { await storeManager.loadProduct() }
                         }
 
-                        Text("Pay once. Own it for life.")
+                        Text("No subscription. No account. Just yours.")
                             .font(.system(size: 11, design: .monospaced))
                             .foregroundColor(Color.mediumGray)
 
@@ -127,6 +122,21 @@ struct RedPillPaywallView: View {
                 storeManager.unlockAllHabits(powers: powers, agents: agents, context: modelContext)
                 dismiss()
             }
+        }
+    }
+
+    private func trustRow(icon: String, text: String) -> some View {
+        HStack(spacing: Spacing.sm) {
+            Image(systemName: icon)
+                .font(.system(size: 14))
+                .foregroundColor(Color.matrixGreen.opacity(0.8))
+                .frame(width: 22)
+
+            Text(text)
+                .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                .foregroundColor(.white.opacity(0.7))
+
+            Spacer()
         }
     }
 
