@@ -1,74 +1,69 @@
 # Session Handoff
-**Date:** 2026-03-31 (Session 6)
-**Session focus:** Contract execution — all 91 items assessed and implemented/skipped
+**Date:** 2026-04-06 (Session 8)
+**Session focus:** Dynamic demographic onboarding — full 9-step implementation
 
 <!-- critical-context: This block contains the minimum state needed to resume work after context compaction. -->
-**Branch:** `contract/2026-03-31-self-improvement` (71 commits ahead of main)
-**Build:** 3 (v1.1 — Ready for Distribution, approved by Apple)
-**Active file:** CONTRACT.md (91/91 items complete)
-**Blocking issue:** none — contract fully executed
-**Current task:** DONE. Ready for review and merge.
+**Branch:** `main` (uncommitted changes — all 9 steps implemented)
+**Build:** v1.2 (Build 1) — Live on App Store
+**Active file:** none
+**Blocking issue:** none
+**Current task:** All 9 steps complete, build verified clean
 <!-- /critical-context -->
 
 ## What was done this session
 
-### Contract Execution: 91 items across 9 waves
+### Dynamic Demographic Onboarding (9 steps)
 
-**Results:**
-- **64 items implemented** with build-verified commits
-- **27 items skipped** (with documented reasons)
-- **71 commits** on branch `contract/2026-03-31-self-improvement`
-- **0 reverted** (no build failures)
+Implemented spec from `/Users/secondary/Desktop/Marketing X Matrix/DYNAMIC_ONBOARDING_SPEC.md`. Plan: `/Users/secondary/.claude/plans/encapsulated-brewing-pretzel.md`.
 
-### Wave-by-wave breakdown:
+**Step 1 — Data Model:** Added `OperatorGender` enum (male/female/nonBinary/unspecified), `DemographicTier` enum (6 tiers) with `resolve(age:gender:)`, new UserDefaults key, UserProfile properties.
+- Files: `Utilities/UserDefaultsKeys.swift`, `Utilities/UserProfile.swift`
 
-| Wave | Focus | Implemented | Skipped |
-|------|-------|-------------|---------|
-| 1 | Data Correctness + Security | 9 | 2 |
-| 2 | Widget Fixes | 7 | 1 |
-| 3 | IAP & Achievements | 5 | 0 |
-| 4 | Onboarding Fixes | 5 | 2 |
-| 5 | UX Polish | 10 | 0 |
-| 6 | Performance | 5 | 1 |
-| 7 | Architecture + Thread Safety | 10 | 8 |
-| 8 | Tests | 4 | 10 |
-| 9 | Low Priority | 5 | 1 |
-| Docs | CONTRACT.md updates | 3 | — |
+**Step 2 — OnboardingCopy System:** New file with `CopyKey` enum (21 keys) and `OnboardingCopy` struct. All 6 tier variants per key. M_YOUTH returns current text (zero regression).
+- File: `Utilities/OnboardingCopy.swift` (NEW)
 
-### Notable fixes:
-- **C1**: XP over-award on bulk submit
-- **C2**: Dictionary mutation crash in AnomalyManager
-- **C3**: DateHelper static cache data race (NSLock)
-- **C9/H1/H17**: IAP bypass via UserDefaults + entitlement handling
-- **C10/C11**: Onboarding race conditions (double-fire, blue pill dismiss)
-- **H5**: Widget sync by stable ID instead of name
-- **M1-M6**: Performance (cache weeklyStats, batch achievements, reduce timer frequency)
-- **TG8/TG10**: New test coverage for partial schedule + TierPromotionManager
+**Step 3 — Gender Selection UI:** Added gender card selection (MALE/FEMALE/NON-BINARY + SKIP) to PrisonerRecordPhase, auto-advances after 0.3s.
+- File: `Views/Onboarding/PrisonerRecordPhase.swift`
 
-### Common skip reasons:
-- @MainActor cascade (T1/T3/T4): Adding would require marking 3+ downstream types
-- SwiftData/App Groups/StoreKit dependency (TG1-TG7, TG9): Can't unit test atomically
-- Sweeping multi-file changes (M9 accessibility, M17 shared framework)
-- Product decisions (M29 onboarding skip)
+**Step 4 — Thread Tier Through AwakeningView:** Added `operatorGender` state, computed `demographicTier`, passed tier to all 12 phase views, saves gender in `finalizeAwakening()`.
+- File: `Views/AwakeningView.swift`
 
-## What's pending
+**Step 5 — Wire Copy Into Phases:** All 12 phase views updated with `let tier: DemographicTier` parameter and `OnboardingCopy(tier:).text(for:)` calls.
+- Files: 12 phase .swift files in `Views/Onboarding/`
 
-### Ready for review:
-```bash
-git diff main...contract/2026-03-31-self-improvement
-```
+**Step 6 — New Problems + Filtered Selection:** Added 14 new `ModernProblem` cases, `problems(for:)` and `label(for:)` methods. ProblemSelectionPhase uses tier-filtered lists.
+- Files: `Views/Onboarding/OnboardingTypes.swift`, `Views/Onboarding/ProblemSelectionPhase.swift`
 
-### After merge, consider:
-- v1.2 TestFlight build (increment build number first)
-- ASO Phase 1 metadata changes still pending in App Store Connect
-- Accessibility pass (M9) as a future initiative
-- SwiftData model migration for cached streak (M3) in a future version
+**Step 7 — New Habits:** Added 6 HackHabit cases + 4 AgentHabit cases with full properties. New agents set `family: nil` (standalone).
+- File: `Models/HabitTypes.swift`
 
-## Key files this session
-- `CONTRACT.md` — All 91 items assessed with commit hashes or skip reasons
-- `.claude/HANDOFF.md` — This file
+**Step 8 — Demographic-Aware Loadout:** `fillFromUniversalPool()` replaced with tier-aware version using `getUniversalHacks(for:)` and `getUniversalAgents(for:)`.
+- File: `Views/AwakeningView.swift`
+
+**Step 9 — Demographic-Aware AddHabitSheet:** Converted suggestion arrays to `hackSuggestions(for:)` and `agentSuggestions(for:)` functions with 6 tier-specific lists each.
+- File: `Views/AddHabitSheet.swift`
+
+**Build Fix:** `OnboardingCopy.swift` was missing from `project.pbxproj` — added to PBXBuildFile, PBXFileReference, Utilities group, and Sources build phase.
+
+### Build Status
+- Build verified clean via XcodeBuildMCP (iPhone 17 Pro simulator, iOS 26.2)
+
+## Current State
+- All changes uncommitted on `main`
+- Build compiles clean
+- ~18 files modified, 1 new file
+
+## Next Steps
+- Commit all changes
+- Test 7 demographic paths (M_YOUTH, F_YOUTH, M_YOUNG, F_YOUNG, M_ADULT, F_ADULT, skip-gender)
+- Verify AddHabitSheet shows different suggestions per tier
+
+## XcodeBuildMCP Defaults
+- Project: `MatrixHabit.xcodeproj`
+- Scheme: `MatrixHabit`
+- Simulator: `iPhone 17 Pro` (ID: `1F49D91F-7D35-4815-8EB3-90238C67A760`)
 
 ## Previous session context
-- Session 5: 6-agent parallel audit → CONTRACT.md created (91 items)
-- Session 4: ASO Phase 2 code changes (ReviewManager rewrite, rate button)
-- v1.1 approved by Apple, 2 ratings, IAP processing
+- Session 7: Cleanup, v1.2 submission, ASO checks
+- Session 6: Contract execution — 64/91 items implemented, 71 commits, merged to main
+- Session 5: 6-agent parallel audit, CONTRACT.md created (91 items)

@@ -4,6 +4,7 @@ import SwiftUI
 
 struct ProblemSelectionPhase: View {
     @Binding var selectedProblems: Set<ModernProblem>
+    let tier: DemographicTier
     let onBack: () -> Void
     let onComplete: () -> Void
 
@@ -45,9 +46,10 @@ struct ProblemSelectionPhase: View {
 
                 ScrollView {
                     VStack(spacing: Spacing.sm) {
-                        ForEach(ModernProblem.allCases) { problem in
+                        ForEach(ModernProblem.problems(for: tier)) { problem in
                             ProblemCard(
                                 problem: problem,
+                                tier: tier,
                                 isSelected: selectedProblems.contains(problem)
                             ) {
                                 toggleProblem(problem)
@@ -60,7 +62,7 @@ struct ProblemSelectionPhase: View {
             }
 
             if !selectedProblems.isEmpty {
-                PrimaryButton(title: "ACKNOWLEDGE CHAINS_", color: Color.agentRed) { onComplete() }
+                PrimaryButton(title: OnboardingCopy(tier: tier).text(for: .problemButton), color: Color.agentRed) { onComplete() }
                     .padding(.horizontal, Spacing.xl)
                     .padding(.bottom, Spacing.xxl)
             }
@@ -78,7 +80,7 @@ struct ProblemSelectionPhase: View {
             if selectedProblems.contains(.allAbove) {
                 selectedProblems.removeAll()
             } else {
-                selectedProblems = Set(ModernProblem.allCases)
+                selectedProblems = Set(ModernProblem.problems(for: tier))
             }
         } else {
             if selectedProblems.contains(problem) {
@@ -95,6 +97,7 @@ struct ProblemSelectionPhase: View {
 
 struct ProblemCard: View {
     let problem: ModernProblem
+    let tier: DemographicTier
     let isSelected: Bool
     let action: () -> Void
 
@@ -113,7 +116,7 @@ struct ProblemCard: View {
         }) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(problem.rawValue.uppercased())
+                    Text(problem.label(for: tier).uppercased())
                         .font(.system(size: 14, weight: .bold, design: .monospaced))
                         .foregroundColor(isSelected ? Color.agentRed : .white)
                     Text(problem.description)

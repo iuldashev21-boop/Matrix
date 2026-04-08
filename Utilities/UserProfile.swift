@@ -1,5 +1,43 @@
 import Foundation
 
+// MARK: - Operator Gender
+
+enum OperatorGender: String, CaseIterable {
+    case male = "male"
+    case female = "female"
+    case nonBinary = "nonBinary"
+    case unspecified = "unspecified"
+}
+
+// MARK: - Demographic Tier
+
+enum DemographicTier: String {
+    case maleYouth
+    case femaleYouth
+    case maleYoung
+    case femaleYoung
+    case maleAdult
+    case femaleAdult
+
+    static func resolve(age: Int, gender: OperatorGender) -> DemographicTier {
+        switch (gender, age) {
+        case (.female, ..<20):    return .femaleYouth
+        case (.female, 20..<30):  return .femaleYoung
+        case (.female, 30...):    return .femaleAdult
+        case (.male, ..<20):      return .maleYouth
+        case (.male, 20..<30):    return .maleYoung
+        case (.male, 30...):      return .maleAdult
+        case (.nonBinary, ..<20): return .maleYouth
+        case (.nonBinary, 20..<30): return .maleYoung
+        case (.nonBinary, 30...): return .maleAdult
+        case (.unspecified, _):   return .maleYouth
+        default:                  return .maleYouth
+        }
+    }
+}
+
+// MARK: - User Profile
+
 enum UserProfile {
     private static let defaults = UserDefaults.standard
 
@@ -40,6 +78,26 @@ enum UserProfile {
         set { defaults.set(newValue, forKey: Keys.empTokens) }
     }
 
+    static var operatorGender: OperatorGender {
+        get {
+            guard let raw = defaults.string(forKey: UserDefaultsKeys.operatorGender),
+                  let gender = OperatorGender(rawValue: raw) else {
+                return .unspecified
+            }
+            return gender
+        }
+        set { defaults.set(newValue.rawValue, forKey: UserDefaultsKeys.operatorGender) }
+    }
+
+    static var operatorAge: Int {
+        get { defaults.integer(forKey: UserDefaultsKeys.operatorAge) }
+        set { defaults.set(newValue, forKey: UserDefaultsKeys.operatorAge) }
+    }
+
+    static var demographicTier: DemographicTier {
+        DemographicTier.resolve(age: operatorAge, gender: operatorGender)
+    }
+
     // MARK: - Computed Properties
 
     static var currentLevel: Int {
@@ -78,6 +136,8 @@ enum UserProfile {
         firstLaunchDate = nil
         totalXP = 0
         empTokens = 0
+        operatorGender = .unspecified
+        operatorAge = 0
     }
 
     static func addXP(_ amount: Int) {

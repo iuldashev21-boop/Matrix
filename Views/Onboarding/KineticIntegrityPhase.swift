@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Phase 6: Kinetic Integrity (Movement)
 
 struct KineticIntegrityPhase: View {
+    let tier: DemographicTier
     @Binding var answer: MovementLevel?
     let onBack: () -> Void
     let onComplete: () -> Void
@@ -36,7 +37,7 @@ struct KineticIntegrityPhase: View {
                         .matrixGlow()
 
 
-                    Text("When did you last break a sweat?")
+                    Text(OnboardingCopy(tier: tier).text(for: .kineticQuestion))
                         .font(.system(size: 18, weight: .bold, design: .monospaced))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)

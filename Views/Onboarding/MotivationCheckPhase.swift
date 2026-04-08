@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Phase 9: Motivation Check
 
 struct MotivationCheckPhase: View {
+    let tier: DemographicTier
     @Binding var answer: MotivationType?
     let onBack: () -> Void
     let onComplete: () -> Void
@@ -35,7 +36,7 @@ struct MotivationCheckPhase: View {
                         .font(.system(size: 14, weight: .bold, design: .monospaced))
                         .foregroundColor(Color.agentRed)
 
-                    Text("Are you doing this for yourself, or because you feel you 'should'?")
+                    Text(OnboardingCopy(tier: tier).text(for: .motivationQuestion))
                         .font(.system(size: 18, weight: .bold, design: .monospaced))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)

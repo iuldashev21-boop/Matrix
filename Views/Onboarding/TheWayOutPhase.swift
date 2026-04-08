@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Phase 12: The Way Out (Revelation 2)
 
 struct TheWayOutPhase: View {
+    let tier: DemographicTier
     let onBack: () -> Void
     let onComplete: () -> Void
 
@@ -98,32 +99,9 @@ struct TheWayOutPhase: View {
                             .padding(.top, Spacing.sm)
 
                             VStack(spacing: Spacing.xs) {
-                                HStack(spacing: 0) {
-                                    Text("Not motivation. ")
-                                        .foregroundColor(Color.lightGray)
-                                    Text("SYSTEMS.")
-                                        .foregroundColor(Color.matrixGreen)
-                                        .fontWeight(.bold)
-                                        .shadow(color: Color.matrixGreen.opacity(0.5), radius: 5)
-                                }
-
-                                HStack(spacing: 0) {
-                                    Text("Not willpower. ")
-                                        .foregroundColor(Color.lightGray)
-                                    Text("AWARENESS.")
-                                        .foregroundColor(Color.matrixGreen)
-                                        .fontWeight(.bold)
-                                        .shadow(color: Color.matrixGreen.opacity(0.5), radius: 5)
-                                }
-
-                                HStack(spacing: 0) {
-                                    Text("Not perfection. ")
-                                        .foregroundColor(Color.lightGray)
-                                    Text("CONSISTENCY.")
-                                        .foregroundColor(Color.matrixGreen)
-                                        .fontWeight(.bold)
-                                        .shadow(color: Color.matrixGreen.opacity(0.5), radius: 5)
-                                }
+                                WayOutLine(text: OnboardingCopy(tier: tier).text(for: .wayOutLine1))
+                                WayOutLine(text: OnboardingCopy(tier: tier).text(for: .wayOutLine2))
+                                WayOutLine(text: OnboardingCopy(tier: tier).text(for: .wayOutLine3))
                             }
                             .font(.system(size: 14, design: .monospaced))
                             .padding(.top, Spacing.sm)
@@ -202,5 +180,31 @@ struct TheWayOutPhase: View {
             }
         }
         .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: buttonPulse)
+    }
+}
+
+// MARK: - Way Out Line (splits "Not X. KEYWORD." into dual-color text)
+
+private struct WayOutLine: View {
+    let text: String
+
+    var body: some View {
+        if let range = text.range(of: ". ") {
+            let prefix = String(text[text.startIndex...range.lowerBound]) + " "
+            let keyword = String(text[range.upperBound...])
+            HStack(spacing: 0) {
+                Text(prefix)
+                    .foregroundColor(Color.lightGray)
+                Text(keyword)
+                    .foregroundColor(Color.matrixGreen)
+                    .fontWeight(.bold)
+                    .shadow(color: Color.matrixGreen.opacity(0.5), radius: 5)
+            }
+        } else {
+            Text(text)
+                .foregroundColor(Color.matrixGreen)
+                .fontWeight(.bold)
+                .shadow(color: Color.matrixGreen.opacity(0.5), radius: 5)
+        }
     }
 }

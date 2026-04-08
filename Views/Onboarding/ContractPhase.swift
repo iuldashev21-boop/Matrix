@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Phase 14: Contract
 
 struct ContractPhase: View {
+    let tier: DemographicTier
     let onBack: () -> Void
     let onComplete: () -> Void
 
@@ -84,7 +85,7 @@ struct ContractPhase: View {
                         .animation(.easeInOut(duration: 0.1), value: isHolding)
                         .gesture(DragGesture(minimumDistance: 0).onChanged { _ in startHold() }.onEnded { _ in endHold() })
 
-                        Text("> HOLD TO DISCONNECT FROM SIMULATION")
+                        Text("> \(OnboardingCopy(tier: tier).text(for: .contractHold))")
                             .font(.system(size: 11, weight: .medium, design: .monospaced))
                             .foregroundColor(Color.mediumGray)
                     }
@@ -97,7 +98,7 @@ struct ContractPhase: View {
             if showFlash { Color.white.ignoresSafeArea().transition(.opacity) }
 
             if showFinalText {
-                Text("WELCOME TO THE DESERT OF THE REAL.")
+                Text(OnboardingCopy(tier: tier).text(for: .contractPostHold))
                     .font(.system(size: 18, weight: .bold, design: .monospaced))
                     .foregroundColor(Color.matrixGreen)
                     .matrixGlow()

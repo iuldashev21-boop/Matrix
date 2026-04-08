@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Phase 1: Hook Question
 
 struct HookQuestionPhase: View {
+    let tier: DemographicTier
     @Binding var answer: Bool?
     let onBack: () -> Void
     let onComplete: () -> Void
@@ -36,7 +37,7 @@ struct HookQuestionPhase: View {
                         .foregroundColor(Color.matrixGreen)
                         .matrixGlow()
 
-                    Text("Do you feel like you are living below your potential?")
+                    Text(OnboardingCopy(tier: tier).text(for: .hookQuestion))
                         .font(.system(size: 20, weight: .bold, design: .monospaced))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)

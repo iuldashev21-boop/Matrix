@@ -13,6 +13,7 @@ struct AwakeningView: View {
 
     // MARK: - Collected Data
     @State private var operatorName: String = ""
+    @State private var operatorGender: OperatorGender = .unspecified
     @State private var operatorAge: String = ""
     @State private var livingBelowPotential: Bool? = nil
     @State private var selectedProblems: Set<ModernProblem> = []
@@ -28,6 +29,10 @@ struct AwakeningView: View {
     @State private var showSaveError: Bool = false
 
     private let totalPhases = 17
+
+    private var demographicTier: DemographicTier {
+        DemographicTier.resolve(age: Int(operatorAge) ?? 0, gender: operatorGender)
+    }
 
     var body: some View {
         ZStack {
@@ -58,11 +63,13 @@ struct AwakeningView: View {
                 case 0:
                     PrisonerRecordPhase(
                         operatorName: $operatorName,
+                        operatorGender: $operatorGender,
                         operatorAge: $operatorAge,
                         onComplete: { advancePhase() }
                     )
                 case 1:
                     TerminologyCardPhase(
+                        tier: demographicTier,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
@@ -73,6 +80,7 @@ struct AwakeningView: View {
                     )
                 case 3:
                     HookQuestionPhase(
+                        tier: demographicTier,
                         answer: $livingBelowPotential,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
@@ -80,11 +88,13 @@ struct AwakeningView: View {
                 case 4:
                     ProblemSelectionPhase(
                         selectedProblems: $selectedProblems,
+                        tier: demographicTier,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 5:
                     YearsDeletedPhase(
+                        tier: demographicTier,
                         age: Int(operatorAge) ?? 25,
                         hoursLost: $hoursLost,
                         onBack: { goBack() },
@@ -92,36 +102,42 @@ struct AwakeningView: View {
                     )
                 case 6:
                     BrokenPromisesPhase(
+                        tier: demographicTier,
                         answer: $brokenPromises,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 7:
                     PostScrollEmotionPhase(
+                        tier: demographicTier,
                         answer: $postScrollEmotion,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 8:
                     KineticIntegrityPhase(
+                        tier: demographicTier,
                         answer: $movementLevel,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 9:
                     FuelPurityPhase(
+                        tier: demographicTier,
                         answer: $energyCrash,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 10:
                     RechargeCyclePhase(
+                        tier: demographicTier,
                         answer: $sleepQuality,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 11:
                     MotivationCheckPhase(
+                        tier: demographicTier,
                         answer: $motivationType,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
@@ -138,11 +154,13 @@ struct AwakeningView: View {
                     )
                 case 13:
                     TheTruthPhase(
+                        tier: demographicTier,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
                 case 14:
                     TheWayOutPhase(
+                        tier: demographicTier,
                         onBack: { goBack() },
                         onComplete: { advancePhase() }
                     )
@@ -154,6 +172,7 @@ struct AwakeningView: View {
                     )
                 case 16:
                     ContractPhase(
+                        tier: demographicTier,
                         onBack: { goBack() },
                         onComplete: { finalizeAwakening() }
                     )
@@ -490,15 +509,43 @@ struct AwakeningView: View {
     }
 
     private func fillFromUniversalPool() {
-        let universalPool: [AgentHabit] = [
-            .noBedScrolling, .noLiquidSugar, .morningMaker, .noChairLock, .noGhostingIRL, .noRageBait
-        ]
+        let universalAgents = getUniversalAgents(for: demographicTier)
 
-        for agent in universalPool {
+        for agent in universalAgents {
             guard suggestedLoadout.agents.count < 3 else { break }
             if !suggestedLoadout.agents.contains(agent) {
                 suggestedLoadout.agents.append(agent)
             }
+        }
+
+        let universalHacks = getUniversalHacks(for: demographicTier)
+        for hack in universalHacks {
+            guard suggestedLoadout.hacks.count < 3 else { break }
+            if !suggestedLoadout.hacks.contains(hack) {
+                suggestedLoadout.hacks.append(hack)
+            }
+        }
+    }
+
+    private func getUniversalHacks(for tier: DemographicTier) -> [HackHabit] {
+        switch tier {
+        case .maleYouth:   return [.lockIn, .coldReboot, .combatPrep, .touchGrass, .proteinFirst]
+        case .femaleYouth: return [.brainDump, .deepSleep, .hydrationMax, .staticStretch, .dailyWs]
+        case .maleYoung:   return [.lockIn, .combatPrep, .proteinFirst, .deepSleep, .skillUpload]
+        case .femaleYoung: return [.brainDump, .boundarySet, .moveDaily, .deepSleep, .gratitudeLog]
+        case .maleAdult:   return [.combatPrep, .proteinFirst, .deepSleep, .moveDaily, .screenCurfew]
+        case .femaleAdult: return [.boundarySet, .moveDaily, .deepSleep, .screenCurfew, .gratitudeLog]
+        }
+    }
+
+    private func getUniversalAgents(for tier: DemographicTier) -> [AgentHabit] {
+        switch tier {
+        case .maleYouth:   return [.noBrainRot, .noLateNight, .noMorningScroll]
+        case .femaleYouth: return [.noComparisonScroll, .noBedScrolling, .noLateNight]
+        case .maleYoung:   return [.noBrainRot, .noLateNight, .noImpulseBuys]
+        case .femaleYoung: return [.noComparisonScroll, .noOvercommitting, .noBedScrolling]
+        case .maleAdult:   return [.noBrainRot, .noChairLock, .noLateNight]
+        case .femaleAdult: return [.noOvercommitting, .noBedScrolling, .noSelfSabotage]
         }
     }
 
@@ -521,6 +568,7 @@ struct AwakeningView: View {
 
     private func finalizeAwakening() {
         UserProfile.operativeName = operatorName
+        UserProfile.operatorGender = operatorGender
         UserDefaults.standard.set(Int(operatorAge) ?? 25, forKey: UserDefaultsKeys.operatorAge)
 
         if suggestedLoadout.hacks.isEmpty {

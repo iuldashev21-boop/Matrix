@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Phase 4: Broken Promises (Integrity)
 
 struct BrokenPromisesPhase: View {
+    let tier: DemographicTier
     @Binding var answer: BrokenPromisesOption?
     let onBack: () -> Void
     let onComplete: () -> Void
@@ -36,7 +37,7 @@ struct BrokenPromisesPhase: View {
                         .foregroundColor(Color.matrixGreen)
                         .matrixGlow()
 
-                    Text("How often do you break promises you make to yourself?")
+                    Text(OnboardingCopy(tier: tier).text(for: .brokenPromisesQuestion))
                         .font(.system(size: 20, weight: .bold, design: .monospaced))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)

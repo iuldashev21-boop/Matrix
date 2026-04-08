@@ -13,23 +13,123 @@ struct HabitSuggestion: Identifiable {
 
 // MARK: - Suggested Habits
 
-private let hackSuggestions: [HabitSuggestion] = [
-    HabitSuggestion(name: "Supplements", icon: "pill.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
-    HabitSuggestion(name: "Gym", icon: "figure.strengthtraining.traditional", scheduledDays: Set([2, 4, 6]), frequencyLabel: "3x Week"),
-    HabitSuggestion(name: "Meditation", icon: "brain.head.profile", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
-    HabitSuggestion(name: "Reading", icon: "book.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
-    HabitSuggestion(name: "Hydration", icon: "drop.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
-    HabitSuggestion(name: "Journaling", icon: "pencil.and.scribble", scheduledDays: Set(1...7), frequencyLabel: "Daily")
-]
+private func hackSuggestions(for tier: DemographicTier) -> [HabitSuggestion] {
+    switch tier {
+    case .maleYouth:
+        return [
+            HabitSuggestion(name: "Gym", icon: "figure.strengthtraining.traditional", scheduledDays: Set([2, 4, 6]), frequencyLabel: "3x Week"),
+            HabitSuggestion(name: "Cold Reboot", icon: "snowflake", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Reading", icon: "book.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Lock In", icon: "lock.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Hydration", icon: "drop.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Combat Prep", icon: "figure.martial.arts", scheduledDays: Set([2, 4, 6]), frequencyLabel: "3x Week")
+        ]
+    case .femaleYouth:
+        return [
+            HabitSuggestion(name: "Journaling", icon: "pencil.and.scribble", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Hydration", icon: "drop.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Daily Move", icon: "figure.walk", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Brain Dump", icon: "brain.head.profile", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Deep Sleep", icon: "moon.stars.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Static Stretch", icon: "figure.flexibility", scheduledDays: Set(1...7), frequencyLabel: "Daily")
+        ]
+    case .maleYoung:
+        return [
+            HabitSuggestion(name: "Gym", icon: "figure.strengthtraining.traditional", scheduledDays: Set([2, 4, 6]), frequencyLabel: "3x Week"),
+            HabitSuggestion(name: "Fuel Prep", icon: "fork.knife", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Lock In", icon: "lock.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Reading", icon: "book.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Money Check", icon: "dollarsign.circle.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Screen Curfew", icon: "moon.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily")
+        ]
+    case .femaleYoung:
+        return [
+            HabitSuggestion(name: "Boundary Set", icon: "hand.raised.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Daily Move", icon: "figure.walk", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Gratitude Log", icon: "heart.text.square.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Brain Dump", icon: "brain.head.profile", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Screen Curfew", icon: "moon.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Fuel Prep", icon: "fork.knife", scheduledDays: Set(1...7), frequencyLabel: "Daily")
+        ]
+    case .maleAdult:
+        return [
+            HabitSuggestion(name: "Fuel Prep", icon: "fork.knife", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Daily Move", icon: "figure.walk", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Screen Curfew", icon: "moon.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Money Check", icon: "dollarsign.circle.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Deep Sleep", icon: "moon.stars.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Lock In", icon: "lock.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily")
+        ]
+    case .femaleAdult:
+        return [
+            HabitSuggestion(name: "Boundary Set", icon: "hand.raised.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Daily Move", icon: "figure.walk", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Screen Curfew", icon: "moon.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Gratitude Log", icon: "heart.text.square.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Fuel Prep", icon: "fork.knife", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "Deep Sleep", icon: "moon.stars.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily")
+        ]
+    }
+}
 
-private let agentSuggestions: [HabitSuggestion] = [
-    HabitSuggestion(name: "No Doom Scrolling", icon: "iphone", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
-    HabitSuggestion(name: "No Junk Food", icon: "fork.knife", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
-    HabitSuggestion(name: "No Late Nights", icon: "moon.zzz", scheduledDays: Set([2, 3, 4, 5, 6]), frequencyLabel: "Weekdays"),
-    HabitSuggestion(name: "No Gaming", icon: "gamecontroller.fill", scheduledDays: Set([2, 3, 4, 5, 6]), frequencyLabel: "Weekdays"),
-    HabitSuggestion(name: "No Excess Caffeine", icon: "cup.and.saucer.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
-    HabitSuggestion(name: "No Binge Watching", icon: "tv.fill", scheduledDays: Set([2, 3, 4, 5, 6]), frequencyLabel: "Weekdays")
-]
+private func agentSuggestions(for tier: DemographicTier) -> [HabitSuggestion] {
+    switch tier {
+    case .maleYouth:
+        return [
+            HabitSuggestion(name: "No Doom Scrolling", icon: "iphone", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Junk Food", icon: "fork.knife", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Late Nights", icon: "moon.zzz", scheduledDays: Set([2, 3, 4, 5, 6]), frequencyLabel: "Weekdays"),
+            HabitSuggestion(name: "No Gaming", icon: "gamecontroller.fill", scheduledDays: Set([2, 3, 4, 5, 6]), frequencyLabel: "Weekdays"),
+            HabitSuggestion(name: "No PMO", icon: "eye.slash", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Binge Watching", icon: "tv.fill", scheduledDays: Set([2, 3, 4, 5, 6]), frequencyLabel: "Weekdays")
+        ]
+    case .femaleYouth:
+        return [
+            HabitSuggestion(name: "No Comparison Scroll", icon: "eye.slash.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Late Nights", icon: "moon.zzz", scheduledDays: Set([2, 3, 4, 5, 6]), frequencyLabel: "Weekdays"),
+            HabitSuggestion(name: "No Stress Eating", icon: "xmark.circle.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Bed Scrolling", icon: "bed.double.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Self-Sabotage", icon: "exclamationmark.triangle", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Overcommitting", icon: "calendar.badge.minus", scheduledDays: Set(1...7), frequencyLabel: "Daily")
+        ]
+    case .maleYoung:
+        return [
+            HabitSuggestion(name: "No Doom Scrolling", icon: "iphone", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Junk Food", icon: "fork.knife", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Late Nights", icon: "moon.zzz", scheduledDays: Set([2, 3, 4, 5, 6]), frequencyLabel: "Weekdays"),
+            HabitSuggestion(name: "No Impulse Buys", icon: "creditcard.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No PMO", icon: "eye.slash", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Brain Rot", icon: "brain", scheduledDays: Set(1...7), frequencyLabel: "Daily")
+        ]
+    case .femaleYoung:
+        return [
+            HabitSuggestion(name: "No Comparison Scroll", icon: "eye.slash.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Overcommitting", icon: "calendar.badge.minus", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Bed Scrolling", icon: "bed.double.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Stress Eating", icon: "xmark.circle.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Self-Sabotage", icon: "exclamationmark.triangle", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Late Nights", icon: "moon.zzz", scheduledDays: Set([2, 3, 4, 5, 6]), frequencyLabel: "Weekdays")
+        ]
+    case .maleAdult:
+        return [
+            HabitSuggestion(name: "No Autopilot Drinking", icon: "wineglass", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Chair Lock", icon: "chair.fill", scheduledDays: Set([2, 3, 4, 5, 6]), frequencyLabel: "Weekdays"),
+            HabitSuggestion(name: "No Late Nights", icon: "moon.zzz", scheduledDays: Set([2, 3, 4, 5, 6]), frequencyLabel: "Weekdays"),
+            HabitSuggestion(name: "No Brain Rot", icon: "brain", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Junk Food", icon: "fork.knife", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Impulse Buys", icon: "creditcard.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily")
+        ]
+    case .femaleAdult:
+        return [
+            HabitSuggestion(name: "No Overcommitting", icon: "calendar.badge.minus", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Autopilot Drinking", icon: "wineglass", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Bed Scrolling", icon: "bed.double.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Self-Sabotage", icon: "exclamationmark.triangle", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Stress Eating", icon: "xmark.circle.fill", scheduledDays: Set(1...7), frequencyLabel: "Daily"),
+            HabitSuggestion(name: "No Brain Rot", icon: "brain", scheduledDays: Set(1...7), frequencyLabel: "Daily")
+        ]
+    }
+}
 
 struct AddHabitSheet: View {
     @Environment(\.dismiss) private var dismiss
@@ -48,7 +148,8 @@ struct AddHabitSheet: View {
     ]
 
     private var suggestions: [HabitSuggestion] {
-        isAgent ? agentSuggestions : hackSuggestions
+        let tier = UserProfile.demographicTier
+        return isAgent ? agentSuggestions(for: tier) : hackSuggestions(for: tier)
     }
 
     private var trimmedName: String {

@@ -4,6 +4,7 @@ import SwiftUI
 
 struct PrisonerRecordPhase: View {
     @Binding var operatorName: String
+    @Binding var operatorGender: OperatorGender
     @Binding var operatorAge: String
     let onComplete: () -> Void
 
@@ -17,7 +18,7 @@ struct PrisonerRecordPhase: View {
     @FocusState private var ageFieldFocused: Bool
 
     enum InputPhase {
-        case typing, enteringName, enteringAge, complete
+        case typing, enteringName, enteringGender, enteringAge, complete
     }
 
     private let systemLines = [
@@ -84,6 +85,63 @@ struct PrisonerRecordPhase: View {
                     .padding(.top, Spacing.lg)
                 }
 
+                // Gender Selection
+                if phase == .enteringGender || phase == .enteringAge || phase == .complete {
+                    VStack(alignment: .leading, spacing: Spacing.xs) {
+                        Text("> OPERATOR PROFILE:")
+                            .font(.system(size: 14, weight: .bold, design: .monospaced))
+                            .foregroundColor(Color.matrixGreen)
+                            .matrixGlow()
+
+                        if phase == .enteringGender {
+                            Text("Select your operator profile.")
+                                .font(.system(size: 12, design: .monospaced))
+                                .foregroundColor(Color.mediumGray)
+                                .padding(.bottom, Spacing.xs)
+
+                            ForEach([OperatorGender.male, .female, .nonBinary], id: \.rawValue) { gender in
+                                Button {
+                                    selectGender(gender)
+                                } label: {
+                                    HStack {
+                                        Text(genderLabel(gender))
+                                            .font(.system(size: 16, weight: .bold, design: .monospaced))
+                                            .foregroundColor(operatorGender == gender ? Color.matrixGreen : .white)
+                                        Spacer()
+                                        if operatorGender == gender {
+                                            Image(systemName: "checkmark")
+                                                .foregroundColor(Color.matrixGreen)
+                                        }
+                                    }
+                                    .padding(.vertical, Spacing.sm)
+                                    .padding(.horizontal, Spacing.md)
+                                    .background(Color.charcoal)
+                                    .cornerRadius(4)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .stroke(operatorGender == gender ? Color.matrixGreen : Color.mediumGray.opacity(0.5), lineWidth: operatorGender == gender ? 2 : 1)
+                                            .shadow(color: operatorGender == gender ? Color.matrixGreen.opacity(0.5) : .clear, radius: 4)
+                                    )
+                                }
+                            }
+
+                            Button {
+                                selectGender(.unspecified)
+                            } label: {
+                                Text("SKIP")
+                                    .font(.system(size: 12, weight: .medium, design: .monospaced))
+                                    .foregroundColor(Color.mediumGray)
+                                    .padding(.top, Spacing.xs)
+                            }
+                        } else {
+                            Text(genderLabel(operatorGender))
+                                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                                .foregroundColor(Color.matrixGreen)
+                        }
+                    }
+                    .padding(.top, Spacing.md)
+                }
+
                 // Age Input
                 if phase == .enteringAge || phase == .complete {
                     VStack(alignment: .leading, spacing: Spacing.xs) {
@@ -132,7 +190,7 @@ struct PrisonerRecordPhase: View {
             Spacer()
 
             // Continue Button
-            if showContinue {
+            if showContinue && phase != .enteringGender {
                 PrimaryButton(title: "CONTINUE_") {
                     if phase == .enteringName {
                         handleNameSubmit()
@@ -197,8 +255,25 @@ struct PrisonerRecordPhase: View {
     private func handleNameSubmit() {
         guard !operatorName.trimmingCharacters(in: .whitespaces).isEmpty else { return }
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        phase = .enteringAge
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { ageFieldFocused = true }
+        phase = .enteringGender
+    }
+
+    private func selectGender(_ gender: OperatorGender) {
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        operatorGender = gender
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            phase = .enteringAge
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { ageFieldFocused = true }
+        }
+    }
+
+    private func genderLabel(_ gender: OperatorGender) -> String {
+        switch gender {
+        case .male: return "MALE"
+        case .female: return "FEMALE"
+        case .nonBinary: return "NON-BINARY"
+        case .unspecified: return "UNSPECIFIED"
+        }
     }
 
     private func handleAgeSubmit() {

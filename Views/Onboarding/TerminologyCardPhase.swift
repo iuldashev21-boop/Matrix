@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Phase 15: Terminology Card (Single Card)
 
 struct TerminologyCardPhase: View {
+    let tier: DemographicTier
     let onBack: () -> Void
     let onComplete: () -> Void
 
@@ -36,7 +37,7 @@ struct TerminologyCardPhase: View {
                             .foregroundColor(Color.matrixGreen)
                             .matrixGlow()
 
-                        Text("How The Construct Works")
+                        Text(OnboardingCopy(tier: tier).text(for: .terminologyOpener))
                             .font(.system(size: 12, design: .monospaced))
                             .foregroundColor(Color.mediumGray)
                             .padding(.bottom, Spacing.sm)

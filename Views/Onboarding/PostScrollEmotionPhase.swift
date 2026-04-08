@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Phase 5: Post-Scroll Emotion
 
 struct PostScrollEmotionPhase: View {
+    let tier: DemographicTier
     @Binding var answer: ScrollEmotion?
     let onBack: () -> Void
     let onComplete: () -> Void
@@ -36,7 +37,7 @@ struct PostScrollEmotionPhase: View {
                         .matrixGlow()
 
 
-                    Text("How do you feel about the RESULT of that time?")
+                    Text(OnboardingCopy(tier: tier).text(for: .postScrollQuestion))
                         .font(.system(size: 18, weight: .bold, design: .monospaced))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)

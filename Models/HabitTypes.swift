@@ -128,6 +128,14 @@ enum HackHabit: String, CaseIterable, Hashable {
     case skillUpload = "Skill Upload"
     case staticStretch = "Static Stretch"
 
+    // MARK: - Demographic Expansion
+    case boundarySet = "Boundary Set"
+    case gratitudeLog = "Gratitude Log"
+    case mealPrep = "Fuel Prep"
+    case moveDaily = "Daily Move"
+    case screenCurfew = "Screen Curfew"
+    case financialCheck = "Money Check"
+
     var habitName: String { rawValue }
 
     var icon: String {
@@ -147,6 +155,12 @@ enum HackHabit: String, CaseIterable, Hashable {
         case .combatPrep: return "dumbbell.fill"
         case .skillUpload: return "graduationcap.fill"
         case .staticStretch: return "figure.flexibility"
+        case .boundarySet: return "hand.raised.fill"
+        case .gratitudeLog: return "heart.text.square.fill"
+        case .mealPrep: return "fork.knife"
+        case .moveDaily: return "figure.walk"
+        case .screenCurfew: return "moon.fill"
+        case .financialCheck: return "dollarsign.circle.fill"
         }
     }
 
@@ -167,6 +181,12 @@ enum HackHabit: String, CaseIterable, Hashable {
         case .combatPrep: return "30-45 mins of intentional exercise."
         case .skillUpload: return "30 mins of learning something new."
         case .staticStretch: return "15 mins of stretching or mobility."
+        case .boundarySet: return "Say no to one request that doesn't serve you today."
+        case .gratitudeLog: return "Write down one thing you're grateful for. Takes 30 seconds."
+        case .mealPrep: return "Prepare or plan one healthy meal instead of defaulting to junk."
+        case .moveDaily: return "Move your body for at least 15 minutes. Walk counts."
+        case .screenCurfew: return "Phone down 30 minutes before sleep. No exceptions."
+        case .financialCheck: return "Review your spending for 2 minutes. Know where your money went."
         }
     }
 
@@ -187,6 +207,12 @@ enum HackHabit: String, CaseIterable, Hashable {
         case .combatPrep: return "30min+ exercise"
         case .skillUpload: return "30min learning"
         case .staticStretch: return "15min stretching"
+        case .boundarySet: return "Set one boundary"
+        case .gratitudeLog: return "Log one gratitude"
+        case .mealPrep: return "Plan/prep one meal"
+        case .moveDaily: return "15 min movement"
+        case .screenCurfew: return "Screens off before bed"
+        case .financialCheck: return "2-min money review"
         }
     }
 
@@ -207,14 +233,20 @@ enum HackHabit: String, CaseIterable, Hashable {
         case .combatPrep: return "Did you execute your workout?"
         case .skillUpload: return "Did you learn something new?"
         case .staticStretch: return "Did you stretch today?"
+        case .boundarySet: return "Did you protect your time or energy by saying no today?"
+        case .gratitudeLog: return "Did you write down something you're grateful for today?"
+        case .mealPrep: return "Did you prepare or plan a healthy meal today?"
+        case .moveDaily: return "Did you move your body for at least 15 minutes today?"
+        case .screenCurfew: return "Did you put your phone down 30 minutes before sleeping?"
+        case .financialCheck: return "Did you review your spending today?"
         }
     }
 
     var difficulty: DifficultyTier {
         switch self {
-        case .lockIn, .coldReboot, .combatPrep: return .hard
-        case .touchGrass, .proteinFirst, .zionCall, .deepSleep, .skillUpload: return .medium
-        case .dailyWs, .phoneJail, .hydrationMax, .solarLoad, .morningWin, .brainDump, .staticStretch: return .easy
+        case .lockIn, .coldReboot, .combatPrep, .screenCurfew: return .hard
+        case .touchGrass, .proteinFirst, .zionCall, .deepSleep, .skillUpload, .boundarySet, .mealPrep, .financialCheck: return .medium
+        case .dailyWs, .phoneJail, .hydrationMax, .solarLoad, .morningWin, .brainDump, .staticStretch, .gratitudeLog, .moveDaily: return .easy
         }
     }
 
@@ -236,6 +268,12 @@ enum HackHabit: String, CaseIterable, Hashable {
         case .solarLoad: return .noSnooze
         case .skillUpload: return .noBrainRot
         case .staticStretch: return .noChairLock
+        case .boundarySet: return .noSelfSabotage
+        case .gratitudeLog: return .noVictimMode
+        case .mealPrep: return .noJunkMeals
+        case .moveDaily: return .noChairLock
+        case .screenCurfew: return .noBedScrolling
+        case .financialCheck: return .noImpulseBuys
         }
     }
 }
@@ -286,6 +324,12 @@ enum AgentHabit: String, CaseIterable, Hashable {
     // MARK: - Anxiety Family (noRageBait=Easy, noLateNight=Medium)
     case noNewsDoomInput = "No News/Doom Input"     // Hard
 
+    // MARK: - Demographic Expansion
+    case noComparisonScroll = "No Comparison Scroll"
+    case noEmotionalEating = "No Stress Eating"
+    case noOvercommitting = "No Overcommitting"
+    case noWineDefault = "No Autopilot Drinking"
+
     var habitName: String { rawValue }
 
     var icon: String {
@@ -327,6 +371,12 @@ enum AgentHabit: String, CaseIterable, Hashable {
 
         // Anxiety Family
         case .noNewsDoomInput: return "newspaper.fill"
+
+        // Demographic Expansion
+        case .noComparisonScroll: return "eye.slash.fill"
+        case .noEmotionalEating: return "xmark.circle.fill"
+        case .noOvercommitting: return "calendar.badge.minus"
+        case .noWineDefault: return "wineglass"
         }
     }
 
@@ -374,6 +424,12 @@ enum AgentHabit: String, CaseIterable, Hashable {
 
         // Anxiety Family
         case .noNewsDoomInput: return "Complete information diet. Zero input from anxiety factory."
+
+        // Demographic Expansion
+        case .noComparisonScroll: return "Don't open Instagram/TikTok to compare your life to strangers."
+        case .noEmotionalEating: return "Don't eat to manage emotions. Eat when hungry."
+        case .noOvercommitting: return "Don't say yes to something you'll resent later."
+        case .noWineDefault: return "Don't drink out of habit. Only drink when you consciously choose to."
         }
     }
 
@@ -421,6 +477,12 @@ enum AgentHabit: String, CaseIterable, Hashable {
 
         // Anxiety Family
         case .noNewsDoomInput: return "No news/doom input"
+
+        // Demographic Expansion
+        case .noComparisonScroll: return "No comparison browsing"
+        case .noEmotionalEating: return "No emotional eating"
+        case .noOvercommitting: return "No autopilot yes"
+        case .noWineDefault: return "No default drinking"
         }
     }
 
@@ -468,6 +530,12 @@ enum AgentHabit: String, CaseIterable, Hashable {
 
         // Anxiety Family
         case .noNewsDoomInput: return "Did you avoid news, doom content, and anxiety triggers?"
+
+        // Demographic Expansion
+        case .noComparisonScroll: return "Did you avoid comparison-scrolling today?"
+        case .noEmotionalEating: return "Did you avoid eating out of stress or boredom today?"
+        case .noOvercommitting: return "Did you pause before committing to any new obligation today?"
+        case .noWineDefault: return "Did you avoid drinking on autopilot today?"
         }
     }
 
@@ -515,6 +583,12 @@ enum AgentHabit: String, CaseIterable, Hashable {
 
         // Anxiety Family
         case .noNewsDoomInput: return "No news apps. No doomscroll. No 'staying informed' excuse."
+
+        // Demographic Expansion
+        case .noComparisonScroll: return "When you feel the urge, close the app and write down one thing you did today."
+        case .noEmotionalEating: return "Before eating, ask: am I hungry or am I avoiding something?"
+        case .noOvercommitting: return "Default response: 'Let me check my schedule and get back to you.'"
+        case .noWineDefault: return "Before pouring, ask: do I actually want this, or is this just what I do?"
         }
     }
 
@@ -553,8 +627,15 @@ enum AgentHabit: String, CaseIterable, Hashable {
              .morningMaker,              // Bed Rotting Easy
              .noRageBait,                // Anxiety Easy
              .noChairLock,               // Legacy Easy
-             .noGhostingIRL:             // Legacy Easy
+             .noGhostingIRL,             // Legacy Easy
+             .noComparisonScroll,        // Demographic Easy
+             .noEmotionalEating,         // Demographic Easy
+             .noOvercommitting:          // Demographic Easy
             return .easy
+
+        // MEDIUM tier - demographic
+        case .noWineDefault:
+            return .medium
         }
     }
 
@@ -596,6 +677,9 @@ enum AgentHabit: String, CaseIterable, Hashable {
         // Anxiety Family
         case .noRageBait, .noLateNight, .noNewsDoomInput:
             return .anxiety
+        // Demographic Expansion (standalone — no tier promotion ladder)
+        case .noComparisonScroll, .noEmotionalEating, .noOvercommitting, .noWineDefault:
+            return nil
         // Legacy/Universal - no family
         default:
             return nil

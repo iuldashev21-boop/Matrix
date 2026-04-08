@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Phase 8: Recharge Cycle (Sleep)
 
 struct RechargeCyclePhase: View {
+    let tier: DemographicTier
     @Binding var answer: SleepQuality?
     let onBack: () -> Void
     let onComplete: () -> Void
@@ -36,7 +37,7 @@ struct RechargeCyclePhase: View {
                         .matrixGlow()
 
 
-                    Text("How would you rate your sleep quality last night?")
+                    Text(OnboardingCopy(tier: tier).text(for: .rechargeQuestion))
                         .font(.system(size: 18, weight: .bold, design: .monospaced))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)

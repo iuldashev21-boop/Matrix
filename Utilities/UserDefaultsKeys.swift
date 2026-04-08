@@ -8,6 +8,7 @@ enum UserDefaultsKeys {
     // MARK: - User Profile
     static let operatorName = "operatorName"
     static let operatorAge = "operatorAge"
+    static let operatorGender = "operatorGender"
     static let hasCompletedOnboarding = "hasCompletedOnboarding"
     static let totalXP = "totalXP"
     static let joinDate = "joinDate"

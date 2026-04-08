@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Phase 3: Years Deleted
 
 struct YearsDeletedPhase: View {
+    let tier: DemographicTier
     let age: Int
     @Binding var hoursLost: Int
     let onBack: () -> Void
@@ -43,7 +44,7 @@ struct YearsDeletedPhase: View {
             if showContent && !showResult {
                 VStack(spacing: Spacing.lg) {
 
-                    Text("How many hours do you lose to these loops daily?")
+                    Text(OnboardingCopy(tier: tier).text(for: .yearsDeletedPrompt))
                         .font(.system(size: 18, weight: .bold, design: .monospaced))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
@@ -125,7 +126,7 @@ struct YearsDeletedPhase: View {
             Spacer()
 
             if showResult {
-                PrimaryButton(title: "I AM ANGRY", color: Color.agentRed) { onComplete() }
+                PrimaryButton(title: OnboardingCopy(tier: tier).text(for: .yearsDeletedButton), color: Color.agentRed) { onComplete() }
                     .padding(.horizontal, Spacing.xl)
                     .padding(.bottom, Spacing.xxl)
                     .scaleEffect(1.0)

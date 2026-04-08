@@ -3,16 +3,19 @@ import SwiftUI
 // MARK: - Phase 11: The Truth (Revelation 1)
 
 struct TheTruthPhase: View {
+    let tier: DemographicTier
     let onBack: () -> Void
     let onComplete: () -> Void
 
     @State private var revealedLines: Int = 0
     @State private var showButton: Bool = false
 
-    private let lines: [(text: String, color: Color, isBold: Bool)] = [
-        ("You are not lazy.", Color.white, false),
-        ("You are not broken.", Color.white, false),
-        ("You are PROGRAMMED.", Color.white, true),
+    private var lines: [(text: String, color: Color, isBold: Bool)] {
+        let copy = OnboardingCopy(tier: tier)
+        return [
+        (copy.text(for: .truthLine1), Color.white, false),
+        (copy.text(for: .truthLine2), Color.white, false),
+        (copy.text(for: .truthLine3), Color.white, true),
         ("", Color.clear, false),
         ("Your brain didn't evolve for", Color.lightGray, false),
         ("infinite scroll feeds and", Color.lightGray, false),
@@ -28,6 +31,7 @@ struct TheTruthPhase: View {
         ("That's the first crack", Color.white, false),
         ("in the simulation.", Color.matrixGreen, true)
     ]
+    }
 
     @State private var glitchOffset: CGSize = .zero
     @State private var headerGlitch: Bool = false

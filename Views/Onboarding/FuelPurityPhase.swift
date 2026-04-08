@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Phase 7: Fuel Purity (Energy)
 
 struct FuelPurityPhase: View {
+    let tier: DemographicTier
     @Binding var answer: EnergyCrash?
     let onBack: () -> Void
     let onComplete: () -> Void
@@ -36,7 +37,7 @@ struct FuelPurityPhase: View {
                         .matrixGlow()
 
 
-                    Text("When do your energy systems typically crash?")
+                    Text(OnboardingCopy(tier: tier).text(for: .fuelQuestion))
                         .font(.system(size: 18, weight: .bold, design: .monospaced))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
