@@ -93,6 +93,7 @@ extension MatrixHabitApp {
         UserDefaults.standard.set(true, forKey: "hasSeenGhostTutorial")
         UserDefaults.standard.set(true, forKey: "hasSeenHabitTip")
         UserDefaults.standard.set(true, forKey: "hasSeenPostOnboardingPaywall")
+        UserDefaults.standard.set(true, forKey: UserDefaultsKeys.hasSeenNotificationPrompt)
         UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "lastAffirmationDate")
 
         // Helper: create N consecutive daily check-ins ending on offset day (0=today, 1=yesterday)

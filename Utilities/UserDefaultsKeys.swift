@@ -14,6 +14,9 @@ enum UserDefaultsKeys {
     static let joinDate = "joinDate"
     static let empTokens = "empTokens"
 
+    // MARK: - Notifications
+    static let hasSeenNotificationPrompt = "hasSeenNotificationPrompt"
+
     // MARK: - Easter Eggs
     static let cheatKeys = "cheatKeys"
     static let whiteRabbitCaught = "whiteRabbitCaught"

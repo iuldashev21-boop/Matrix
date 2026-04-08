@@ -14,6 +14,8 @@ struct ZionMainframeView: View {
     @State private var showExportSheet: Bool = false
     @State private var showAchievements: Bool = false
     @State private var showResetErrorAlert: Bool = false  // P0: Show error if reset fails
+    @State private var showTimePicker: Bool = false
+    @State private var selectedTime: Date = NotificationManager.shared.timeAsDate()
     @State private var versionTapCount: Int = 0
     @State private var showEasterEgg: Bool = false
     @State private var easterEggGlitch: CGSize = .zero
@@ -186,28 +188,70 @@ struct ZionMainframeView: View {
             // Notifications Toggle
             SettingsToggleRow(
                 title: "DAILY SIGNAL",
-                description: "Reminder to log your progress at 8 PM.",
+                description: "Daily signal at \(formattedReminderTime).",
                 isOn: $notificationsEnabled
             ) {
                 Task {
                     if notificationsEnabled {
-                        // Request permission if enabling
                         let granted = await NotificationManager.shared.requestAuthorization()
                         await MainActor.run {
                             if granted {
                                 NotificationManager.shared.notificationsEnabled = true
                             } else {
-                                // Permission denied, revert toggle
                                 notificationsEnabled = false
                             }
                         }
                     } else {
                         NotificationManager.shared.notificationsEnabled = false
+                        showTimePicker = false
                     }
+                }
+            }
+
+            // Time Picker (expandable, only when notifications enabled)
+            if notificationsEnabled {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        showTimePicker.toggle()
+                    }
+                } label: {
+                    HStack {
+                        Text("SIGNAL TIME")
+                            .font(.system(size: 12, weight: .bold, design: .monospaced))
+                            .foregroundColor(Color.mediumGray)
+                        Spacer()
+                        Text(formattedReminderTime)
+                            .font(.system(size: 12, weight: .bold, design: .monospaced))
+                            .foregroundColor(Color.matrixGreen)
+                        Image(systemName: showTimePicker ? "chevron.up" : "chevron.down")
+                            .font(.system(size: 10))
+                            .foregroundColor(Color.mediumGray)
+                    }
+                    .padding(.horizontal, Spacing.md)
+                    .padding(.vertical, Spacing.sm)
+                }
+
+                if showTimePicker {
+                    DatePicker("", selection: $selectedTime, displayedComponents: .hourAndMinute)
+                        .datePickerStyle(.wheel)
+                        .labelsHidden()
+                        .colorMultiply(Color.matrixGreen)
+                        .frame(height: 150)
+                        .padding(.horizontal, Spacing.md)
+                        .onChange(of: selectedTime) { _, newTime in
+                            NotificationManager.shared.setTime(from: newTime)
+                        }
+                        .transition(.opacity.combined(with: .move(edge: .top)))
                 }
             }
         }
         .padding(.horizontal, Spacing.md)
+    }
+
+    private var formattedReminderTime: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        return formatter.string(from: selectedTime)
     }
 
     private var unlockedAchievementCount: Int {

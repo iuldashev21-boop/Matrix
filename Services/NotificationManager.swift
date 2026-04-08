@@ -41,8 +41,11 @@ class NotificationManager: ObservableObject {
 
     var reminderHour: Int {
         get {
-            let hour = UserDefaults.standard.integer(forKey: Keys.reminderHour)
-            return hour == 0 ? 20 : hour // Default 8 PM
+            // Use object(forKey:) so midnight (0) isn't treated as unset
+            if UserDefaults.standard.object(forKey: Keys.reminderHour) == nil {
+                return 20 // Default 8 PM
+            }
+            return UserDefaults.standard.integer(forKey: Keys.reminderHour)
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Keys.reminderHour)
@@ -56,6 +59,26 @@ class NotificationManager: ObservableObject {
             UserDefaults.standard.set(newValue, forKey: Keys.reminderMinute)
             if notificationsEnabled { scheduleDailyReminder() }
         }
+    }
+
+    /// Returns the stored reminder time as a Date (for DatePicker binding)
+    func timeAsDate() -> Date {
+        var components = DateComponents()
+        components.hour = reminderHour
+        components.minute = reminderMinute
+        return Calendar.current.date(from: components) ?? Date()
+    }
+
+    /// Sets reminder hour and minute from a Date
+    func setTime(from date: Date) {
+        let components = Calendar.current.dateComponents([.hour, .minute], from: date)
+        if let hour = components.hour {
+            UserDefaults.standard.set(hour, forKey: Keys.reminderHour)
+        }
+        if let minute = components.minute {
+            UserDefaults.standard.set(minute, forKey: Keys.reminderMinute)
+        }
+        if notificationsEnabled { scheduleDailyReminder() }
     }
 
     // MARK: - Initialization

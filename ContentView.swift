@@ -5,7 +5,9 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @AppStorage("hasSeenPostOnboardingPaywall") private var hasSeenPostOnboardingPaywall = false
+    @AppStorage("hasSeenNotificationPrompt") private var hasSeenNotificationPrompt = false
     @State private var showPostOnboardingPaywall = false
+    @State private var showNotificationPrompt = false
 
     var body: some View {
         Group {
@@ -17,6 +19,12 @@ struct ContentView: View {
         }
         .onAppear {
             UserProfile.recordFirstLaunchIfNeeded()
+            // Edge case: user killed app after paywall but before notification prompt
+            if hasCompletedOnboarding && hasSeenPostOnboardingPaywall && !hasSeenNotificationPrompt {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    showNotificationPrompt = true
+                }
+            }
         }
         .onChange(of: hasCompletedOnboarding) { _, completed in
             if completed && !hasSeenPostOnboardingPaywall {
@@ -26,8 +34,17 @@ struct ContentView: View {
                 }
             }
         }
-        .sheet(isPresented: $showPostOnboardingPaywall) {
+        .sheet(isPresented: $showPostOnboardingPaywall, onDismiss: {
+            if !hasSeenNotificationPrompt {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    showNotificationPrompt = true
+                }
+            }
+        }) {
             RedPillPaywallView()
+        }
+        .sheet(isPresented: $showNotificationPrompt) {
+            NotificationPermissionView(isPresented: $showNotificationPrompt)
         }
     }
 }
