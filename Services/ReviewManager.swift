@@ -29,10 +29,9 @@ final class ReviewManager {
     private let minimumDaysBetweenPrompts = 45
     private let maxRequestsPerYear = 3
     private let reviewTriggerStreaks = [7, 14, 21, 66]
-    private let reviewTriggerAchievements = [3, 7]
-    private let minimumHabits = 2
-    private let minimumCheckIns = 10
-    private let minimumDistinctDays = 5
+    private let minimumHabits = 1
+    private let minimumCheckIns = 1
+    private let minimumDistinctDays = 1
     private let streakBreakCooldownHours = 48
 
     // MARK: - Engagement Tracking
@@ -72,8 +71,9 @@ final class ReviewManager {
     }
 
     /// Check if we should show a review pre-screen after an achievement unlock
+    /// Fires on first achievement and every 5th after that
     func checkForReviewAfterAchievement(achievementCount: Int, totalHabitCount: Int) -> Decision {
-        guard reviewTriggerAchievements.contains(achievementCount) else { return .skip }
+        guard achievementCount == 1 || achievementCount % 5 == 0 else { return .skip }
         return evaluateGates(totalHabitCount: totalHabitCount)
     }
 
