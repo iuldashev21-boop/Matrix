@@ -10,6 +10,7 @@ enum UserDefaultsKeys {
     static let operatorAge = "operatorAge"
     static let operatorGender = "operatorGender"
     static let hasCompletedOnboarding = "hasCompletedOnboarding"
+    static let hasSeenPostOnboardingPaywall = "hasSeenPostOnboardingPaywall"
     static let totalXP = "totalXP"
     static let joinDate = "joinDate"
     static let empTokens = "empTokens"

@@ -242,9 +242,9 @@ struct EditHabitSheet: View {
                 .foregroundColor(Color.lightGray)
 
             HStack(spacing: Spacing.md) {
-                StatBox(value: "\(currentStreak)", label: "CURRENT")
-                StatBox(value: "\(longestStreak)", label: "BEST")
-                StatBox(value: "\(totalCheckIns)", label: "TOTAL")
+                EditStatBox(value: "\(currentStreak)", label: "CURRENT")
+                EditStatBox(value: "\(longestStreak)", label: "BEST")
+                EditStatBox(value: "\(totalCheckIns)", label: "TOTAL")
             }
         }
         .padding(.horizontal, Spacing.md)
@@ -306,7 +306,7 @@ struct EditHabitSheet: View {
 
 // MARK: - Stat Box
 
-private struct StatBox: View {
+private struct EditStatBox: View {
     let value: String
     let label: String
 

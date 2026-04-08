@@ -108,6 +108,7 @@ A10000000000000000000024 /* RankSystem.swift in Sources */ = {isa = PBXBuildFile
 		A10000000000000000000124 /* OnboardingCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000124 /* OnboardingCopy.swift */; };
 		CFB78A40B5406845F49986BF /* CheckInService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41454C1F4BFDEA76C9D73C34 /* CheckInService.swift */; };
 		B1000000000000000000001 /* NotificationPermissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000001 /* NotificationPermissionView.swift */; };
+		C1000000000000000000001 /* EditHabitSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2000000000000000000001 /* EditHabitSheet.swift */; };
 		D0F8926E679B0FEF22FDAC15 /* RedPillPaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C540CCE7ECB02F6DEF67D4 /* RedPillPaywallView.swift */; };
 		D4E2B8A0F9C3561B4A7CAD02 /* CheckInHabitIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C1A7F9E8D2450A3F6B9C01 /* CheckInHabitIntent.swift */; };
 		E5F3C9B1A0D4672C5B8DBE03 /* CheckInHabitIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C1A7F9E8D2450A3F6B9C01 /* CheckInHabitIntent.swift */; };
@@ -172,6 +173,7 @@ A10000000000000000000024 /* RankSystem.swift in Sources */ = {isa = PBXBuildFile
 		7534156F000EB69CE39E42FA /* MatrixHabit.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = MatrixHabit.entitlements; sourceTree = "<group>"; };
 		84C540CCE7ECB02F6DEF67D4 /* RedPillPaywallView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RedPillPaywallView.swift; sourceTree = "<group>"; };
 		B2000000000000000000001 /* NotificationPermissionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotificationPermissionView.swift; sourceTree = "<group>"; };
+		C2000000000000000000001 /* EditHabitSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditHabitSheet.swift; sourceTree = "<group>"; };
 		8EA3C51FF0C57DE112DA7FCA /* UserProfileTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserProfileTests.swift; sourceTree = "<group>"; };
 		903B865343E0674F8A0D02CE /* hold_progress.wav */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.wav; path = hold_progress.wav; sourceTree = "<group>"; };
 		B3C1A7F9E8D2450A3F6B9C01 /* CheckInHabitIntent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CheckInHabitIntent.swift; sourceTree = "<group>"; };
@@ -494,6 +496,7 @@ A20000000000000000000025 /* CommandCenterView.swift */,
 				A20000000000000000000040 /* ConstructLoaderView.swift */,
 				A50000000000000000000010 /* Sidequests */,
 				A50000000000000000000012 /* Onboarding */,
+				C2000000000000000000001 /* EditHabitSheet.swift */,
 				B2000000000000000000001 /* NotificationPermissionView.swift */,
 				84C540CCE7ECB02F6DEF67D4 /* RedPillPaywallView.swift */,
 			);
@@ -782,6 +785,7 @@ A10000000000000000000024 /* RankSystem.swift in Sources */,
 				84FED044452FD91380D3E9F2 /* WidgetDataManager.swift in Sources */,
 				CFB78A40B5406845F49986BF /* CheckInService.swift in Sources */,
 				4C9E1AF8B72D3C0694E5DA17 /* WidgetSyncService.swift in Sources */,
+				C1000000000000000000001 /* EditHabitSheet.swift in Sources */,
 				B1000000000000000000001 /* NotificationPermissionView.swift in Sources */,
 				D0F8926E679B0FEF22FDAC15 /* RedPillPaywallView.swift in Sources */,
 				E5F3C9B1A0D4672C5B8DBE03 /* CheckInHabitIntent.swift in Sources */,
