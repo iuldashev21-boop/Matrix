@@ -24,10 +24,14 @@ struct CommandCenterView: View {
     @State private var showHabitTip: Bool = false
     @State private var showGhostTutorial: Bool = false
     @State private var showDailyAffirmation: Bool = false
+    @State private var showMomentumNudge: Bool = false
+    @State private var showSharePrompt: Bool = false
     @StateObject private var rabbitManager = WhiteRabbitManager()
     @AppStorage("hasSeenHabitTip") private var hasSeenHabitTip: Bool = false
     @AppStorage("hasSeenGhostTutorial") private var hasSeenGhostTutorial: Bool = false
     @AppStorage("lastAffirmationDate") private var lastAffirmationDate: Double = 0
+    @AppStorage("hasSeenMomentumNudge") private var hasSeenMomentumNudge: Bool = false
+    @AppStorage("hasSeenSharePrompt") private var hasSeenSharePrompt: Bool = false
 
     // Tier Promotion System
     @State private var promotionCandidate: PromotionCandidate? = nil
@@ -139,6 +143,10 @@ struct CommandCenterView: View {
         incompleteHabitsCount > 0
     }
 
+    private var lockedHabitCount: Int {
+        powers.filter { $0.isPremiumLocked }.count + agents.filter { $0.isPremiumLocked }.count
+    }
+
     // MARK: - Body
 
     var body: some View {
@@ -180,6 +188,12 @@ struct CommandCenterView: View {
             } else if hasSeenGhostTutorial && shouldShowDailyAffirmation {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     withAnimation { showDailyAffirmation = true }
+                }
+            }
+
+            if !StoreManager.shared.isRedPillOwned && !hasSeenMomentumNudge && daysActiveCount >= 3 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    withAnimation { showMomentumNudge = true }
                 }
             }
 
@@ -241,6 +255,32 @@ struct CommandCenterView: View {
             }
             if showDailyAffirmation {
                 DailyAffirmationOverlay(affirmation: dailyAffirmation, onDismiss: dismissAffirmation)
+            }
+            if showSharePrompt {
+                ShareSignalOverlay(onDismiss: {
+                    withAnimation {
+                        showSharePrompt = false
+                        hasSeenSharePrompt = true
+                    }
+                })
+            }
+            if showMomentumNudge {
+                MomentumNudgeOverlay(
+                    daysActive: daysActiveCount,
+                    streak: bestCurrentStreak,
+                    operativeName: operativeName,
+                    onUpgrade: {
+                        withAnimation { showMomentumNudge = false }
+                        showPaywall = true
+                    },
+                    onDismiss: dismissMomentumNudge
+                )
+            }
+        }
+        .onChange(of: allHabitsCompleted) { _, completed in
+            guard completed, daysActiveCount >= 7, !hasSeenSharePrompt, !showMomentumNudge else { return }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                withAnimation { showSharePrompt = true }
             }
         }
         .onChange(of: powers.count + agents.count) { oldValue, newValue in
@@ -351,6 +391,13 @@ struct CommandCenterView: View {
         }
     }
 
+    private func dismissMomentumNudge() {
+        withAnimation {
+            showMomentumNudge = false
+            hasSeenMomentumNudge = true
+        }
+    }
+
     // MARK: - Daily Affirmation Logic
 
     private var shouldShowDailyAffirmation: Bool {
@@ -417,6 +464,11 @@ struct CommandCenterView: View {
                             relapseCount: totalRelapses
                         )
                         .transition(.opacity.combined(with: .move(edge: .top)))
+
+                        if !StoreManager.shared.isRedPillOwned && lockedHabitCount > 0 {
+                            upgradeNudgeBanner
+                                .transition(.opacity.combined(with: .move(edge: .top)))
+                        }
                     }
 
                     // Submit All Button
@@ -526,6 +578,39 @@ struct CommandCenterView: View {
         return "SUBMIT ALL (\(incompleteHabitsCount))"
     }
 
+    private var upgradeNudgeBanner: some View {
+        Button { showPaywall = true } label: {
+            HStack(spacing: Spacing.sm) {
+                Image(systemName: "lock.circle.fill")
+                    .font(.system(size: 22))
+                    .foregroundColor(.orange)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("SYSTEM AT MINIMUM CAPACITY")
+                        .font(.system(size: 11, weight: .bold, design: .monospaced))
+                        .foregroundColor(.white)
+                    Text("\(lockedHabitCount) more programs ready to deploy.")
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundColor(Color.mediumGray)
+                }
+
+                Spacer()
+
+                Text("UNLOCK →")
+                    .font(.system(size: 11, weight: .bold, design: .monospaced))
+                    .foregroundColor(.orange)
+            }
+            .padding(Spacing.md)
+            .background(Color.charcoal)
+            .cornerRadius(Theme.cornerRadius)
+            .overlay(
+                RoundedRectangle(cornerRadius: Theme.cornerRadius)
+                    .stroke(Color.orange.opacity(0.5), lineWidth: 1)
+            )
+        }
+        .padding(.horizontal, Spacing.md)
+    }
+
     // MARK: - Powers Content
 
     private var powersContent: some View {
@@ -576,7 +661,26 @@ struct CommandCenterView: View {
                 .opacity(0.5)
             }
             // Locked habits
-            ForEach(powers.filter { $0.isPremiumLocked }) { power in
+            let lockedPowers = powers.filter { $0.isPremiumLocked }
+            if !lockedPowers.isEmpty {
+                Button { showPaywall = true } label: {
+                    HStack(spacing: Spacing.xs) {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 9))
+                            .foregroundColor(.orange.opacity(0.9))
+                        Text("CLASSIFIED — \(lockedPowers.count) LOCKED PROGRAM\(lockedPowers.count == 1 ? "" : "S")")
+                            .font(.system(size: 10, weight: .bold, design: .monospaced))
+                            .foregroundColor(.orange.opacity(0.9))
+                        Spacer()
+                        Text("UNLOCK ACCESS →")
+                            .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                            .foregroundColor(.orange.opacity(0.7))
+                    }
+                    .padding(.horizontal, Spacing.md + 4)
+                    .padding(.vertical, Spacing.xs)
+                }
+            }
+            ForEach(lockedPowers) { power in
                 let hackHabit = HackHabit.allCases.first { $0.rawValue == power.name }
                 HabitCard(
                     title: power.name,
@@ -646,7 +750,26 @@ struct CommandCenterView: View {
                 .opacity(0.5)
             }
             // Locked habits
-            ForEach(agents.filter { $0.isPremiumLocked }) { agent in
+            let lockedAgents = agents.filter { $0.isPremiumLocked }
+            if !lockedAgents.isEmpty {
+                Button { showPaywall = true } label: {
+                    HStack(spacing: Spacing.xs) {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 9))
+                            .foregroundColor(.orange.opacity(0.9))
+                        Text("CLASSIFIED — \(lockedAgents.count) LOCKED AGENT\(lockedAgents.count == 1 ? "" : "S")")
+                            .font(.system(size: 10, weight: .bold, design: .monospaced))
+                            .foregroundColor(.orange.opacity(0.9))
+                        Spacer()
+                        Text("UNLOCK ACCESS →")
+                            .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                            .foregroundColor(.orange.opacity(0.7))
+                    }
+                    .padding(.horizontal, Spacing.md + 4)
+                    .padding(.vertical, Spacing.xs)
+                }
+            }
+            ForEach(lockedAgents) { agent in
                 let agentHabit = AgentHabit.allCases.first { $0.rawValue == agent.name }
                 HabitCard(
                     title: agent.name,

@@ -10,6 +10,22 @@ struct HookQuestionPhase: View {
 
     @State private var showContent: Bool = false
 
+    private var positiveLabel: String {
+        switch tier {
+        case .maleAdult:   return "RECENTLY, ACTUALLY"
+        case .femaleAdult: return "RECENTLY"
+        default:           return "YES"
+        }
+    }
+
+    private var negativeLabel: String {
+        switch tier {
+        case .maleAdult:   return "HONESTLY? AGES AGO"
+        case .femaleAdult: return "I CAN'T REMEMBER"
+        default:           return "NO"
+        }
+    }
+
     var body: some View {
         VStack(spacing: Spacing.xl) {
             // Back button
@@ -44,11 +60,11 @@ struct HookQuestionPhase: View {
                         .padding(.horizontal, Spacing.lg)
 
                     VStack(spacing: Spacing.md) {
-                        DiagnosticButton(title: "YES", isSelected: answer == true) {
+                        DiagnosticButton(title: positiveLabel, isSelected: answer == true) {
                             answer = true
                             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                         }
-                        DiagnosticButton(title: "NO", isSelected: answer == false) {
+                        DiagnosticButton(title: negativeLabel, isSelected: answer == false) {
                             answer = false
                             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                         }

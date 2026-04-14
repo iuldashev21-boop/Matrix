@@ -7,6 +7,11 @@ struct RedPillPaywallView: View {
     @Query private var powers: [Power]
     @Query private var agents: [Agent]
     private let storeManager = StoreManager.shared
+    @State private var showDismiss: Bool = false
+
+    private var lockedHabitCount: Int {
+        powers.filter { $0.isPremiumLocked }.count + agents.filter { $0.isPremiumLocked }.count
+    }
 
     var body: some View {
         ZStack {
@@ -28,7 +33,7 @@ struct RedPillPaywallView: View {
                             .font(.system(size: 28, weight: .black, design: .monospaced))
                             .foregroundColor(.white)
 
-                        Text("YOUR AWAKENING IS INCOMPLETE")
+                        Text(lockedHabitCount > 0 ? "\(lockedHabitCount) PROGRAMS WAITING FOR YOU" : "YOUR AWAKENING IS INCOMPLETE")
                             .font(.system(size: 12, weight: .medium, design: .monospaced))
                             .foregroundColor(.red.opacity(0.8))
                     }
@@ -99,22 +104,30 @@ struct RedPillPaywallView: View {
                 }
             }
 
-            // Close button
+            // Close button — delayed to reduce reflex dismissal
             VStack {
                 HStack {
                     Spacer()
-                    Button(action: { dismiss() }) {
-                        Text("NOT NOW")
-                            .font(.system(size: 11, weight: .medium, design: .monospaced))
-                            .foregroundColor(Color.mediumGray)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Color.charcoal.opacity(0.6))
-                            .cornerRadius(12)
+                    if showDismiss {
+                        Button(action: { dismiss() }) {
+                            Text("NOT NOW")
+                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                .foregroundColor(Color.mediumGray)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color.charcoal.opacity(0.6))
+                                .cornerRadius(12)
+                        }
+                        .padding(Spacing.md)
+                        .transition(.opacity)
                     }
-                    .padding(Spacing.md)
                 }
                 Spacer()
+            }
+        }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                withAnimation(.easeIn(duration: 0.3)) { showDismiss = true }
             }
         }
         .onChange(of: storeManager.isRedPillOwned) { _, owned in
