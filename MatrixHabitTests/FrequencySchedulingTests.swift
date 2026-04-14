@@ -53,33 +53,45 @@ final class FrequencySchedulingTests: XCTestCase {
     }
 
     func test_streak_missedScheduledDay_breaksStreak() {
-        // Weekdays only
+        // Weekdays only: Mon–Fri (2–6)
         let scheduledDays = [2, 3, 4, 5, 6]
 
-        // Check-ins with a missed weekday (gap on a scheduled day)
-        var checkIns: [CheckIn] = []
+        // Anchor to a fixed Friday so days 0–4 are all known weekdays:
+        //   i=0 → Friday (6), i=1 → Thursday (5), i=2 → Wednesday (4),
+        //   i=3 → Tuesday (3) [SKIPPED — the gap], i=4 → Monday (2)
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-
-        // Add check-ins for recent days but skip one weekday
-        for i in 0..<7 {
-            guard let date = calendar.date(byAdding: .day, value: -i, to: today) else { continue }
-            let weekday = calendar.component(.weekday, from: date)
-
-            // Skip one weekday to create a gap
-            if i == 3 && scheduledDays.contains(weekday) {
-                continue
+        var fridayComponents = DateComponents()
+        fridayComponents.weekday = 6 // Friday
+        fridayComponents.weekOfYear = calendar.component(.weekOfYear, from: Date())
+        fridayComponents.yearForWeekOfYear = calendar.component(.yearForWeekOfYear, from: Date())
+        guard let friday = calendar.date(from: fridayComponents).map({ calendar.startOfDay(for: $0) }),
+              friday <= calendar.startOfDay(for: Date()) else {
+            // If this week's Friday is in the future, step back one week
+            var comps = fridayComponents
+            comps.weekOfYear = (fridayComponents.weekOfYear ?? 1) - 1
+            guard let prevFriday = calendar.date(from: comps).map({ calendar.startOfDay(for: $0) }) else { return }
+            var checkIns2: [CheckIn] = []
+            for i in 0..<5 {
+                guard let date = calendar.date(byAdding: .day, value: -i, to: prevFriday) else { continue }
+                if i == 3 { continue } // skip Tuesday — guaranteed weekday gap
+                checkIns2.append(CheckIn(date: date, isSuccess: true))
             }
+            let streak2 = StreakCalculator.calculateStreak(for: checkIns2, scheduledDays: scheduledDays)
+            XCTAssertLessThan(streak2, 4)
+            return
+        }
 
-            if scheduledDays.contains(weekday) {
-                checkIns.append(CheckIn(date: date, isSuccess: true))
-            }
+        var checkIns: [CheckIn] = []
+        for i in 0..<5 {
+            guard let date = calendar.date(byAdding: .day, value: -i, to: friday) else { continue }
+            if i == 3 { continue } // skip Tuesday — guaranteed weekday gap
+            checkIns.append(CheckIn(date: date, isSuccess: true))
         }
 
         let streak = StreakCalculator.calculateStreak(for: checkIns, scheduledDays: scheduledDays)
 
-        // Streak should be broken by the missed day
-        XCTAssertLessThan(streak, 5)
+        // Streak should be broken by the missed Tuesday
+        XCTAssertLessThan(streak, 4)
     }
 
     func test_longestStreak_withScheduledDays_respectsSchedule() {
